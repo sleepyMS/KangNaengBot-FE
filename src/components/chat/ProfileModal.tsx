@@ -171,7 +171,7 @@ export const ProfileModal = () => {
             </div>
           )}
 
-          <div className="space-y-5 w-full overflow-hidden">
+          <div className="space-y-5 w-full">
             {/* 이름 */}
             <div className="flex items-center gap-4 w-full">
               <label className="w-16 text-sm text-gray-500 flex-shrink-0">
@@ -301,11 +301,11 @@ export const ProfileModal = () => {
             </div>
           </div>
 
-          {/* 저장 버튼 - 전체 너비 */}
+          {/* 저장 버튼 - 전체 너비, 드롭다운 공간 확보 위해 상단 여백 증가, 홈버튼 위해 하단 여백 추가 */}
           <button
             type="submit"
             disabled={isLoading}
-            className="mt-8 w-full py-4 text-white font-medium rounded-2xl shadow-lg transition-all disabled:opacity-50"
+            className="relative z-0 mt-16 mb-8 w-full py-4 text-white font-medium rounded-2xl shadow-lg transition-all disabled:opacity-50"
             style={{
               background:
                 "radial-gradient(63.37% 63.37% at 50% 50%, #4E92FF 0%, rgba(78, 146, 255, 0.5) 100%)",

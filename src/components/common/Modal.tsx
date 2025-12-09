@@ -70,7 +70,7 @@ export const Modal = ({
             backdropFilter: "blur(32px)",
             WebkitBackdropFilter: "blur(32px)",
             borderRadius: "24px 24px 0 0",
-            maxHeight: "90vh",
+            maxHeight: "85vh",
             boxShadow: "0px -4px 40px 0px rgba(105, 162, 255, 0.24)",
           }}
         >
@@ -82,7 +82,7 @@ export const Modal = ({
           {/* 스크롤 가능한 컨텐츠 영역 */}
           <div
             className="overflow-y-auto overflow-x-hidden px-5 py-4"
-            style={{ maxHeight: "calc(90vh - 80px)" }}
+            style={{ maxHeight: "calc(85vh - 80px)" }}
           >
             {children}
           </div>
