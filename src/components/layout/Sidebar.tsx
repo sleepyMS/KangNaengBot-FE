@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   MessageSquare,
   ChevronDown,
@@ -7,6 +7,8 @@ import {
   MoreHorizontal,
   RefreshCw,
   Trash2,
+  Settings,
+  LogOut,
 } from "lucide-react";
 import { useUIStore, useChatStore, useAuthStore } from "@/store";
 
@@ -25,8 +27,26 @@ export const Sidebar = () => {
     deleteSession,
     fetchSessions,
   } = useChatStore();
-  const { user, profile, isAuthenticated } = useAuthStore();
+  const { user, profile, isAuthenticated, logout } = useAuthStore();
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  // 팝오버 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setIsPopoverOpen(false);
+      }
+    };
+    if (isPopoverOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isPopoverOpen]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -233,7 +253,7 @@ export const Sidebar = () => {
             className={`
             border-t border-gray-100
             transition-all duration-300 ease-in-out
-            flex mt-auto
+            flex mt-auto relative
             ${
               isSidebarOpen
                 ? "px-4 py-3 justify-start"
@@ -242,7 +262,7 @@ export const Sidebar = () => {
           `}
           >
             <button
-              onClick={openProfileModal}
+              onClick={() => setIsPopoverOpen(!isPopoverOpen)}
               className={`
                 flex items-center rounded-full
                 transition-all duration-300 ease-in-out
@@ -308,6 +328,49 @@ export const Sidebar = () => {
                 {user?.email || profile?.profile_name || "hello@gmail.com"}
               </span>
             </button>
+
+            {/* Popover */}
+            {isPopoverOpen && (
+              <div
+                ref={popoverRef}
+                className={`
+                  absolute bg-white rounded-xl shadow-lg border border-gray-100 py-2 min-w-[140px]
+                  animate-fade-in
+                  ${
+                    isSidebarOpen
+                      ? "bottom-full left-2 mb-1"
+                      : "left-full bottom-0 ml-2"
+                  }
+                `}
+              >
+                <button
+                  onClick={() => {
+                    setIsPopoverOpen(false);
+                    openProfileModal();
+                  }}
+                  className="w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors group"
+                >
+                  <Settings
+                    size={18}
+                    className="text-gray-500 group-hover:text-primary-500"
+                  />
+                  <span className="text-sm">설정</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setIsPopoverOpen(false);
+                    logout();
+                  }}
+                  className="w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors group"
+                >
+                  <LogOut
+                    size={18}
+                    className="text-gray-500 group-hover:text-primary-500"
+                  />
+                  <span className="text-sm">로그아웃</span>
+                </button>
+              </div>
+            )}
           </div>
         </aside>
       </div>

@@ -100,13 +100,13 @@ export const CustomDropdown = ({
                 type="button"
                 onClick={() => handleSelect(option)}
                 className={`
-                  w-full px-4 py-3 text-left text-sm
+                  w-[calc(100%-8px)] mx-1 px-3 py-2.5 text-left text-sm rounded-lg
                   flex items-center justify-between
                   transition-all duration-150
                   ${
                     value === option
                       ? "bg-gradient-to-r from-primary-50 to-blue-50 text-primary-600 font-medium"
-                      : "text-gray-700 hover:bg-gray-50"
+                      : "text-gray-700 hover:bg-primary-50 hover:text-primary-600"
                   }
                 `}
               >
