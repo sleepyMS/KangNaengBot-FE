@@ -5,8 +5,10 @@ import axios, {
 } from "axios";
 import type { ApiError } from "@/types";
 
-// API 기본 URL
-const API_BASE_URL = "https://agent-backend-api-88199591627.us-east4.run.app";
+// API 기본 URL (환경 변수에서 가져옴)
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://agent-backend-api-88199591627.us-east4.run.app";
 
 // Axios 인스턴스 생성
 export const apiClient = axios.create({

@@ -1,7 +1,9 @@
 import apiClient from "../apiClient";
 import type { User } from "@/types";
 
-const API_BASE_URL = "https://agent-backend-api-88199591627.us-east4.run.app";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://agent-backend-api-88199591627.us-east4.run.app";
 
 /**
  * Google OAuth 로그인 URL로 리다이렉트
