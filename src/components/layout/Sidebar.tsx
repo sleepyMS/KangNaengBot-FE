@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   MessageSquare,
   ChevronDown,
@@ -13,6 +14,7 @@ import {
 import { useUIStore, useChatStore, useAuthStore } from "@/store";
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
   const {
     isSidebarOpen,
     setSidebarOpen,
@@ -360,6 +362,7 @@ export const Sidebar = () => {
                   onClick={() => {
                     setIsPopoverOpen(false);
                     logout();
+                    navigate("/login");
                   }}
                   className="w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors group"
                 >
