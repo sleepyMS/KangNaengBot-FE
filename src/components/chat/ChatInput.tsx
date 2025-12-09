@@ -18,9 +18,16 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
     const trimmedMessage = message.trim();
     setMessage("");
 
+    let sessionId = currentSessionId;
+
     // 세션이 없으면 새로 생성
-    if (!currentSessionId) {
-      await createSession();
+    if (!sessionId) {
+      try {
+        sessionId = await createSession();
+      } catch {
+        // 세션 생성 실패 시 에러는 store에서 처리됨
+        return;
+      }
     }
 
     await sendMessage(trimmedMessage);

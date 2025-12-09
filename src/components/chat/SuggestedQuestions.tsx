@@ -18,8 +18,12 @@ export const SuggestedQuestions = () => {
   const { isMobile } = useUIStore();
 
   const handleQuestionClick = async (question: string) => {
-    await createSession();
-    await sendMessage(question);
+    try {
+      await createSession();
+      await sendMessage(question);
+    } catch {
+      // 세션 생성 실패 시 에러는 store에서 처리됨
+    }
   };
 
   return (
