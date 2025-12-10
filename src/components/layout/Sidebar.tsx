@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   MessageSquare,
   ChevronDown,
@@ -277,6 +277,31 @@ export const Sidebar = () => {
                   )}
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Legal Links - 사이드바 펼쳐졌을 때만 표시 */}
+          <div
+            className={`
+              px-4 pb-2 overflow-hidden
+              transition-opacity duration-300 ease-in-out
+              ${isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
+            `}
+          >
+            <div className="flex items-center gap-2 text-xs text-gray-400 whitespace-nowrap min-w-[200px]">
+              <Link
+                to="/terms"
+                className="hover:text-gray-600 transition-colors"
+              >
+                이용약관
+              </Link>
+              <span>•</span>
+              <Link
+                to="/privacy"
+                className="hover:text-gray-600 transition-colors"
+              >
+                개인정보처리방침
+              </Link>
             </div>
           </div>
 
