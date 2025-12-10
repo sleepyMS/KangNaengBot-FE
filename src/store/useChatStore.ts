@@ -17,7 +17,10 @@ interface ChatState {
   createSession: () => Promise<string>;
   selectSession: (sessionId: string) => Promise<void>;
   deleteSession: (sessionId: string) => Promise<void>;
-  sendMessage: (message: string) => Promise<void>;
+  sendMessage: (
+    message: string,
+    createSessionIfNeeded?: boolean
+  ) => Promise<void>;
   addMessage: (message: MessageItem) => void;
   clearCurrentSession: () => void;
   clearError: () => void;
@@ -133,14 +136,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
 
-  sendMessage: async (message: string) => {
-    const { currentSessionId, guestUserId } = get();
-    if (!currentSessionId) {
-      set({ error: "세션이 선택되지 않았습니다." });
-      return;
-    }
+  sendMessage: async (
+    message: string,
+    createSessionIfNeeded: boolean = false
+  ) => {
+    let { currentSessionId, guestUserId } = get();
 
-    // 사용자 메시지 즉시 추가
+    // 세션이 없고, 새 세션 생성이 필요한 경우 (첫 메시지)
+    const needsNewSession = !currentSessionId && createSessionIfNeeded;
+
+    // 낙관적 UI: 사용자 메시지 즉시 표시
     const userMessage: MessageItem = {
       role: "user",
       content: message,
@@ -153,10 +158,35 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }));
 
     try {
+      // 세션이 필요하면 먼저 생성 (낙관적이지만 메시지는 이미 보여주고 있음)
+      if (needsNewSession) {
+        const response = await sessionsService.createSession();
+        currentSessionId = response.session_id;
+        guestUserId = response.user_id;
+
+        const newSession: SessionItem = {
+          sid: response.session_id,
+          // 첫 메시지로 제목 설정
+          title: message.slice(0, 50) + (message.length > 50 ? "..." : ""),
+          is_active: true,
+          created_at: response.created_at || new Date().toISOString(),
+        };
+        set((state) => ({
+          sessions: [newSession, ...state.sessions],
+          currentSessionId: response.session_id,
+          guestUserId: response.user_id,
+        }));
+      }
+
+      if (!currentSessionId) {
+        set({ error: "세션이 선택되지 않았습니다.", isSending: false });
+        return;
+      }
+
       const response = await chatService.sendMessage({
         session_id: currentSessionId,
         message,
-        user_id: guestUserId ?? undefined, // 게스트 모드면 guestUserId 사용
+        user_id: guestUserId ?? undefined,
       });
 
       // AI 응답 추가
@@ -170,8 +200,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
         isSending: false,
       }));
 
-      // 세션 제목 업데이트 (첫 메시지인 경우)
-      if (get().messages.length <= 2) {
+      // 세션 제목 업데이트 (첫 메시지인 경우, 새 세션이 아닌 기존 세션일 때만)
+      if (!needsNewSession && get().messages.length <= 2) {
         set((state) => ({
           sessions: state.sessions.map((s) =>
             s.sid === currentSessionId
@@ -185,13 +215,15 @@ export const useChatStore = create<ChatState>((set, get) => ({
         }));
       }
     } catch (error) {
-      set({
+      // 실패 시 낙관적 메시지 롤백
+      set((state) => ({
+        messages: needsNewSession ? [] : state.messages.slice(0, -1),
         isSending: false,
         error:
           error instanceof Error
             ? error.message
             : "메시지 전송에 실패했습니다.",
-      });
+      }));
     }
   },
 

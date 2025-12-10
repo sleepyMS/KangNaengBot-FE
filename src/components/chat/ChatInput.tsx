@@ -12,8 +12,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [showLoginAlert, setShowLoginAlert] = useState(false);
-  const { sendMessage, isSending, currentSessionId, createSession } =
-    useChatStore();
+  const { sendMessage, isSending, currentSessionId } = useChatStore();
   const { isAuthenticated } = useAuthStore();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -23,19 +22,8 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
     const trimmedMessage = message.trim();
     setMessage("");
 
-    let sessionId = currentSessionId;
-
-    // 세션이 없으면 새로 생성
-    if (!sessionId) {
-      try {
-        sessionId = await createSession();
-      } catch {
-        // 세션 생성 실패 시 에러는 store에서 처리됨
-        return;
-      }
-    }
-
-    await sendMessage(trimmedMessage);
+    // 세션이 없으면 sendMessage에서 자동 생성 (낙관적 UI)
+    await sendMessage(trimmedMessage, !currentSessionId);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -45,13 +33,15 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
     }
   };
 
-  const handleNewChat = async () => {
+  const handleNewChat = () => {
     // 게스트 모드면 로그인 유도 모달 표시
     if (!isAuthenticated) {
       setShowLoginAlert(true);
       return;
     }
-    await createSession();
+    // 세션 생성하지 않고, 현재 세션만 초기화
+    // 실제 세션은 첫 메시지 전송 시 생성됨 (handleSubmit에서 처리)
+    useChatStore.getState().clearCurrentSession();
   };
 
   const handleLoginConfirm = () => {
