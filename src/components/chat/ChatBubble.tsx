@@ -11,10 +11,10 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
   return (
     <div
       className={`flex gap-3 ${
-        isUser ? "flex-row-reverse" : ""
+        isUser ? "flex-row-reverse" : "items-end"
       } animate-slide-up`}
     >
-      {/* Avatar - AI only */}
+      {/* Avatar - AI only (하단 정렬) */}
       {!isUser && (
         <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center overflow-hidden">
           <img src="/assets/images/logo.svg" alt="강냉봇" className="w-5 h-5" />
