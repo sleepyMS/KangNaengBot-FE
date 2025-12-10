@@ -138,7 +138,7 @@ export const Sidebar = () => {
                 className="h-6 w-auto flex-shrink-0"
               />
               <span className="text-sm font-medium text-gray-600 whitespace-nowrap">
-                gangnyeongbot
+                gangnaengbot
               </span>
             </div>
 
