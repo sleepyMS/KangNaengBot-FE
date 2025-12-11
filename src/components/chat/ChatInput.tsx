@@ -90,7 +90,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
             <div className="flex justify-center">
               <button
                 onClick={handleNewChat}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white rounded-full border border-gray-200 text-sm text-gray-600 shadow-sm hover:shadow-input hover:border-primary-300 transition-all"
+                className="new-chat-btn inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 rounded-full border border-gray-200 dark:border-slate-600 text-sm text-gray-600 dark:text-gray-300 shadow-sm transition-all"
               >
                 새 대화 시작하기
                 <Plus size={16} />
@@ -115,7 +115,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
                 onKeyDown={handleKeyDown}
                 placeholder="무엇이든 물어보세요."
                 rows={1}
-                className="flex-1 px-6 py-4 resize-none outline-none text-gray-800 placeholder-gray-400 overflow-y-auto bg-transparent"
+                className="flex-1 px-6 py-4 resize-none outline-none text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 overflow-y-auto bg-transparent"
                 style={{
                   minHeight: `${SINGLE_LINE_HEIGHT}px`,
                   maxHeight: `${MAX_HEIGHT}px`,

@@ -44,7 +44,7 @@ export const CustomDropdown = ({
   return (
     <div className="flex items-center gap-6">
       {label && (
-        <label className="w-16 text-sm text-gray-500 flex-shrink-0">
+        <label className="w-16 text-sm text-gray-500 dark:text-gray-400 flex-shrink-0">
           {label}
         </label>
       )}
@@ -55,19 +55,25 @@ export const CustomDropdown = ({
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
           className={`
-            w-full px-4 py-3 bg-gray-100/80 rounded-xl
+            w-full px-4 py-3 bg-gray-100/80 dark:bg-slate-800 rounded-xl
             flex items-center justify-between
             focus:outline-none focus:ring-2 focus:ring-primary-400/30
             transition-all text-left
             ${
               disabled
                 ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer hover:bg-gray-100"
+                : "cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700"
             }
             ${isOpen ? "ring-2 ring-primary-400/30" : ""}
           `}
         >
-          <span className={value ? "text-gray-800" : "text-gray-400"}>
+          <span
+            className={
+              value
+                ? "text-gray-800 dark:text-gray-100"
+                : "text-gray-400 dark:text-gray-500"
+            }
+          >
             {value || placeholder}
           </span>
           <ChevronDown
@@ -81,15 +87,8 @@ export const CustomDropdown = ({
         {/* 드롭다운 메뉴 */}
         {isOpen && options.length > 0 && (
           <div
-            className="absolute z-50 w-full mt-2 py-2 rounded-xl overflow-hidden animate-fade-in"
+            className="absolute z-50 w-full mt-2 py-2 rounded-xl overflow-hidden animate-fade-in glass-modal"
             style={{
-              background:
-                "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              boxShadow:
-                "0px 4px 24px rgba(0, 0, 0, 0.1), 0px 0px 40px rgba(105, 162, 255, 0.15)",
-              border: "1px solid rgba(255, 255, 255, 0.8)",
               maxHeight: "240px",
               overflowY: "auto",
             }}
@@ -100,13 +99,13 @@ export const CustomDropdown = ({
                 type="button"
                 onClick={() => handleSelect(option)}
                 className={`
-                  w-[calc(100%-8px)] mx-1 px-3 py-2.5 text-left text-sm rounded-lg
+                  dropdown-item w-[calc(100%-8px)] mx-1 px-3 py-2.5 text-left text-sm rounded-lg
                   flex items-center justify-between
                   transition-all duration-150
                   ${
                     value === option
-                      ? "bg-gradient-to-r from-primary-50 to-blue-50 text-primary-600 font-medium"
-                      : "text-gray-700 hover:bg-primary-50 hover:text-primary-600"
+                      ? "bg-gradient-to-r from-primary-500 to-blue-600 text-white font-medium"
+                      : "text-gray-700 dark:text-gray-200 hover:bg-primary-50"
                   }
                 `}
               >

@@ -27,7 +27,9 @@ export const ToastContainer = () => {
           `}
         >
           {icons[toast.type]}
-          <span className="text-sm text-gray-700">{toast.message}</span>
+          <span className="text-sm text-gray-700 dark:text-gray-200">
+            {toast.message}
+          </span>
           <button
             onClick={() => removeToast(toast.id)}
             className="ml-2 p-1 rounded-lg hover:bg-black/5 text-gray-400 hover:text-gray-600 transition-colors"

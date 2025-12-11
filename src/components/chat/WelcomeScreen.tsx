@@ -53,7 +53,7 @@ export const WelcomeScreen = () => {
 
   return (
     <div className="text-center mb-6">
-      <h1 className="text-xl md:text-2xl font-bold text-gray-800 leading-relaxed min-h-[2em]">
+      <h1 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100 leading-relaxed min-h-[2em]">
         {displayedText}
         <span
           className={`inline-block w-0.5 h-7 md:h-8 bg-primary-500 ml-1 align-middle transition-opacity duration-100 ${

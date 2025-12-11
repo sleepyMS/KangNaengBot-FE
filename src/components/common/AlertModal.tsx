@@ -42,25 +42,27 @@ export const AlertModal = ({
 
       {/* Modal */}
       <div
-        className="relative bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 animate-fade-in"
+        className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-sm w-full p-6 animate-fade-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Icon */}
         <div className="flex justify-center mb-4">{icons[type]}</div>
 
         {/* Title */}
-        <h3 className="text-lg font-semibold text-gray-800 text-center mb-2">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 text-center mb-2">
           {title}
         </h3>
 
         {/* Message */}
-        <div className="text-sm text-gray-600 text-center mb-6">{message}</div>
+        <div className="text-sm text-gray-600 dark:text-gray-300 text-center mb-6">
+          {message}
+        </div>
 
         {/* Buttons */}
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 px-4 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors text-sm font-medium"
+            className="flex-1 py-2.5 px-4 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
           >
             {cancelText}
           </button>

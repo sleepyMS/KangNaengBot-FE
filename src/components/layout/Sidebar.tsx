@@ -189,7 +189,7 @@ export const Sidebar = () => {
             {/* Toggle Button - 회전 애니메이션 */}
             <button
               onClick={toggleSidebar}
-              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-all duration-200 flex-shrink-0"
+              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-all duration-200 flex-shrink-0"
             >
               <div
                 className={`transition-transform duration-300 ${
@@ -214,7 +214,7 @@ export const Sidebar = () => {
               <div className="flex items-center justify-between mb-3 gap-2">
                 <button
                   onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-                  className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 whitespace-nowrap flex-shrink-0"
+                  className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 whitespace-nowrap flex-shrink-0"
                 >
                   내 대화 모아보기
                   <ChevronDown
@@ -227,11 +227,11 @@ export const Sidebar = () => {
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <button
                     onClick={handleRefresh}
-                    className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                   >
                     <RefreshCw size={14} />
                   </button>
-                  <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors">
+                  <button className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
                     <MoreHorizontal size={14} />
                   </button>
                 </div>
@@ -297,8 +297,8 @@ export const Sidebar = () => {
                             transition-all duration-200 group cursor-pointer border
                             ${
                               currentSessionId === session.sid
-                                ? "bg-primary-50 text-primary-600 border-primary-200 shadow-sm"
-                                : "border-transparent hover:bg-primary-50/50 text-gray-700"
+                                ? "bg-gradient-to-r from-primary-500 to-blue-600 text-white border-primary-400 shadow-lg"
+                                : "border-transparent hover:bg-primary-50/50 dark:hover:bg-primary-900/20 text-gray-700 dark:text-gray-300"
                             }
                           `}
                         >
@@ -315,7 +315,7 @@ export const Sidebar = () => {
                           {!isMobile && (
                             <button
                               onClick={(e) => handleDeleteClick(e, session.sid)}
-                              className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-200 text-gray-400 hover:text-red-500 transition-all flex-shrink-0"
+                              className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400 hover:text-red-500 transition-all flex-shrink-0"
                             >
                               <Trash2 size={12} />
                             </button>
@@ -384,7 +384,7 @@ export const Sidebar = () => {
             <button
               onClick={() => setIsPopoverOpen(!isPopoverOpen)}
               className={`
-                flex items-center rounded-full
+                user-profile-btn flex items-center rounded-full border border-transparent
                 transition-all duration-300 ease-in-out
                 ${
                   isSidebarOpen
@@ -403,6 +403,7 @@ export const Sidebar = () => {
                       background:
                         "radial-gradient(63.37% 63.37% at 50% 50%, #4E92FF 0%, rgba(78, 146, 255, 0.5) 100%)",
                       boxShadow: "0px 0px 40px 0px rgba(105, 162, 255, 0.24)",
+                      borderColor: "transparent",
                     }
                   : undefined
               }
@@ -411,7 +412,11 @@ export const Sidebar = () => {
                 className={`
                 w-10 h-10 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0
                 transition-colors duration-300 ease-in-out
-                ${isProfileModalOpen ? "bg-white/20" : "bg-gray-100"}
+                ${
+                  isProfileModalOpen
+                    ? "bg-white/20"
+                    : "bg-gray-100 dark:bg-gray-700"
+                }
               `}
               >
                 {user?.picture ? (
@@ -424,7 +429,7 @@ export const Sidebar = () => {
                   <svg
                     className={`${
                       isProfileModalOpen ? "text-white" : "text-gray-400"
-                    } w-8 h-8`}
+                    } w-8 h-8 transition-colors duration-300`}
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -454,7 +459,7 @@ export const Sidebar = () => {
               <div
                 ref={popoverRef}
                 className={`
-                  absolute bg-white rounded-xl shadow-lg border border-gray-100 py-2 min-w-[140px] z-50
+                  absolute glass-modal rounded-xl py-2 min-w-[140px] z-50
                   animate-fade-in
                   ${
                     isSidebarOpen
@@ -468,11 +473,11 @@ export const Sidebar = () => {
                     setIsPopoverOpen(false);
                     openProfileModal();
                   }}
-                  className="w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors group"
+                  className="popover-item w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 transition-colors group"
                 >
                   <Settings
                     size={18}
-                    className="text-gray-500 group-hover:text-primary-500"
+                    className="text-gray-500 dark:text-gray-400 group-hover:text-primary-500"
                   />
                   <span className="text-sm">설정</span>
                 </button>
@@ -482,11 +487,11 @@ export const Sidebar = () => {
                     logout();
                     navigate("/login");
                   }}
-                  className="w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors group"
+                  className="popover-item w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 transition-colors group"
                 >
                   <LogOut
                     size={18}
-                    className="text-gray-500 group-hover:text-primary-500"
+                    className="text-gray-500 dark:text-gray-400 group-hover:text-primary-500"
                   />
                   <span className="text-sm">로그아웃</span>
                 </button>

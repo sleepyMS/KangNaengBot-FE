@@ -1,6 +1,6 @@
 import { useEffect, useRef, useMemo } from "react";
 import { ChatBubble } from "./ChatBubble";
-import { AILoadingSpinner } from "@/components/common";
+import { Spinner } from "@/components/common";
 import { useChatStore } from "@/store";
 import type { MessageItem } from "@/types";
 
@@ -56,7 +56,11 @@ export const MessageList = () => {
   // 게스트 모드에서는 currentSessionId가 null이므로 스피너가 표시되지 않음
   const { currentSessionId } = useChatStore();
   if (isLoading && currentSessionId && filteredMessages.length === 0) {
-    return <AILoadingSpinner />;
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return (
@@ -69,7 +73,7 @@ export const MessageList = () => {
         {/* Loading Indicator - 생각중... */}
         {isSending && (
           <div className="flex gap-3 items-end animate-slide-up">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center overflow-hidden">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-center overflow-hidden">
               <img
                 src="/assets/images/logo.svg"
                 alt="강냉봇"
@@ -77,7 +81,9 @@ export const MessageList = () => {
               />
             </div>
             <div className="bubble-ai flex items-center gap-1">
-              <span className="text-sm text-gray-500">생각중</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                생각중
+              </span>
               <span className="flex gap-0.5 ml-1">
                 <span
                   className="w-1 h-1 bg-primary-400 rounded-full animate-bounce-dot"

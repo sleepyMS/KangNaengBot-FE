@@ -198,8 +198,8 @@ export const SettingsModal = () => {
                   flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all
                   ${
                     activeTab === tab.id
-                      ? "bg-primary-500 text-white"
-                      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                      ? "bg-gradient-to-r from-primary-500 to-blue-600 text-white shadow-md"
+                      : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"
                   }
                 `}
               >
@@ -224,13 +224,7 @@ export const SettingsModal = () => {
 
       {/* Modal */}
       <div
-        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)",
-          backdropFilter: "blur(20px)",
-          boxShadow: "0px 0px 40px 0px rgba(105, 162, 255, 0.24)",
-        }}
+        className="relative w-full max-w-2xl rounded-2xl overflow-hidden glass-modal"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -254,8 +248,8 @@ export const SettingsModal = () => {
                     w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium transition-all
                     ${
                       activeTab === tab.id
-                        ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
-                        : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        ? "bg-gradient-to-r from-primary-500 to-blue-600 text-white shadow-md"
+                        : "text-gray-600 dark:text-gray-400 hover:bg-primary-50/50 dark:hover:bg-primary-900/20 text-gray-700 dark:text-gray-300"
                     }
                   `}
                 >

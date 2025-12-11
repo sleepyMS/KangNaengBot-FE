@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: "class", // 다크 모드를 .dark 클래스로 활성화
   theme: {
     extend: {
       colors: {

@@ -66,14 +66,23 @@ body::before {
 
 /* ========== Dark Mode 시스템 ========== */
 .dark {
-  --color-bg: #0f172a;
-  --color-bg-secondary: #1e293b;
-  --color-bg-tertiary: #334155;
-  --color-text: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-tertiary: #64748b;
+  /* 배경 색상 - 더 세련된 다크 블루 계열 */
+  --color-bg: #0c1222;
+  --color-bg-secondary: #1a2332;
+  --color-bg-tertiary: #243044;
+
+  /* 텍스트 색상 - 가독성 향상 */
+  --color-text: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+
+  /* 보더 색상 */
   --color-border: #334155;
   --color-border-light: #1e293b;
+
+  /* 프라이머리 색상 (다크모드용 밝은 톤) */
+  --color-primary-dark: #60a5fa;
+  --color-primary-glow: rgba(96, 165, 250, 0.25);
 
   color-scheme: dark;
 }
@@ -84,12 +93,12 @@ body::before {
   color: var(--color-text);
 }
 
-/* 다크 모드 배경 객체 */
+/* 다크 모드 배경 객체 - 더 은은한 글로우 */
 .dark body::before {
   background: radial-gradient(
     50% 50% at 50% 50%,
-    rgba(78, 146, 255, 0.15) 0%,
-    rgba(78, 146, 255, 0) 100%
+    rgba(96, 165, 250, 0.12) 0%,
+    rgba(59, 130, 246, 0) 100%
   );
 }
 
@@ -244,6 +253,326 @@ body::before {
     backdrop-filter: blur(32px);
     box-shadow: 0px 0px 40px 0px rgba(105, 162, 255, 0.24);
   }
+
+  /* 모달 글래스 스타일 */
+  .glass-modal {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(248, 250, 252, 0.95) 100%
+    );
+    backdrop-filter: blur(20px);
+    box-shadow: 0px 0px 40px 0px rgba(105, 162, 255, 0.24);
+  }
+}
+
+/* ========== Dark Mode 컴포넌트 스타일 ========== */
+
+/* 다크모드 입력창 */
+.dark .input-chat {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 35, 50, 0.9) 0%,
+    rgba(36, 48, 68, 0.9) 100%
+  );
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  color: #f8fafc;
+  box-shadow: 0px 0px 40px 0px rgba(96, 165, 250, 0.15);
+}
+.dark .input-chat::placeholder {
+  color: #94a3b8;
+}
+
+/* 다크모드 추천 질문 칩 */
+.dark .chip-suggestion {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 35, 50, 0.8) 0%,
+    rgba(36, 48, 68, 0.8) 100%
+  );
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  color: #e2e8f0;
+  box-shadow: 0px 0px 30px 0px rgba(96, 165, 250, 0.12);
+}
+.dark .chip-suggestion:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(36, 48, 68, 0.9) 0%,
+    rgba(51, 65, 85, 0.9) 100%
+  );
+  border-color: rgba(96, 165, 250, 0.4);
+  color: #60a5fa;
+  box-shadow: 0px 0px 40px 0px rgba(96, 165, 250, 0.2);
+}
+
+/* 다크모드 채팅 버블 */
+.dark .bubble-user {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #ffffff;
+}
+.dark .bubble-ai {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 35, 50, 0.95) 0%,
+    rgba(30, 41, 59, 0.95) 100%
+  );
+  color: #f1f5f9;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 다크모드 사이드바 */
+.dark .glass-sidebar {
+  background: rgba(12, 18, 34, 0.85);
+  border-right: 1px solid rgba(51, 65, 85, 0.5);
+  backdrop-filter: blur(20px);
+}
+
+/* 다크모드 글래스 효과 */
+.dark .glass {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 35, 50, 0.8) 0%,
+    rgba(36, 48, 68, 0.8) 100%
+  );
+  border: 1px solid rgba(71, 85, 105, 0.4);
+  backdrop-filter: blur(32px);
+}
+
+/* 다크모드 입력창 컨테이너 */
+.dark .glass-input-container {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 35, 50, 0.9) 0%,
+    rgba(36, 48, 68, 0.9) 100%
+  );
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  box-shadow: 0px 0px 40px 0px rgba(96, 165, 250, 0.15);
+}
+
+/* 다크모드 프로필 버튼 */
+.dark .glass-profile {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 35, 50, 0.8) 0%,
+    rgba(36, 48, 68, 0.8) 100%
+  );
+  border: 1px solid rgba(71, 85, 105, 0.4);
+  box-shadow: 0px 0px 30px 0px rgba(96, 165, 250, 0.12);
+}
+
+/* 다크모드 모달 */
+.dark .glass-modal {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.98) 0%,
+    rgba(30, 41, 59, 0.98) 100%
+  );
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  box-shadow: 0px 0px 40px 0px rgba(96, 165, 250, 0.15);
+}
+
+/* 다크모드 사이드바 토글 버튼 */
+.dark .sidebar-toggle {
+  color: #94a3b8;
+}
+.dark .sidebar-toggle:hover {
+  color: #e2e8f0;
+  background: rgba(51, 65, 85, 0.5);
+}
+
+/* 다크모드 Select 드롭다운 */
+.dark select {
+  background-color: #1a2332;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+.dark select option {
+  background: #1a2332;
+  color: #f1f5f9;
+}
+.dark select option:hover,
+.dark select option:focus,
+.dark select option:checked {
+  background: linear-gradient(180deg, #243044 0%, #334155 100%);
+  color: #60a5fa;
+}
+
+/* 다크모드 테이블 */
+.dark table {
+  color: #e2e8f0;
+}
+.dark thead tr {
+  background: #1e293b !important;
+}
+.dark th {
+  background: #1e293b;
+  color: #f1f5f9;
+  border-color: #475569 !important;
+}
+.dark td {
+  background: transparent;
+  color: #e2e8f0;
+  border-color: #475569 !important;
+}
+.dark tbody tr:nth-child(odd) {
+  background: rgba(30, 41, 59, 0.5);
+}
+.dark tbody tr:nth-child(even) {
+  background: rgba(51, 65, 85, 0.3);
+}
+
+/* 다크모드 컨텐츠 박스 */
+.dark .bg-gray-50 {
+  background: #1e293b !important;
+}
+/* .dark .bg-gray-100 {
+  background: #1e293b !important;
+} */
+.dark .bg-gray-50 h3,
+.dark .bg-gray-100 h3 {
+  color: #f1f5f9;
+}
+.dark .bg-gray-50 li,
+.dark .bg-gray-100 li {
+  color: #cbd5e1;
+}
+.dark .bg-gray-50 p,
+.dark .bg-gray-100 p {
+  color: #cbd5e1;
+}
+
+/* 다크모드 반투명 흰색 배경 */
+.dark .bg-white\/80 {
+  background: rgba(30, 41, 59, 0.9) !important;
+}
+.dark .bg-white\/70 {
+  background: rgba(15, 23, 42, 0.85) !important;
+}
+
+/* 다크모드 텍스트 색상 오버라이드 */
+.dark .text-gray-600 {
+  color: #e2e8f0 !important;
+}
+.dark .text-gray-700 {
+  color: #f1f5f9 !important;
+}
+.dark .text-gray-800 {
+  color: #f8fafc !important;
+}
+.dark .font-semibold.text-gray-700 {
+  color: #f1f5f9 !important;
+}
+
+/* 다크모드 리스트 마커 색상 */
+.dark ul li::marker,
+.dark ol li::marker {
+  color: #94a3b8;
+}
+
+/* 다크모드 strong 태그 */
+.dark strong {
+  color: #f1f5f9;
+}
+
+/* 다크모드 페이지 배경 그라디언트 오버라이드 */
+.dark .from-blue-50 {
+  --tw-gradient-from: #0f172a !important;
+}
+.dark .via-white {
+  --tw-gradient-to: #0f172a !important;
+  --tw-gradient-stops: var(--tw-gradient-from), #0f172a, var(--tw-gradient-to) !important;
+}
+.dark .to-purple-50 {
+  --tw-gradient-to: #1e293b !important;
+}
+.dark .bg-gradient-to-br.from-blue-50 {
+  background: linear-gradient(
+    to bottom right,
+    #0f172a,
+    #0f172a,
+    #1e293b
+  ) !important;
+}
+
+/* 다크모드 팝오버/드롭다운 호버 스타일 */
+.dark .popover-item:hover,
+.dark .dropdown-item:hover {
+  background: linear-gradient(to right, #3b82f6, #2563eb) !important;
+  color: #ffffff !important;
+}
+.dark .popover-item:hover span,
+.dark .dropdown-item:hover span {
+  color: #ffffff !important;
+}
+.dark .popover-item:hover svg,
+.dark .dropdown-item:hover svg {
+  color: #ffffff !important;
+}
+
+/* 다크모드 새 대화 시작하기 버튼 */
+.dark .new-chat-btn {
+  background: linear-gradient(
+    180deg,
+    rgba(30, 41, 59, 0.9) 0%,
+    rgba(51, 65, 85, 0.9) 100%
+  ) !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+.dark .new-chat-btn:hover {
+  /* 배경 유지, 테두리와 쉐도우만 변경 */
+  border-color: #60a5fa !important;
+  box-shadow: 0px 0px 15px 0px rgba(96, 165, 250, 0.25);
+  color: #ffffff !important;
+}
+.dark .new-chat-btn:hover svg {
+  color: #ffffff !important;
+}
+
+/* 다크모드 인풋 필드 개선 */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark textarea {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark textarea:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* 다크모드 드롭다운 트리거 버튼 */
+.dark .bg-gray-100\/80 {
+  background: #1e293b !important;
+}
+
+/* 다크모드 설정 탭 옵션 버튼 (테마, 언어) */
+.dark .bg-white.border-gray-200,
+.dark .border-gray-200.bg-white {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+}
+.dark .bg-white.border-gray-200:hover,
+.dark .border-gray-200.bg-white:hover {
+  border-color: #64748b !important;
+}
+
+/* 다크모드 유저 프로필 버튼 호버 */
+/* 다크모드 유저 프로필 버튼 호버 */
+.dark .user-profile-btn:hover {
+  /* 배경 유지하고 테두리와 쉐도우만 변경 */
+  box-shadow: 0px 0px 15px 0px rgba(96, 165, 250, 0.25);
+  border-color: #60a5fa !important;
+}
+.dark .user-profile-btn:hover span,
+.dark .user-profile-btn:hover svg {
+  color: #ffffff !important;
 }
 
 @layer utilities {
@@ -270,6 +599,21 @@ body::before {
 }
 
 /* Select 드롭다운 스타일 개선 */
+/* ... existing code ... */
+
+/* 다크모드 계정 탭 스타일 강제 적용 */
+.dark .account-email-box {
+  background-color: #0f172a !important; /* slate-900 */
+  border-color: #334155 !important; /* slate-700 */
+}
+.dark .logout-btn {
+  background-color: rgba(69, 10, 10, 0.3) !important; /* red-950/30 */
+  border-color: rgba(127, 29, 29, 0.5) !important; /* red-900/50 */
+  color: #f87171 !important; /* red-400 */
+}
+.dark .logout-btn:hover {
+  background-color: rgba(69, 10, 10, 0.5) !important; /* red-900/50 */
+}
 select {
   background-image: none;
 }

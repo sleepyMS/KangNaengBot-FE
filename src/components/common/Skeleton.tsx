@@ -6,7 +6,7 @@ interface SkeletonProps {
 export const Skeleton = ({ className = "" }: SkeletonProps) => {
   return (
     <div
-      className={`relative overflow-hidden bg-gray-200/80 rounded ${className}`}
+      className={`relative overflow-hidden bg-gray-200/80 dark:bg-gray-700/80 rounded ${className}`}
     >
       <div
         className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite]"
@@ -32,7 +32,7 @@ const AIBubbleSkeleton = ({ lineCount = 3 }: { lineCount?: number }) => {
   return (
     <div className="flex gap-3 items-end">
       {/* AI 아바타 - 로고 자리 */}
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center overflow-hidden">
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-center overflow-hidden">
         <Skeleton className="w-5 h-5 rounded-full" />
       </div>
       {/* 메시지 버블 */}

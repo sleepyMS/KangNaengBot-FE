@@ -47,14 +47,14 @@ export const LoginPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#E8F4FC] to-[#D6EBFA]">
-        <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#E8F4FC] to-[#D6EBFA] dark:from-[#0c1222] dark:to-[#1a2332]">
+        <div className="w-8 h-8 border-4 border-primary-200 dark:border-primary-800 border-t-primary-600 dark:border-t-primary-400 rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#E8F4FC] to-[#D6EBFA]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#E8F4FC] to-[#D6EBFA] dark:from-[#0c1222] dark:to-[#1a2332]">
       {/* Content - 중앙 정렬 */}
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         {/* Logo */}
@@ -64,7 +64,7 @@ export const LoginPage = () => {
             alt="강냉봇 로고"
             className="h-20 md:h-24 mx-auto"
           />
-          <p className="text-lg md:text-xl font-medium text-gray-800">
+          <p className="text-lg md:text-xl font-medium text-gray-800 dark:text-gray-100">
             강남대학교 챗봇, 강냉봇
           </p>
         </div>
@@ -74,7 +74,7 @@ export const LoginPage = () => {
           <>
             <button
               onClick={handleGoogleLogin}
-              className="flex items-center justify-center gap-2 bg-white rounded-full shadow-md px-8 py-3 mt-8 text-gray-700 font-medium hover:shadow-lg transition-shadow duration-200"
+              className="flex items-center justify-center gap-2 bg-white dark:bg-slate-800 rounded-full shadow-md px-8 py-3 mt-8 text-gray-700 dark:text-gray-200 font-medium hover:shadow-lg transition-shadow duration-200"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -98,7 +98,7 @@ export const LoginPage = () => {
             </button>
             <button
               onClick={handleGuestMode}
-              className="mt-4 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              className="mt-4 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
             >
               게스트로 시작하기
             </button>
@@ -111,7 +111,7 @@ export const LoginPage = () => {
         <div className="w-full px-4 pb-16 flex flex-col items-center">
           <button
             onClick={handleGoogleLogin}
-            className="flex items-center justify-center gap-3 w-full bg-white rounded-full shadow-lg px-6 py-4 text-gray-700 font-medium hover:shadow-xl transition-shadow duration-200"
+            className="flex items-center justify-center gap-3 w-full bg-white dark:bg-slate-800 rounded-full shadow-lg px-6 py-4 text-gray-700 dark:text-gray-200 font-medium hover:shadow-xl transition-shadow duration-200"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -135,7 +135,7 @@ export const LoginPage = () => {
           </button>
           <button
             onClick={handleGuestMode}
-            className="mt-4 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            className="mt-4 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
           >
             게스트로 시작하기
           </button>

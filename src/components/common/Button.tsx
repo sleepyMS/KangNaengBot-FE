@@ -26,9 +26,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary:
         "bg-gradient-to-r from-primary-400 to-primary-500 text-white hover:shadow-button focus:ring-primary-400",
       secondary:
-        "bg-white text-gray-700 border border-gray-200 hover:border-primary-300 hover:shadow-input focus:ring-primary-400",
+        "bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:border-primary-300 hover:shadow-input focus:ring-primary-400",
       ghost:
-        "bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-primary-400",
+        "bg-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-primary-400",
       danger:
         "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400 shadow-md",
     };

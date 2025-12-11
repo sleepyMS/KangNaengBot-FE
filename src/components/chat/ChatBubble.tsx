@@ -32,7 +32,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
     >
       {/* Avatar - AI only (하단 정렬) */}
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center overflow-hidden">
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-center overflow-hidden">
           <img src="/assets/images/logo.svg" alt="강냉봇" className="w-5 h-5" />
         </div>
       )}
@@ -49,7 +49,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
             {message.content}
           </p>
         ) : (
-          <div className="prose prose-sm max-w-none prose-p:my-1 prose-headings:mb-2 prose-headings:mt-3 prose-li:my-0.5 prose-ul:my-1 prose-ol:my-1 text-gray-800">
+          <div className="prose prose-sm max-w-none prose-p:my-1 prose-headings:mb-2 prose-headings:mt-3 prose-li:my-0.5 prose-ul:my-1 prose-ol:my-1 text-gray-800 dark:text-gray-100 dark:prose-invert">
             <ReactMarkdown
               components={{
                 a: ({ node, ...props }) => (
@@ -57,7 +57,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
                     {...props}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 hover:decoration-blue-800 transition-colors break-all"
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline decoration-blue-300 dark:decoration-blue-500 hover:decoration-blue-800 dark:hover:decoration-blue-300 transition-colors break-all"
                   />
                 ),
               }}

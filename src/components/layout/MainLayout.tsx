@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { SettingsModal } from "@/components/settings";
-import { useUIStore, useSettingsStore } from "@/store";
+import { useUIStore } from "@/store";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -9,12 +9,6 @@ interface MainLayoutProps {
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
   const { setIsMobile } = useUIStore();
-  const { initializeTheme } = useSettingsStore();
-
-  // 테마 초기화
-  useEffect(() => {
-    initializeTheme();
-  }, [initializeTheme]);
 
   useEffect(() => {
     const handleResize = () => {

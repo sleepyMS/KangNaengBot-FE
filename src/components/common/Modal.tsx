@@ -63,20 +63,19 @@ export const Modal = ({
 
         {/* Bottom Sheet Modal */}
         <div
-          className="relative w-full animate-slide-up"
+          className="relative w-full animate-slide-up bg-white dark:bg-slate-900 rounded-t-3xl"
           style={{
-            background:
-              "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%)",
             backdropFilter: "blur(32px)",
             WebkitBackdropFilter: "blur(32px)",
-            borderRadius: "24px 24px 0 0",
             maxHeight: "85vh",
             boxShadow: "0px -4px 40px 0px rgba(105, 162, 255, 0.24)",
           }}
         >
           {/* 타이틀 - 중앙 정렬 */}
-          <div className="text-center py-4 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-gray-800">프로필</h2>
+          <div className="text-center py-4 border-b border-gray-100 dark:border-gray-700">
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              프로필
+            </h2>
           </div>
 
           {/* 스크롤 가능한 컨텐츠 영역 */}
@@ -101,23 +100,18 @@ export const Modal = ({
       <div
         className={`
           relative w-full ${sizes[size]} 
-          animate-slide-up transform
+          animate-slide-up transform glass
         `}
         style={{
-          background:
-            "linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(242, 247, 250, 0.5) 100%)",
-          backdropFilter: "blur(32px)",
-          WebkitBackdropFilter: "blur(32px)",
           boxShadow: "0px 0px 40px 0px rgba(105, 162, 255, 0.24)",
           borderRadius: "32px",
-          border: "1px solid rgba(255, 255, 255, 0.6)",
           ...(isProfileModal && { minHeight: "500px" }),
         }}
       >
         {/* Close Button - 우상단 */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-white/50 transition-colors z-10"
+          className="absolute top-6 right-6 p-2 rounded-full text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors z-10"
         >
           <X size={20} />
         </button>
@@ -126,7 +120,7 @@ export const Modal = ({
         <div className={`p-8 ${isProfileModal ? "pt-10" : ""}`}>
           {/* Title - profile 모달의 경우 왼쪽에 별도 배치 */}
           {title && !isProfileModal && (
-            <h2 className="text-lg font-semibold text-gray-800 mb-6">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-6">
               {title}
             </h2>
           )}

@@ -148,7 +148,7 @@ export const SwipeableItem = ({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onClick={handleContentClick}
-        className="relative bg-white z-20"
+        className="relative bg-white dark:bg-slate-900 z-20"
         style={{
           transform: `translateX(-${translateX}px)`,
           transition: isDragging ? "none" : "transform 0.3s ease-out",

@@ -84,13 +84,13 @@ export const AccountTab = () => {
         </div>
 
         {/* 이메일 */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-700 rounded-xl">
-          <Mail size={18} className="text-gray-400" />
+        <div className="account-email-box flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-xl">
+          <Mail size={18} className="text-gray-400 dark:text-gray-500" />
           <div>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               {t("settings.account.email")}
             </p>
-            <p className="text-sm text-gray-800 dark:text-gray-100">
+            <p className="text-sm text-gray-800 dark:text-gray-100 font-medium">
               {user?.email}
             </p>
           </div>
@@ -100,7 +100,7 @@ export const AccountTab = () => {
       {/* 로그아웃 버튼 */}
       <button
         onClick={() => setShowLogoutConfirm(true)}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
+        className="logout-btn w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-950/30 border border-transparent dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
       >
         <LogOut size={18} />
         {t("settings.account.logout")}

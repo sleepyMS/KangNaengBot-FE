@@ -3,26 +3,28 @@ import { ArrowLeft } from "lucide-react";
 
 export const PrivacyPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
       {/* Header */}
-      <header className="sticky top-0 z-10 backdrop-blur-lg bg-white/70 border-b border-gray-100">
+      <header className="sticky top-0 z-10 backdrop-blur-lg bg-white/70 dark:bg-slate-900/70 border-b border-gray-100 dark:border-gray-700">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
           <Link
             to="/"
-            className="p-2 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors"
+            className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors"
           >
             <ArrowLeft size={20} />
           </Link>
-          <h1 className="text-lg font-bold text-gray-800">개인정보 처리방침</h1>
+          <h1 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+            개인정보 처리방침
+          </h1>
         </div>
       </header>
 
       {/* Content */}
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 space-y-8">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 md:p-8 space-y-8">
           {/* 개인정보처리방침 개요 */}
-          <section className="bg-blue-50/50 rounded-xl p-4 border border-blue-100">
-            <p className="text-gray-700 leading-relaxed text-sm">
+          <section className="bg-blue-50/50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-100 dark:border-blue-800">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
               <strong>강냉봇</strong>(이하 "서비스")은 「개인정보 보호법」
               제30조에 따라 정보주체(이용자)의 개인정보를 보호하고 이와 관련한
               고충을 신속하고 원활하게 처리할 수 있도록 다음과 같이 개인정보
@@ -32,10 +34,10 @@ export const PrivacyPage = () => {
 
           {/* 제1조: 개인정보 처리 목적 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제1조 (개인정보의 처리 목적)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고
                 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며,
@@ -79,7 +81,7 @@ export const PrivacyPage = () => {
 
           {/* 제2조: 수집하는 개인정보 항목 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제2조 (수집하는 개인정보 항목)
             </h2>
             <div className="text-gray-600 leading-relaxed space-y-4">
@@ -139,8 +141,8 @@ export const PrivacyPage = () => {
                   </tbody>
                 </table>
               </div>
-              <div className="bg-yellow-50/70 rounded-xl p-4 border border-yellow-200 mt-4">
-                <p className="text-yellow-800 text-sm">
+              <div className="bg-yellow-50/70 dark:bg-yellow-900/20 rounded-xl p-4 border border-yellow-200 dark:border-yellow-800 mt-4">
+                <p className="text-yellow-800 dark:text-yellow-200 text-sm">
                   <strong>⚠️ 주의:</strong> 서비스 이용 시 민감한
                   개인정보(주민등록번호, 금융정보, 건강정보, 비밀번호 등)를 AI
                   대화에 입력하지 마시기 바랍니다. 입력된 민감정보에 대한 책임은
@@ -152,10 +154,10 @@ export const PrivacyPage = () => {
 
           {/* 제3조: 개인정보 수집 방법 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제3조 (개인정보의 수집 방법)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>서비스는 다음과 같은 방법으로 개인정보를 수집합니다:</p>
               <ul className="space-y-2 list-decimal list-inside ml-2">
                 <li>
@@ -178,10 +180,10 @@ export const PrivacyPage = () => {
 
           {/* 제4조: 개인정보의 보유 및 이용 기간 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제4조 (개인정보의 보유 및 이용 기간)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 개인정보 수집 및 이용 목적이 달성된 후에는 해당 정보를
                 지체 없이 파기합니다. 다만, 다음의 정보에 대해서는 아래의 이유로
@@ -255,10 +257,10 @@ export const PrivacyPage = () => {
 
           {/* 제5조: 개인정보의 파기 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제5조 (개인정보의 파기 절차 및 방법)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 개인정보 보유 기간의 경과, 처리 목적 달성 등 개인정보가
                 불필요하게 되었을 때에는 지체 없이 해당 개인정보를 파기합니다.
@@ -294,10 +296,10 @@ export const PrivacyPage = () => {
 
           {/* 제6조: 개인정보의 제3자 제공 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제6조 (개인정보의 제3자 제공)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 원칙적으로 이용자의 개인정보를 제1조에서 명시한 목적
                 범위 내에서 처리하며, 정보주체의 사전 동의 없이는 본래의 목적
@@ -326,10 +328,10 @@ export const PrivacyPage = () => {
 
           {/* 제7조: 개인정보 처리의 위탁 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제7조 (개인정보 처리의 위탁)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 원활한 서비스 제공을 위해 다음과 같이 개인정보 처리
                 업무를 위탁하고 있습니다:
@@ -386,15 +388,15 @@ export const PrivacyPage = () => {
 
           {/* 제8조: AI 학습 데이터 처리 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제8조 (AI 학습 데이터 처리)
             </h2>
-            <div className="bg-purple-50/50 rounded-xl p-4 border border-purple-100 mb-4">
-              <p className="text-purple-800 text-sm font-medium">
+            <div className="bg-purple-50/50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-100 dark:border-purple-800 mb-4">
+              <p className="text-purple-800 dark:text-purple-200 text-sm font-medium">
                 🤖 AI 서비스 특화 조항
               </p>
             </div>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <ul className="space-y-3 list-decimal list-inside ml-2">
                 <li>
                   <strong>학습 데이터 활용:</strong> 서비스 품질 향상을 위해
@@ -423,10 +425,10 @@ export const PrivacyPage = () => {
 
           {/* 제9조: 정보주체의 권리 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제9조 (정보주체와 법정대리인의 권리·의무 및 행사 방법)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 정보주체(이용자)는 서비스에 대해 언제든지 다음 각 호의 개인정보
                 보호 관련 권리를 행사할 수 있습니다:
@@ -453,7 +455,7 @@ export const PrivacyPage = () => {
                   삭제
                 </li>
               </ul>
-              <div className="bg-gray-50 rounded-xl p-4 mt-4">
+              <div className="bg-gray-50 dark:bg-slate-700 rounded-xl p-4 mt-4">
                 <h3 className="font-semibold text-gray-700 mb-2">
                   권리 행사 방법
                 </h3>
@@ -488,10 +490,10 @@ export const PrivacyPage = () => {
 
           {/* 제10조: 자동화된 결정에 대한 권리 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제10조 (자동화된 결정에 대한 정보주체의 권리)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 AI를 활용하여 이용자의 질문에 자동으로 응답을
                 생성합니다. 이와 관련하여 정보주체는 다음의 권리를 가집니다:
@@ -518,10 +520,10 @@ export const PrivacyPage = () => {
 
           {/* 제11조: 만 14세 미만 아동 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제11조 (만 14세 미만 아동의 개인정보 처리)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 만 14세 미만의 아동에 대한 개인정보를 수집하지
                 않습니다. 서비스는 대학생 및 대학 관계자를 주요 이용자로 하며,
@@ -536,19 +538,19 @@ export const PrivacyPage = () => {
 
           {/* 제12조: 쿠키 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제12조 (쿠키의 설치·운영 및 거부)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 이용자에게 개별적인 맞춤 서비스를 제공하기 위해
                 이용정보를 저장하고 수시로 불러오는 '쿠키(Cookie)'를 사용합니다.
               </p>
-              <div className="bg-blue-50 rounded-xl p-4 mt-3">
-                <h3 className="font-semibold text-blue-800 mb-2">
+              <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 mt-3">
+                <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
                   사용하는 쿠키
                 </h3>
-                <ul className="space-y-2 text-blue-700 text-sm">
+                <ul className="space-y-2 text-blue-700 dark:text-blue-300 text-sm">
                   <li>
                     <strong>• 인증 토큰 쿠키</strong>
                     <span className="ml-2 text-xs bg-blue-100 px-2 py-0.5 rounded">
@@ -602,10 +604,10 @@ export const PrivacyPage = () => {
 
           {/* 제13조: 안전성 확보 조치 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제13조 (개인정보의 안전성 확보 조치)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 「개인정보 보호법」 제29조에 따라 다음과 같이 안전성
                 확보에 필요한 기술적·관리적·물리적 조치를 하고 있습니다:
@@ -641,16 +643,16 @@ export const PrivacyPage = () => {
 
           {/* 제14조: 개인정보 보호책임자 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제14조 (개인정보 보호책임자)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 서비스는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보
                 처리와 관련한 정보주체의 불만처리 및 피해구제 등을 위하여 아래와
                 같이 개인정보 보호책임자를 지정하고 있습니다.
               </p>
-              <div className="bg-gray-50 rounded-xl p-4 mt-3">
+              <div className="bg-gray-50 dark:bg-slate-700 rounded-xl p-4 mt-3">
                 <h3 className="font-semibold text-gray-700 mb-3">
                   개인정보 보호책임자
                 </h3>
@@ -681,10 +683,10 @@ export const PrivacyPage = () => {
 
           {/* 제15조: 권익침해 구제방법 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제15조 (권익침해 구제방법)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <p>
                 정보주체는 개인정보침해로 인한 구제를 받기 위하여
                 개인정보분쟁조정위원회, 한국인터넷진흥원 개인정보침해신고센터
@@ -752,10 +754,10 @@ export const PrivacyPage = () => {
 
           {/* 제16조: 개인정보 처리방침 변경 */}
           <section>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               제16조 (개인정보 처리방침의 변경)
             </h2>
-            <div className="text-gray-600 leading-relaxed space-y-3">
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
               <ul className="space-y-2 list-decimal list-inside ml-2">
                 <li>
                   이 개인정보처리방침은 시행일로부터 적용되며, 법령 및 방침에
@@ -772,9 +774,11 @@ export const PrivacyPage = () => {
           </section>
 
           {/* 부칙 */}
-          <section className="pt-6 border-t border-gray-200">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">부칙</h2>
-            <div className="text-gray-600 leading-relaxed space-y-2">
+          <section className="pt-6 border-t border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+              부칙
+            </h2>
+            <div className="text-gray-600 dark:text-gray-300 leading-relaxed space-y-2">
               <p>
                 <strong>제1조 (시행일)</strong>
               </p>
@@ -783,11 +787,11 @@ export const PrivacyPage = () => {
           </section>
 
           {/* 개정이력 */}
-          <section className="pt-4 border-t border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">
+          <section className="pt-4 border-t border-gray-100 dark:border-gray-700">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               개정이력
             </h3>
-            <ul className="text-gray-500 text-sm space-y-1">
+            <ul className="text-gray-500 dark:text-gray-400 text-sm space-y-1">
               <li>
                 • 2025년 12월 10일: 개인정보처리방침 전면 개정 (AI 학습 데이터
                 조항 추가, 자동화된 결정 권리 추가, 처리 위탁 상세화)

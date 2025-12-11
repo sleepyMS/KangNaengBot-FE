@@ -1,7 +1,7 @@
 // 로딩 컴포넌트
 export const AILoadingSpinner = () => {
   return (
-    <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
+    <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* 애니메이션 배경 그라데이션 */}
       <div
         className="absolute inset-0 opacity-30"
@@ -128,7 +128,7 @@ export const AILoadingSpinner = () => {
             />
 
             {/* 로고 컨테이너 */}
-            <div className="absolute inset-6 rounded-full bg-white shadow-xl shadow-primary-200/50 flex items-center justify-center border border-white/50">
+            <div className="absolute inset-6 rounded-full bg-white dark:bg-slate-900 shadow-xl shadow-primary-200/50 dark:shadow-primary-900/30 flex items-center justify-center border border-white/50 dark:border-slate-700">
               <img
                 src="/assets/images/logo.svg"
                 alt="강냉봇"
@@ -140,7 +140,7 @@ export const AILoadingSpinner = () => {
 
           {/* 로딩 텍스트 */}
           <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
               <span className="text-sm font-medium tracking-wide">
                 대화를 불러오는 중
               </span>
