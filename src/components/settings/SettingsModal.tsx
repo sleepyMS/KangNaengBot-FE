@@ -219,19 +219,17 @@ export const SettingsModal = () => {
   // 데스크탑 레이아웃
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
-        onClick={closeSettingsModal}
-      />
+      {/* Backdrop - 클릭하여 닫기 */}
+      <div className="absolute inset-0" onClick={closeSettingsModal} />
 
       {/* Modal */}
       <div
-        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden"
+        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl overflow-hidden"
         style={{
           background:
             "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)",
           backdropFilter: "blur(20px)",
+          boxShadow: "0px 0px 40px 0px rgba(105, 162, 255, 0.24)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
