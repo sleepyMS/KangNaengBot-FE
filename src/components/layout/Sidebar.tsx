@@ -240,7 +240,28 @@ export const Sidebar = () => {
               {/* Sessions List */}
               {isHistoryOpen && (
                 <div className="space-y-1">
-                  {sessions.length === 0 ? (
+                  {!isAuthenticated ? (
+                    // 게스트 모드: 로그인 유도
+                    <div className="flex flex-col items-center justify-center py-6 gap-3 text-center">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        로그인하면 대화 기록을
+                        <br />
+                        저장할 수 있어요
+                      </p>
+                      <button
+                        onClick={() => navigate("/login")}
+                        className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all hover:scale-105 active:scale-95"
+                        style={{
+                          background:
+                            "radial-gradient(63.37% 63.37% at 50% 50%, #4E92FF 0%, rgba(78, 146, 255, 0.5) 100%)",
+                          boxShadow:
+                            "0px 0px 24px 0px rgba(105, 162, 255, 0.24)",
+                        }}
+                      >
+                        로그인하기
+                      </button>
+                    </div>
+                  ) : sessions.length === 0 ? (
                     isSessionsLoading ? (
                       <div className="flex flex-col items-center justify-center py-8 gap-3">
                         <Spinner size="md" />
