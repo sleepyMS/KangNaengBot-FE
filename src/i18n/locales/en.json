@@ -153,5 +153,67 @@
       "Ask me about enrollment, graduation requirements, or schedules!",
       "I'm here to help with anything 😊"
     ]
+  },
+  "university": {
+    "college": {
+      "direct": "Directly Under Vice President",
+      "welfare": "Weltech",
+      "management": "Management",
+      "global_culture": "Global Culture",
+      "engineering": "Engineering",
+      "arts_sports": "Arts & Sports",
+      "education": "Education"
+    },
+    "department": {
+      "free_major": "School of Interdisciplinary Studies",
+      "social_welfare": "School of Social Welfare",
+      "senior_business": "Dept of Senior Business",
+      "social_welfare_night": "School of Social Welfare (Night)",
+      "commerce": "School of Business & Economics",
+      "law_admin_tax": "School of Public Admin & Tax",
+      "commerce_night": "School of Business & Economics (Night)",
+      "law_admin_tax_night": "School of Public Admin & Tax (Night)",
+      "culture_contents": "Dept of Cultural Contents",
+      "intl_studies": "Dept of International Area Studies",
+      "china_contents": "Dept of Chinese Contents Business",
+      "christian_comm": "Dept of Christian Communication",
+      "korean_lit": "Dept of Korean Language & Literature",
+      "computer_eng": "School of Computer Engineering",
+      "ai_eng": "School of AI Convergence Engineering",
+      "electronic_semi": "School of Electronic & Semiconductor Eng",
+      "real_estate": "School of Real Estate & Construction",
+      "design": "Dept of Design",
+      "sports": "Dept of Physical Education",
+      "music": "Dept of Music",
+      "education": "Dept of Education",
+      "early_childhood": "Dept of Early Childhood Education",
+      "elem_special_edu": "Dept of Elementary Special Education",
+      "sec_special_edu": "Dept of Secondary Special Education"
+    },
+    "major": {
+      "social_welfare": "Social Welfare Major",
+      "social_service": "Social Service Major",
+      "social_welfare_night": "Social Welfare Major (Night)",
+      "management": "Management Major",
+      "economics": "Economics & Finance Major",
+      "intl_trade": "International Trade Major",
+      "taxation": "Taxation Major",
+      "law_admin": "Public Administration Major",
+      "management_night": "Management Major (Night)",
+      "economics_night": "Economics & Finance Major (Night)",
+      "taxation_night": "Taxation Major (Night)",
+      "law_admin_night": "Public Administration Major (Night)",
+      "korean_foreign": "Korean Language & Lit (Intl)",
+      "software": "Software Major",
+      "meta_game": "Metaverse Game Major",
+      "ai": "Artificial Intelligence Major",
+      "data_science": "Data Science Major",
+      "electronic": "Electronic Engineering Major",
+      "semiconductor": "Semiconductor Engineering Major",
+      "smart_mobility": "Smart Mobility Major",
+      "real_estate": "Real Estate Major",
+      "smart_city": "Smart City Engineering Major",
+      "architectural": "Architectural Engineering Major"
+    }
   }
 }

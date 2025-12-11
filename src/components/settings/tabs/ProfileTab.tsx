@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store";
 import { ChevronDown } from "lucide-react";
 import { CustomDropdown } from "@/components/common";
+import { UNIVERSITY_TRANS_KEYS } from "@/constants/universityTranslation";
 
 // 드롭다운 옵션들 - 강남대학교 단과대학/학부/전공 데이터
 const COLLEGES = [
@@ -134,8 +135,23 @@ export const ProfileTab = ({ isMobile = false }: ProfileTabProps) => {
     }
   };
 
-  const departmentOptions = form.college ? DEPARTMENTS[form.college] || [] : [];
-  const majorOptions = form.department ? MAJORS[form.department] || [] : [];
+  const departmentList = form.college ? DEPARTMENTS[form.college] || [] : [];
+  const majorList = form.department ? MAJORS[form.department] || [] : [];
+
+  // Helper to map string options to objects with translated labels
+  const getTranslatedOptions = (items: string[]) => {
+    return items.map((item) => {
+      const transKey = UNIVERSITY_TRANS_KEYS[item];
+      return {
+        label: transKey ? t(transKey) : item,
+        value: item,
+      };
+    });
+  };
+
+  const collegeOptions = getTranslatedOptions(COLLEGES);
+  const departmentOptions = getTranslatedOptions(departmentList);
+  const majorOptions = getTranslatedOptions(majorList);
 
   const inputStyle =
     "flex-1 min-w-0 px-4 py-3 bg-gray-100/80 dark:bg-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400/30 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 transition-all";
@@ -188,7 +204,7 @@ export const ProfileTab = ({ isMobile = false }: ProfileTabProps) => {
           {/* 단과대학 */}
           <CustomDropdown
             label={t("settings.profile.college")}
-            options={COLLEGES}
+            options={collegeOptions}
             value={form.college}
             onChange={(value) => {
               setForm((prev) => ({
