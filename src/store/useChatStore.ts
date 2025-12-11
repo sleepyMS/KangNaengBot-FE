@@ -17,6 +17,7 @@ interface ChatState {
   fetchSessions: () => Promise<void>;
   createSession: () => Promise<string>;
   selectSession: (sessionId: string, forceRefresh?: boolean) => Promise<void>;
+  prefetchSession: (sessionId: string) => void; // 호버 프리페칭용
   deleteSession: (sessionId: string) => Promise<void>;
   sendMessage: (
     message: string,
@@ -140,6 +141,28 @@ export const useChatStore = create<ChatState>((set, get) => ({
             : "대화 내용을 불러오지 못했습니다.",
       });
     }
+  },
+
+  // 호버 프리페칭: UI 상태 변경 없이 백그라운드에서 데이터 로드
+  prefetchSession: (sessionId: string) => {
+    const { messageCache } = get();
+
+    // 이미 캐시가 있으면 프리페칭 불필요
+    if (messageCache.has(sessionId)) {
+      return;
+    }
+
+    // 백그라운드에서 조용히 데이터 로드
+    sessionsService
+      .getSessionMessages(sessionId)
+      .then((response) => {
+        const newCache = new Map(get().messageCache);
+        newCache.set(sessionId, response.messages);
+        set({ messageCache: newCache });
+      })
+      .catch(() => {
+        // 프리페칭 실패는 무시 (클릭 시 다시 시도됨)
+      });
   },
 
   deleteSession: async (sessionId: string) => {

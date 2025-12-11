@@ -27,6 +27,7 @@ export const Sidebar = () => {
     sessions,
     currentSessionId,
     selectSession,
+    prefetchSession,
     deleteSession,
     fetchSessions,
   } = useChatStore();
@@ -223,6 +224,7 @@ export const Sidebar = () => {
                           role="button"
                           tabIndex={0}
                           onClick={() => handleSelectSession(session.sid)}
+                          onMouseEnter={() => prefetchSession(session.sid)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") {
                               e.preventDefault();

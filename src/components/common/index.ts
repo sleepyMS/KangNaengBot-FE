@@ -5,3 +5,4 @@ export { AlertModal } from "./AlertModal";
 export { CustomDropdown } from "./CustomDropdown";
 export { ToastContainer } from "./ToastContainer";
 export { SwipeableItem } from "./SwipeableItem";
+export { Skeleton, MessageSkeleton } from "./Skeleton";

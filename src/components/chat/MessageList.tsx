@@ -1,14 +1,26 @@
 import { useEffect, useRef } from "react";
 import { ChatBubble } from "./ChatBubble";
+import { MessageSkeleton } from "@/components/common";
 import { useChatStore } from "@/store";
 
 export const MessageList = () => {
-  const { messages, isSending } = useChatStore();
+  const { messages, isSending, isLoading } = useChatStore();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isSending]);
+
+  // 세션 로딩 중일 때 스켈레톤 표시
+  if (isLoading) {
+    return (
+      <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="max-w-3xl mx-auto">
+          <MessageSkeleton />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-6">
