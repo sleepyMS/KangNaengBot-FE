@@ -66,6 +66,7 @@ apiClient.interceptors.response.use(
           apiError.message = "인증이 필요합니다. 다시 로그인해주세요.";
           // 토큰 삭제 및 로그인 페이지 리다이렉트
           removeAccessToken();
+          localStorage.removeItem("auth-storage");
           window.location.href = "/login";
           break;
         case 403:
