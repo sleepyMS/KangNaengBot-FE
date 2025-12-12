@@ -127,7 +127,9 @@
     "newChat": "新对话",
     "send": "发送",
     "loginRequired": "需要登录",
-    "loginRequiredDesc": "请登录以开始新对话。\n您还可以保存通过对话记录！",
+    "loginRequiredDesc": "登录开始新对话。\n对话记录将被保存！",
+    "loginRequiredLine1": "登录开始新对话。",
+    "loginRequiredLine2": "对话记录将被保存！",
     "login": "登录",
     "suggestions": {
       "food": "今天的食堂菜单是什么？",

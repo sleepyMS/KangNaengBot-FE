@@ -117,6 +117,8 @@
       "title": "Language Settings",
       "korean": "한국어",
       "english": "English",
+      "japanese": "日本語",
+      "chinese": "中文",
       "current": "Current Language"
     }
   },
@@ -125,7 +127,9 @@
     "newChat": "Start New Chat",
     "send": "Send",
     "loginRequired": "Login Required",
-    "loginRequiredDesc": "Please sign in to start a new conversation.\nYou can also save your chat history!",
+    "loginRequiredDesc": "Sign in to start new chats.\nYour conversations will be saved!",
+    "loginRequiredLine1": "Sign in to start new chats.",
+    "loginRequiredLine2": "Your conversations will be saved!",
     "login": "Sign In",
     "suggestions": {
       "food": "What's the menu today?",

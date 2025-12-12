@@ -117,6 +117,8 @@
       "title": "언어 설정",
       "korean": "한국어",
       "english": "English",
+      "japanese": "日本語",
+      "chinese": "中文",
       "current": "현재 언어"
     }
   },
@@ -126,6 +128,8 @@
     "send": "전송",
     "loginRequired": "로그인이 필요해요",
     "loginRequiredDesc": "새 대화를 시작하려면 로그인이 필요합니다.\n로그인하면 대화 기록도 저장할 수 있어요!",
+    "loginRequiredLine1": "새 대화를 시작하려면 로그인이 필요합니다.",
+    "loginRequiredLine2": "로그인하면 대화 기록도 저장할 수 있어요!",
     "login": "로그인하기",
     "suggestions": {
       "food": "오늘 학식 뭐야?",

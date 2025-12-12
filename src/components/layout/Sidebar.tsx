@@ -244,10 +244,15 @@ export const Sidebar = () => {
                 <div className="space-y-1">
                   {!isAuthenticated ? (
                     // 게스트 모드: 로그인 유도
-                    <div className="flex flex-col items-center justify-center py-6 gap-3 text-center">
-                      <p className="text-sm text-gray-500 dark:text-gray-400 whitespace-pre-wrap">
-                        {t("chat.loginRequiredDesc")}
-                      </p>
+                    <div className="flex flex-col items-center justify-center py-6 gap-3 text-center overflow-hidden">
+                      <div className="flex flex-col gap-1 text-sm text-gray-500 dark:text-gray-400">
+                        <span className="whitespace-nowrap overflow-hidden">
+                          {t("chat.loginRequiredLine1")}
+                        </span>
+                        <span className="whitespace-nowrap overflow-hidden">
+                          {t("chat.loginRequiredLine2")}
+                        </span>
+                      </div>
                       <button
                         onClick={() => navigate("/login")}
                         className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all hover:scale-105 active:scale-95"

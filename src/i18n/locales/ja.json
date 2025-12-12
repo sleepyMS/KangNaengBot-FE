@@ -127,7 +127,9 @@
     "newChat": "新しいチャット",
     "send": "送信",
     "loginRequired": "ログインが必要です",
-    "loginRequiredDesc": "新しい会話を始めるにはログインしてください。\n会話履歴も保存されます！",
+    "loginRequiredDesc": "ログインして会話を始めましょう。\n履歴も保存されます！",
+    "loginRequiredLine1": "ログインして会話を始めましょう。",
+    "loginRequiredLine2": "履歴も保存されます！",
     "login": "ログイン",
     "suggestions": {
       "food": "今日の学食メニューは？",
