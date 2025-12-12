@@ -20,12 +20,14 @@
 
 ## 🛠 기술 스택 (Tech Stack)
 
-- **Framework**: React 19, TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS
-- **State Management**: Zustand
-- **Data Fetching**: Axios
-- **Internationalization**: i18next (ko, en, ja, zh)
+| 구분 (Category)          | 기술 (Technology)                                                                                                                                                                                      | 설명 (Description)              |
+| :----------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------ |
+| **Framework**            | ![React](https://img.shields.io/badge/React_19-20232A?style=flat&logo=react&logoColor=61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white) | UI 라이브러리 및 정적 타입 언어 |
+| **Build Tool**           | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)                                                                                                                 | 빠른 개발 서버 및 번들링 툴     |
+| **Styling**              | ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)                                                                                          | 유틸리티 퍼스트 CSS 프레임워크  |
+| **State Management**     | ![Zustand](https://img.shields.io/badge/Zustand-orange?style=flat)                                                                                                                                     | 가볍고 직관적인 전역 상태 관리  |
+| **Data Fetching**        | ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white)                                                                                                              | HTTP 클라이언트                 |
+| **Internationalization** | ![i18next](https://img.shields.io/badge/i18next-26A69A?style=flat&logo=i18next&logoColor=white)                                                                                                        | 다국어 지원 (KO, EN, JA, ZH)    |
 
 ## 🚀 시작하기 (Getting Started)
 
