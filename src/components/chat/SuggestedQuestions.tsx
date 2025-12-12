@@ -1,13 +1,47 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useChatStore, useUIStore } from "@/store";
 
+// 질문 키 목록
+const QUESTION_KEYS = [
+  "food",
+  "professor",
+  "office",
+  "graduation",
+  "schedule",
+  "library",
+  "club",
+  "scholarship",
+  "dormitory",
+  "exchange",
+  "lab",
+  "inquiry",
+];
+
+// Fisher-Yates 셔플 알고리즘으로 랜덤 선택
+const getRandomQuestions = (keys: string[], count: number): string[] => {
+  const shuffled = [...keys];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, count);
+};
+
 const useSuggestedQuestions = () => {
-  const { t } = useTranslation();
-  return [
-    { id: "1", text: t("chat.suggestions.food") },
-    { id: "2", text: t("chat.suggestions.professor") },
-    { id: "3", text: t("chat.suggestions.office") },
-  ];
+  const { t, i18n } = useTranslation();
+
+  // 언어가 변경되거나 컴포넌트가 마운트될 때만 새로운 랜덤 질문 선택
+  const questions = useMemo(() => {
+    const randomKeys = getRandomQuestions(QUESTION_KEYS, 3);
+    return randomKeys.map((key, index) => ({
+      id: String(index + 1),
+      text: t(`chat.suggestions.${key}`),
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n.language]); // 언어 변경 시에만 재계산
+
+  return questions;
 };
 
 // 모바일에서 비눗방울 레이아웃을 위한 위치 스타일 (컨테이너 기준)

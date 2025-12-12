@@ -133,8 +133,17 @@
     "login": "登录",
     "suggestions": {
       "food": "今天的食堂菜单是什么？",
-      "professor": "告诉我关于洪吉童教授的课",
-      "office": "行政室在哪里？"
+      "professor": "告诉我关于教授的课程",
+      "office": "教务处在哪里？",
+      "graduation": "毕业要求是什么？",
+      "schedule": "选课日程是什么时候？",
+      "library": "图书馆营业时间是？",
+      "club": "推荐一下专业社团",
+      "scholarship": "如何申请奖学金？",
+      "dormitory": "如何申请宿舍？",
+      "exchange": "有交换生项目吗？",
+      "lab": "教授的研究室在哪里？",
+      "inquiry": "不知道应该咨询哪里"
     }
   },
   "sidebar": {

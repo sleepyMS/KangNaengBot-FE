@@ -133,8 +133,17 @@
     "login": "로그인하기",
     "suggestions": {
       "food": "오늘 학식 뭐야?",
-      "professor": "홍길동 교수님 수업 알려줘",
-      "office": "행정실이 어디야?"
+      "professor": "교수님 수업 알려줘",
+      "office": "교학팀이 어디야?",
+      "graduation": "졸업요건이 어떻게 돼?",
+      "schedule": "수강신청 일정 알려줘",
+      "library": "도서관 운영시간 알려줘",
+      "club": "전공 동아리 추천해줘",
+      "scholarship": "장학금 신청 방법 알려줘",
+      "dormitory": "기숙사 신청은 어떻게 해?",
+      "exchange": "교환학생 프로그램이 있어?",
+      "lab": "교수님 연구실 위치를 알려줘",
+      "inquiry": "어디에 문의를 해야 할지 모르겠어"
     }
   },
   "sidebar": {

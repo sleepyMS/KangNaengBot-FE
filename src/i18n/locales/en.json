@@ -133,8 +133,17 @@
     "login": "Sign In",
     "suggestions": {
       "food": "What's the menu today?",
-      "professor": "Tell me about Prof. Hong's class",
-      "office": "Where is the admin office?"
+      "professor": "Tell me about the professor's class",
+      "office": "Where is the academic affairs office?",
+      "graduation": "What are the graduation requirements?",
+      "schedule": "When is course registration?",
+      "library": "What are the library hours?",
+      "club": "Recommend me a major club",
+      "scholarship": "How do I apply for scholarships?",
+      "dormitory": "How do I apply for dormitory?",
+      "exchange": "Are there exchange programs?",
+      "lab": "Where is the professor's office?",
+      "inquiry": "I don't know who to contact"
     }
   },
   "sidebar": {
