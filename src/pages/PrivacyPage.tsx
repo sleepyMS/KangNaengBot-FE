@@ -668,10 +668,10 @@ export const PrivacyPage = () => {
                     <strong>서비스명:</strong> 강냉봇 (GangNaengBot)
                   </p>
                   <p>
-                    <strong>담당:</strong> 개인정보 보호 담당
+                    <strong>책임자:</strong> 홍기현
                   </p>
                   <p>
-                    <strong>이메일:</strong> privacy@gangnaengbot.com
+                    <strong>이메일:</strong> kpj45123@gmail.com
                   </p>
                   <p>
                     <strong>문의 가능 시간:</strong> 평일 09:00 ~ 18:00 (공휴일

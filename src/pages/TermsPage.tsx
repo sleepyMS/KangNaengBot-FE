@@ -547,7 +547,10 @@ export const TermsPage = () => {
                   <strong>서비스명:</strong> 강냉봇 (GangNaengBot)
                 </p>
                 <p>
-                  <strong>이메일:</strong> contact@gangnengbot.com
+                  <strong>책임자:</strong> 홍기현
+                </p>
+                <p>
+                  <strong>이메일:</strong> kpj45123@gmail.com
                 </p>
                 <p>
                   <strong>운영시간:</strong> 평일 09:00 - 18:00 (공휴일 제외)
