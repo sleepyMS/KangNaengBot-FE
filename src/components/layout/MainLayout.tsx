@@ -5,6 +5,7 @@ import { LanguageSwitcher } from "@/components/common";
 import { useUIStore } from "@/store";
 import { MessageSquarePlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   const { t } = useTranslation();
   const { setIsMobile, isMobile, isSidebarOpen, openSettingsModal } =
     useUIStore();
+  const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,6 +26,10 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [setIsMobile]);
+
+  // 모바일에서 채팅 세션 페이지(/chat/...)일 때는 언어 전환 버튼 숨김
+  const isChatSession = location.pathname.startsWith("/chat/");
+  const showLanguageSwitcher = !(isMobile && isChatSession);
 
   return (
     <div className="flex h-screen overflow-hidden dark:bg-slate-900 transition-colors">
@@ -45,7 +51,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             <MessageSquarePlus size={18} />
             <span>{t("settings.tabs.feedback")}</span>
           </button>
-          <LanguageSwitcher />
+          {showLanguageSwitcher && <LanguageSwitcher />}
         </div>
         {children}
       </main>
