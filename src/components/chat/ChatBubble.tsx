@@ -45,11 +45,11 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
         `}
       >
         {isUser ? (
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">
+          <p className="text-base leading-relaxed whitespace-pre-wrap">
             {message.content}
           </p>
         ) : (
-          <div className="prose prose-sm max-w-none prose-p:my-1 prose-headings:mb-2 prose-headings:mt-3 prose-li:my-0.5 prose-ul:my-1 prose-ol:my-1 text-gray-800 dark:text-gray-100 dark:prose-invert">
+          <div className="text-base prose max-w-none prose-p:my-1 prose-headings:mb-2 prose-headings:mt-3 prose-li:my-0.5 prose-ul:my-1 prose-ol:my-1 text-gray-800 dark:text-gray-100 dark:prose-invert">
             <ReactMarkdown
               components={{
                 a: ({ node, ...props }) => (
