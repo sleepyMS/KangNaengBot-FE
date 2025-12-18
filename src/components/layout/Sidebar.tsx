@@ -306,7 +306,7 @@ export const Sidebar = () => {
                             ${
                               currentSessionId === session.sid
                                 ? "bg-gradient-to-r from-primary-500 to-blue-600 text-white border-primary-400 shadow-lg"
-                                : "border-transparent hover:bg-primary-50/50 dark:hover:bg-primary-900/20 text-gray-700 dark:text-gray-300"
+                                : "border-transparent hover:bg-[rgba(78,146,255,0.3)] dark:hover:bg-primary-900/20 text-gray-700 dark:text-gray-300"
                             }
                           `}
                         >
