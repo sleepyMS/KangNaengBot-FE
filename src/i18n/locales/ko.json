@@ -84,6 +84,7 @@
       "login": "로그인에 실패했습니다.",
       "profileLoad": "프로필을 불러오지 못했습니다.",
       "profileSave": "프로필 저장에 실패했습니다.",
+      "deleteAccount": "회원탈퇴에 실패했습니다.",
       "emptyResponseFallback": "죄송해요, 질문을 이해하지 못했어요. 다른 방식으로 다시 질문해 주시겠어요? 🙏"
     }
   },
@@ -126,7 +127,10 @@
       "logoutConfirm": "정말 로그아웃 하시겠습니까?",
       "guestMode": "게스트 모드",
       "guestDescription": "로그인하면 대화 기록을 저장할 수 있어요",
-      "login": "로그인"
+      "login": "로그인",
+      "deleteAccount": "회원 탈퇴",
+      "deleteAccountConfirm": "정말로 탈퇴하시겠습니까? 모든 데이터가 삭제되며 복구할 수 없습니다.",
+      "deleteAccountSuccess": "회원탈퇴가 완료되었습니다."
     },
     "theme": {
       "title": "테마 설정",

@@ -45,3 +45,11 @@ export const generateTestToken = async (
   });
   return response.data;
 };
+
+/**
+ * 회원 탈퇴 (Soft Delete)
+ */
+export const deleteMe = async (): Promise<string> => {
+  const response = await apiClient.delete<string>("/auth/me");
+  return response.data;
+};

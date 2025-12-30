@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { AlertTriangle, Info, CheckCircle } from "lucide-react";
+import { AlertTriangle, Info, CheckCircle, XCircle } from "lucide-react";
 
-type AlertType = "info" | "warning" | "success";
+type AlertType = "info" | "warning" | "success" | "danger";
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -18,6 +18,7 @@ const icons: Record<AlertType, ReactNode> = {
   info: <Info className="w-12 h-12 text-primary-500" />,
   warning: <AlertTriangle className="w-12 h-12 text-amber-500" />,
   success: <CheckCircle className="w-12 h-12 text-green-500" />,
+  danger: <XCircle className="w-12 h-12 text-red-500" />,
 };
 
 export const AlertModal = ({
@@ -68,7 +69,11 @@ export const AlertModal = ({
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-primary-500 text-white hover:bg-primary-600 transition-colors text-sm font-medium"
+            className={`flex-1 py-2.5 px-4 rounded-xl text-white transition-colors text-sm font-medium ${
+              type === "danger"
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-primary-500 hover:bg-primary-600"
+            }`}
           >
             {confirmText}
           </button>

@@ -84,6 +84,7 @@
       "login": "Login failed.",
       "profileLoad": "Failed to load profile.",
       "profileSave": "Failed to save profile.",
+      "deleteAccount": "Failed to delete account.",
       "emptyResponseFallback": "Sorry, I couldn't understand your question. Could you please rephrase it? 🙏"
     }
   },
@@ -126,7 +127,10 @@
       "logoutConfirm": "Are you sure you want to log out?",
       "guestMode": "Guest Mode",
       "guestDescription": "Sign in to save your chat history",
-      "login": "Login"
+      "login": "Login",
+      "deleteAccount": "Delete Account",
+      "deleteAccountConfirm": "Are you sure you want to delete your account? All data will be permanently deleted and cannot be recovered.",
+      "deleteAccountSuccess": "Account deleted successfully."
     },
     "theme": {
       "title": "Theme Settings",

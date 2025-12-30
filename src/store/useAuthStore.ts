@@ -19,6 +19,7 @@ interface AuthState {
   setProfile: (profile: ProfileResponse | null) => void;
   login: (accessToken: string) => Promise<void>;
   logout: () => void;
+  deleteAccount: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (profile: Partial<ProfileResponse>) => Promise<void>;
   clearError: () => void;
@@ -77,6 +78,30 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           error: null,
         });
+      },
+
+      deleteAccount: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          await authService.deleteMe();
+          removeAccessToken();
+          useChatStore.getState().reset();
+          set({
+            user: null,
+            profile: null,
+            isAuthenticated: false,
+            isLoading: false,
+          });
+        } catch (error) {
+          set({
+            isLoading: false,
+            error:
+              error instanceof Error
+                ? error.message
+                : i18n.t("store.error.deleteAccount"),
+          });
+          throw error;
+        }
       },
 
       fetchProfile: async () => {
