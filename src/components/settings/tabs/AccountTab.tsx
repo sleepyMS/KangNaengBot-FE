@@ -15,8 +15,8 @@ export const AccountTab = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     closeSettingsModal();
     if (!isMobile) {
       addToast("success", t("auth.logoutSuccess"));

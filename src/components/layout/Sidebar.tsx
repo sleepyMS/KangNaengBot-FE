@@ -571,13 +571,13 @@ export const Sidebar = () => {
                   <span className="text-sm">{t("settings.tabs.feedback")}</span>
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setIsPopoverOpen(false);
                     if (!isAuthenticated) {
                       navigate("/login");
                       return;
                     }
-                    logout();
+                    await logout();
                     if (!isMobile) {
                       addToast("success", t("auth.logoutSuccess"));
                     }

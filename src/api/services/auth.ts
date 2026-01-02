@@ -53,3 +53,23 @@ export const deleteMe = async (): Promise<string> => {
   const response = await apiClient.delete<string>("/auth/me");
   return response.data;
 };
+
+/**
+ * Refresh Token으로 새 토큰 발급 (Sliding Session)
+ * HttpOnly 쿠키로 전송되는 Refresh Token을 사용
+ */
+export const refreshToken = async (): Promise<{
+  access_token: string;
+  token_type: string;
+}> => {
+  const response = await apiClient.post("/auth/refresh");
+  return response.data;
+};
+
+/**
+ * 로그아웃 - 서버의 Refresh Token 쿠키 삭제
+ */
+export const logout = async (): Promise<{ message: string }> => {
+  const response = await apiClient.post("/auth/logout");
+  return response.data;
+};

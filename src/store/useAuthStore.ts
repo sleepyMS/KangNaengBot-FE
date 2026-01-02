@@ -18,7 +18,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setProfile: (profile: ProfileResponse | null) => void;
   login: (accessToken: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (profile: Partial<ProfileResponse>) => Promise<void>;
@@ -69,7 +69,8 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      logout: () => {
+      logout: async () => {
+        // 1. 먼저 클라이언트 상태 정리 (중복 API 호출 방지)
         removeAccessToken();
         useChatStore.getState().reset();
         set({
@@ -78,6 +79,13 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           error: null,
         });
+
+        // 2. 서버에서 Refresh Token 쿠키 삭제 (백그라운드)
+        try {
+          await authService.logout();
+        } catch {
+          // 로그아웃 API 실패해도 클라이언트는 이미 정리됨
+        }
       },
 
       deleteAccount: async () => {
