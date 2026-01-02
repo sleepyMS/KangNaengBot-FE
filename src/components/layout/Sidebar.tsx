@@ -15,7 +15,7 @@ import {
   MessageSquarePlus,
 } from "lucide-react";
 import { useUIStore, useChatStore, useAuthStore, useToastStore } from "@/store";
-import { AlertModal, SwipeableItem, Spinner } from "@/components/common";
+import { AlertModal, Spinner } from "@/components/common";
 import { UNIVERSITY_TRANS_KEYS } from "@/constants/universityTranslation";
 
 export const Sidebar = () => {
@@ -111,11 +111,6 @@ export const Sidebar = () => {
 
   const handleDeleteClick = (e: React.MouseEvent, sessionId: string) => {
     e.stopPropagation();
-    setDeleteTargetId(sessionId);
-  };
-
-  // 모바일 스와이프 삭제용
-  const handleMobileDelete = (sessionId: string) => {
     setDeleteTargetId(sessionId);
   };
 
@@ -371,22 +366,26 @@ export const Sidebar = () => {
                               <Trash2 size={12} />
                             </button>
                           )}
+                          {/* 모바일: 항상 표시되는 더보기 버튼 */}
+                          {isMobile && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteClick(e, session.sid);
+                              }}
+                              className={`p-1.5 rounded-lg transition-all flex-shrink-0 ${
+                                currentSessionId === session.sid
+                                  ? "hover:bg-white/20 text-white/70 hover:text-white"
+                                  : "hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400 hover:text-red-500"
+                              }`}
+                            >
+                              <MoreHorizontal size={16} />
+                            </button>
+                          )}
                         </div>
                       );
 
-                      // 모바일: SwipeableItem으로 래핑
-                      // 데스크톱: 그대로 렌더링
-                      return isMobile ? (
-                        <SwipeableItem
-                          key={session.sid}
-                          onDelete={() => handleMobileDelete(session.sid)}
-                          resetTrigger={isSidebarOpen}
-                        >
-                          {sessionContent}
-                        </SwipeableItem>
-                      ) : (
-                        <div key={session.sid}>{sessionContent}</div>
-                      );
+                      return <div key={session.sid}>{sessionContent}</div>;
                     })
                   )}
                 </div>
