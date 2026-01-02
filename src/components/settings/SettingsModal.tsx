@@ -200,7 +200,7 @@ export const SettingsModal = () => {
 
           {/* Tab Navigation - 중앙 정렬 */}
           <div className="flex justify-center w-full border-b border-gray-100 dark:border-slate-800">
-            <div className="flex gap-2 px-4 pt-2 pb-4 overflow-x-auto scrollbar-hide max-w-full">
+            <div className="flex gap-2 px-4 pt-4 pb-4 overflow-x-auto scrollbar-hide max-w-full">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
