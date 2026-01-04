@@ -2,7 +2,7 @@
 
 # 주요 구현 기능 (Features)
 
-현재 프로젝트인 **GangNaengBot-FE**에 구현된 주요 기능과 구현 방식에 대한 상세 설명입니다.
+현재 프로젝트인 **KangNaengBot-FE**에 구현된 주요 기능과 구현 방식에 대한 상세 설명입니다.
 
 ## 1. 채팅 시스템 (Chat System)
 

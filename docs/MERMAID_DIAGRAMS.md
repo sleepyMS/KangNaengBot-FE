@@ -8,7 +8,7 @@
 graph LR
     User((👤 User))
 
-    subgraph Client ["🖥️ GangNaengBot Client"]
+    subgraph Client ["🖥️ KangNaengBot Client"]
         Page["📄 Page/Component"]
         Store["📦 Zustand Store"]
         API["🔌 Axios Client"]

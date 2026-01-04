@@ -204,7 +204,7 @@ export const Sidebar = () => {
                 className="h-9 w-auto flex-shrink-0"
               />
               <span className="text-sm font-medium text-gray-600 whitespace-nowrap leading-none">
-                gangnaengbot
+                kangnaengbot
               </span>
             </div>
 
