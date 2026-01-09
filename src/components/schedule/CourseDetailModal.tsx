@@ -11,14 +11,6 @@ interface CourseDetailModalProps {
   onClose: () => void;
 }
 
-const DAY_MAP: Record<Day, string> = {
-  mon: "월",
-  tue: "화",
-  wed: "수",
-  thu: "목",
-  fri: "금",
-};
-
 export const CourseDetailModal = ({
   course,
   onClose,
@@ -26,6 +18,14 @@ export const CourseDetailModal = ({
   const { t } = useTranslation();
 
   if (!course) return null;
+
+  const DAY_MAP: Record<Day, string> = {
+    mon: t("schedule.days.mon"),
+    tue: t("schedule.days.tue"),
+    wed: t("schedule.days.wed"),
+    thu: t("schedule.days.thu"),
+    fri: t("schedule.days.fri"),
+  };
 
   // 시간 문자열 생성
   const getTimeString = () => {
@@ -131,7 +131,8 @@ export const CourseDetailModal = ({
                 {t("schedule.detail.credits")}
               </div>
               <div className="text-sm font-medium text-gray-900 dark:text-white">
-                {course.credits}학점
+                {course.credits}
+                {t("schedule.canvas.credits")}
               </div>
             </div>
           </div>

@@ -795,7 +795,135 @@
       "graduation": "졸업요건 알려줘",
       "building": "심전산학관이 어디야?",
       "majorCredits": "전공학점 얼마나 채워야 해?",
-      "liberalCredits": "균형교양 학점 얼마나 들어야 해?"
+      "liberalCredits": "교양학점 얼마나 채워야 해?"
+    }
+  },
+  "schedule": {
+    "title": "시간표 생성",
+    "desc": "듣고 싶은 과목을 말하면 AI가 시간표를 만들어드려요!",
+    "examples": {
+      "title": "이렇게 물어보세요:",
+      "ex1": "월, 수 공강으로 시간표 짜줘",
+      "ex2": "전공 필수 포함해서 18학점 맞춰줘",
+      "ex3": "오전 수업 위주로 추천해줘"
+    },
+    "generate": "시간표 생성하기",
+    "viewSaved": "보관함",
+    "retry": "다시 시도",
+    "createSchedule": "시간표 만들기",
+    "createScheduleDesc": "AI가 최적의 시간표를 만들어드려요",
+    "exitMode": "시간표 모드 종료",
+    "exitModeDesc": "일반 대화로 돌아가기",
+    "modeActive": "시간표 모드",
+    "inputPlaceholder": "듣고 싶은 과목을 입력하세요",
+    "days": {
+      "mon": "월",
+      "tue": "화",
+      "wed": "수",
+      "thu": "목",
+      "fri": "금"
+    },
+    "filter": {
+      "title": "필터 설정",
+      "emptyDays": "공강 요일",
+      "excludeTime": "제외 시간대 (클릭해서 선택)",
+      "reset": "초기화",
+      "apply": "적용",
+      "emptyDay": "공강 요일",
+      "time": "제외할 교시 설정 (전 요일 공통)",
+      "excludeMorning": "1교시(09:00) 수업 제외",
+      "timeDesc": "선택한 교시는 시간표 생성에서 제외됩니다.",
+      "periods": "교시",
+      "noResults": "조건에 맞는 시간표가 없어요 😢",
+      "autoApplyInfo": "선택한 조건은 즉시 반영돼요!"
+    },
+    "grid": {
+      "time": "시간",
+      "credit": "학점",
+      "professor": "교수",
+      "location": "강의실"
+    },
+    "status": {
+      "generating": "시간표를 생성하고 있어요...",
+      "noResults": "조건에 맞는 시간표가 없습니다.",
+      "error": "시간표 생성 중 오류가 발생했습니다.",
+      "idle": "과목을 입력해주세요",
+      "parsing": "과목을 찾고 있어요...",
+      "confirming": "과목을 확인해주세요",
+      "complete": "시간표가 완성됐어요!"
+    },
+    "generating": {
+      "analyzing": "최적의 조합을 분석하고 있어요..."
+    },
+    "save": {
+      "title": "시간표 저장",
+      "placeholder": "시간표 이름을 입력하세요",
+      "success": "시간표가 저장되었습니다.",
+      "error": "저장에 실패했습니다.",
+      "confirm": "저장",
+      "overwrite": "이미 같은 이름의 시간표가 있습니다. 덮어쓰시겠습니까?"
+    },
+    "delete": {
+      "confirm": "정말 삭제하시겠습니까?",
+      "success": "삭제되었습니다."
+    },
+    "generated": {
+      "title": "생성된 시간표",
+      "subtitle": "총 {{count}}개의 시간표가 생성되었습니다.",
+      "prev": "이전",
+      "next": "다음"
+    },
+    "saved": {
+      "title": "내 보관함",
+      "empty": "저장된 시간표가 없습니다.",
+      "load": "불러오기",
+      "delete": "삭제"
+    },
+    "course": {
+      "detail": "과목 상세 정보",
+      "code": "학수번호",
+      "credit": "학점",
+      "prof": "교수님",
+      "time": "시간",
+      "loc": "강의실"
+    },
+    "confirm": {
+      "title": "이 과목들이 맞나요?",
+      "matched": "찾은 과목",
+      "ambiguous": "선택 필요",
+      "notFound": "찾지 못한 과목",
+      "selectClass": "분반 선택",
+      "modify": "수정하기",
+      "generate": "이대로 생성하기"
+    },
+    "canvas": {
+      "title": "시간표 미리보기",
+      "open": "Canvas로 열기",
+      "close": "닫기",
+      "save": "이미지 저장",
+      "share": "공유",
+      "prev": "이전",
+      "next": "다음",
+      "credits": "학점",
+      "emptyDay": "공강",
+      "noSchedule": "생성된 시간표가 없습니다",
+      "shareTitle": "내 시간표",
+      "shareText": "강냉봇으로 만든 시간표예요!",
+      "linkCopied": "링크가 복사되었습니다"
+    },
+    "error": {
+      "noCourseFound": "입력하신 과목을 찾지 못했어요. 다시 입력해주세요.",
+      "parseFailed": "과목 정보를 불러오는데 실패했어요.",
+      "noCoursesSelected": "선택된 과목이 없어요.",
+      "generationFailed": "시간표 생성에 실패했어요. 다시 시도해주세요.",
+      "allConflict": "모든 과목이 충돌해요. 다른 과목을 선택해주세요."
+    },
+    "detail": {
+      "professor": "담당 교수",
+      "time": "수업 시간",
+      "location": "강의실",
+      "credits": "학점",
+      "enrollment": "수강 인원"
     }
   },
   "sidebar": {
@@ -888,82 +1016,6 @@
       "real_estate": "부동산학전공",
       "smart_city": "스마트도시공학전공",
       "architectural": "건축공학전공"
-    }
-  },
-  "schedule": {
-    "createSchedule": "시간표 만들기",
-    "createScheduleDesc": "AI가 최적의 시간표를 만들어드려요",
-    "exitMode": "시간표 모드 종료",
-    "exitModeDesc": "일반 대화로 돌아가기",
-    "modeActive": "시간표 모드",
-    "inputPlaceholder": "듣고 싶은 과목을 입력하세요",
-    "status": {
-      "idle": "과목을 입력해주세요",
-      "parsing": "과목을 찾고 있어요...",
-      "confirming": "과목을 확인해주세요",
-      "generating": "시간표를 만들고 있어요...",
-      "complete": "시간표가 완성됐어요!",
-      "error": "문제가 발생했어요"
-    },
-    "generating": {
-      "analyzing": "최적의 조합을 분석하고 있어요..."
-    },
-    "days": {
-      "mon": "월",
-      "tue": "화",
-      "wed": "수",
-      "thu": "목",
-      "fri": "금"
-    },
-    "confirm": {
-      "title": "이 과목들이 맞나요?",
-      "matched": "찾은 과목",
-      "ambiguous": "선택 필요",
-      "notFound": "찾지 못한 과목",
-      "selectClass": "분반 선택",
-      "modify": "수정하기",
-      "generate": "이대로 생성하기"
-    },
-    "canvas": {
-      "title": "시간표 미리보기",
-      "open": "Canvas로 열기",
-      "close": "닫기",
-      "save": "이미지 저장",
-      "share": "공유",
-      "prev": "이전",
-      "next": "다음",
-      "credits": "학점",
-      "emptyDay": "공강",
-      "noSchedule": "생성된 시간표가 없습니다",
-      "shareTitle": "내 시간표",
-      "shareText": "강냉봇으로 만든 시간표예요!",
-      "linkCopied": "링크가 복사되었습니다"
-    },
-    "error": {
-      "noCourseFound": "입력하신 과목을 찾지 못했어요. 다시 입력해주세요.",
-      "parseFailed": "과목 정보를 불러오는데 실패했어요.",
-      "noCoursesSelected": "선택된 과목이 없어요.",
-      "generationFailed": "시간표 생성에 실패했어요. 다시 시도해주세요.",
-      "allConflict": "모든 과목이 충돌해요. 다른 과목을 선택해주세요."
-    },
-    "detail": {
-      "professor": "담당 교수",
-      "time": "수업 시간",
-      "location": "강의실",
-      "credits": "학점",
-      "enrollment": "수강 인원"
-    },
-    "filter": {
-      "title": "필터 설정",
-      "emptyDay": "공강 요일",
-      "time": "제외할 교시 설정 (전 요일 공통)",
-      "excludeMorning": "1교시(09:00) 수업 제외",
-      "timeDesc": "선택한 교시는 시간표 생성에서 제외됩니다.",
-      "periods": "교시",
-      "apply": "필터 적용하여 다시 생성",
-      "noResults": "조건에 맞는 시간표가 없어요 😢",
-      "reset": "필터 초기화",
-      "autoApplyInfo": "선택한 조건은 즉시 반영돼요!"
     }
   }
 }

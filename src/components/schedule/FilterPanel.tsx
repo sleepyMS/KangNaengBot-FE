@@ -2,34 +2,42 @@
  * 시간표 필터 패널
  * 공강 요일 및 특정 시간대 제외 설정
  */
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Filter } from "lucide-react";
 import { useScheduleStore } from "@/store";
 import type { Day } from "@/types";
-
-const DAYS: { id: Day; label: string }[] = [
-  { id: "mon", label: "월" },
-  { id: "tue", label: "화" },
-  { id: "wed", label: "수" },
-  { id: "thu", label: "목" },
-  { id: "fri", label: "금" },
-];
-
-// 시간 슬롯 (09:00 ~ 20:00, 12개)
-const TIME_HOURS = Array.from({ length: 12 }, (_, i) => {
-  const hour = i + 9;
-  return {
-    startTime: `${hour.toString().padStart(2, "0")}:00`,
-    endTime: `${(hour + 1).toString().padStart(2, "0")}:00`,
-    label: `${hour}시`,
-  };
-});
 
 const ALL_DAYS: Day[] = ["mon", "tue", "wed", "thu", "fri"];
 
 export const FilterPanel = () => {
   const { t } = useTranslation();
   const { filters, setFilters } = useScheduleStore();
+
+  const DAYS: { id: Day; label: string }[] = useMemo(
+    () => [
+      { id: "mon", label: t("schedule.days.mon") },
+      { id: "tue", label: t("schedule.days.tue") },
+      { id: "wed", label: t("schedule.days.wed") },
+      { id: "thu", label: t("schedule.days.thu") },
+      { id: "fri", label: t("schedule.days.fri") },
+    ],
+    [t]
+  );
+
+  // 시간 슬롯 (09:00 ~ 20:00, 12개)
+  const TIME_HOURS = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, i) => {
+        const hour = i + 9;
+        return {
+          startTime: `${hour.toString().padStart(2, "0")}:00`,
+          endTime: `${(hour + 1).toString().padStart(2, "0")}:00`,
+          label: `${hour}:00`,
+        };
+      }),
+    []
+  );
 
   // 요일 토글
   const toggleEmptyDay = (day: Day) => {

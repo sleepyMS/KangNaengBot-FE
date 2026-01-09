@@ -798,6 +798,134 @@
       "liberalCredits": "How many liberal arts credits do I need?"
     }
   },
+  "schedule": {
+    "title": "Create Schedule",
+    "desc": "Tell me the courses you want to take, and I'll create a schedule for you!",
+    "examples": {
+      "title": "Try asking like this:",
+      "ex1": "Make a schedule with no classes on Mon/Wed",
+      "ex2": "Fit 18 credits including major required courses",
+      "ex3": "Recommend morning classes mostly"
+    },
+    "generate": "Generate Schedule",
+    "viewSaved": "Saved",
+    "retry": "Retry",
+    "createSchedule": "Create Schedule",
+    "createScheduleDesc": "AI creates the optimal schedule for you",
+    "exitMode": "Exit Schedule Mode",
+    "exitModeDesc": "Return to normal chat",
+    "modeActive": "Schedule Mode",
+    "inputPlaceholder": "Enter the courses you want to take",
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri"
+    },
+    "filter": {
+      "title": "Filters",
+      "emptyDays": "Empty Days",
+      "excludeTime": "Exclude Time (Click to select)",
+      "reset": "Reset",
+      "apply": "Apply",
+      "emptyDay": "Empty Days",
+      "time": "Exclude Periods (All Days)",
+      "excludeMorning": "Exclude 1st Period (09:00)",
+      "timeDesc": "Selected periods will be excluded from the schedule.",
+      "periods": "Period",
+      "noResults": "No schedules found matching the criteria 😢",
+      "autoApplyInfo": "Selections are applied immediately!"
+    },
+    "grid": {
+      "time": "Time",
+      "credit": "Credit",
+      "professor": "Prof",
+      "location": "Loc"
+    },
+    "status": {
+      "generating": "Generating schedule...",
+      "noResults": "No schedules found matching the criteria.",
+      "error": "An error occurred while generating the schedule.",
+      "idle": "Please enter course names",
+      "parsing": "Searching for courses...",
+      "confirming": "Please confirm the courses",
+      "complete": "Schedule generated!"
+    },
+    "generating": {
+      "analyzing": "Analyzing optimal combinations..."
+    },
+    "save": {
+      "title": "Save Schedule",
+      "placeholder": "Enter schedule name",
+      "success": "Schedule saved successfully.",
+      "error": "Failed to save.",
+      "confirm": "Save",
+      "overwrite": "A schedule with the same name already exists. Overwrite?"
+    },
+    "delete": {
+      "confirm": "Are you sure you want to delete?",
+      "success": "Deleted successfully."
+    },
+    "generated": {
+      "title": "Generated Schedules",
+      "subtitle": "Total {{count}} schedules generated.",
+      "prev": "Prev",
+      "next": "Next"
+    },
+    "saved": {
+      "title": "My Schedules",
+      "empty": "No saved schedules.",
+      "load": "Load",
+      "delete": "Delete"
+    },
+    "course": {
+      "detail": "Course Details",
+      "code": "Code",
+      "credit": "Credit",
+      "prof": "Professor",
+      "time": "Time",
+      "loc": "Location"
+    },
+    "confirm": {
+      "title": "Are these the correct courses?",
+      "matched": "Found Courses",
+      "ambiguous": "Select Required",
+      "notFound": "Courses Not Found",
+      "selectClass": "Select Section",
+      "modify": "Modify",
+      "generate": "Generate"
+    },
+    "canvas": {
+      "title": "Schedule Preview",
+      "open": "Open in Canvas",
+      "close": "Close",
+      "save": "Save Image",
+      "share": "Share",
+      "prev": "Prev",
+      "next": "Next",
+      "credits": "Credits",
+      "emptyDay": "Empty Day",
+      "noSchedule": "No generated schedules",
+      "shareTitle": "My Schedule",
+      "shareText": "My schedule created with KangNaengBot!",
+      "linkCopied": "Link copied"
+    },
+    "error": {
+      "noCourseFound": "Could not find the course. Please try again.",
+      "parseFailed": "Failed to load course information.",
+      "noCoursesSelected": "No courses selected.",
+      "generationFailed": "Failed to generate schedule. Please try again.",
+      "allConflict": "All courses conflict. Please select different courses."
+    },
+    "detail": {
+      "professor": "Professor",
+      "time": "Time",
+      "location": "Location",
+      "credits": "Credits",
+      "enrollment": "Enrollment"
+    }
+  },
   "sidebar": {
     "history": "My Conversations",
     "noHistory": "No conversations with KangNaengBot yet",

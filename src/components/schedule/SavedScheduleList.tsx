@@ -1,4 +1,5 @@
 import { useState, MouseEvent, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useScheduleStore, useToastStore, useUIStore } from "@/store";
 import { Trash2, Star, Calendar } from "lucide-react";
 import type { SavedSchedule } from "@/types";
@@ -11,6 +12,8 @@ export const SavedScheduleList = () => {
     loadSchedule,
     loadSavedSchedules,
   } = useScheduleStore();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadSavedSchedules();
@@ -26,7 +29,9 @@ export const SavedScheduleList = () => {
   const handleDeleteConfirm = () => {
     if (deleteTargetId) {
       deleteSavedSchedule(deleteTargetId);
-      useToastStore.getState().addToast("success", "시간표가 삭제되었습니다.");
+      useToastStore
+        .getState()
+        .addToast("success", t("schedule.delete.success"));
       setDeleteTargetId(null);
     }
   };
@@ -43,7 +48,7 @@ export const SavedScheduleList = () => {
     return (
       <div className="flex flex-col items-center justify-center py-8 gap-2 text-gray-400">
         <Star size={24} className="opacity-20" />
-        <span className="text-xs">보관된 시간표가 없습니다.</span>
+        <span className="text-xs">{t("schedule.saved.empty")}</span>
       </div>
     );
   }
@@ -74,8 +79,9 @@ export const SavedScheduleList = () => {
                   )}
                 </div>
                 <span className="text-xs text-gray-400 truncate">
-                  {schedule.totalCredits}학점 • 공강 {schedule.emptyDays.length}
-                  일
+                  {schedule.totalCredits}
+                  {t("schedule.canvas.credits")} •{" "}
+                  {t("schedule.filter.emptyDay")} {schedule.emptyDays.length}
                 </span>
               </div>
             </div>
@@ -83,7 +89,7 @@ export const SavedScheduleList = () => {
             <button
               onClick={(e) => handleDeleteClick(schedule.id, e)}
               className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-              title="삭제"
+              title={t("schedule.saved.delete")}
             >
               <Trash2 size={14} />
             </button>
@@ -96,10 +102,10 @@ export const SavedScheduleList = () => {
         onClose={() => setDeleteTargetId(null)}
         onConfirm={handleDeleteConfirm}
         type="warning"
-        title="시간표 삭제"
-        message="정말 이 시간표를 삭제하시겠습니까?"
-        confirmText="삭제"
-        cancelText="취소"
+        title={t("schedule.saved.delete")}
+        message={t("schedule.delete.confirm")}
+        confirmText={t("schedule.saved.delete")}
+        cancelText={t("common.cancel")}
       />
     </>
   );

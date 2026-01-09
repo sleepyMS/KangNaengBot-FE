@@ -136,8 +136,8 @@ export const ScheduleCanvas = () => {
             )}
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
               {viewMode === "saved"
-                ? loadedSchedule?.name || "보관된 시간표"
-                : t("schedule.canvas.title")}
+                ? loadedSchedule?.name || t("schedule.saved.title")
+                : t("schedule.generated.title")}
             </h2>
           </div>
           <button
@@ -176,8 +176,10 @@ export const ScheduleCanvas = () => {
             <div className="flex flex-col items-center justify-center h-full text-center p-4">
               <div className="text-gray-500 dark:text-gray-400 mb-4">
                 {status === "complete"
-                  ? t("schedule.filter.noResults")
-                  : t("schedule.canvas.noSchedule")}
+                  ? t("schedule.status.noResults")
+                  : status === "generating"
+                  ? t("schedule.status.generating")
+                  : t("schedule.status.noResults")}
               </div>
               {status === "complete" && (
                 <button
@@ -200,7 +202,7 @@ export const ScheduleCanvas = () => {
               <button
                 onClick={handleSaveImage}
                 className="p-3 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
-                title={t("schedule.canvas.saveImage")}
+                title={t("schedule.save.title")}
               >
                 <Download size={20} />
               </button>
@@ -244,7 +246,9 @@ export const ScheduleCanvas = () => {
                       className={isSaved ? "fill-current" : ""}
                     />
                     <span className="font-medium">
-                      {isSaved ? "보관됨" : "저장"}
+                      {isSaved
+                        ? t("schedule.viewSaved")
+                        : t("schedule.save.confirm")}
                     </span>
                   </button>
                 );
@@ -268,11 +272,11 @@ export const ScheduleCanvas = () => {
           saveSchedule(name);
           useToastStore
             .getState()
-            .addToast("success", "시간표가 보관함에 저장되었습니다.");
+            .addToast("success", t("schedule.save.success"));
         }}
-        title="시간표 이름 저장"
-        placeholder="예: 2024-1 1안, 공강 최대 시간표..."
-        confirmText="저장"
+        title={t("schedule.save.title")}
+        placeholder={t("schedule.save.placeholder")}
+        confirmText={t("schedule.save.confirm")}
       />
 
       {/* 삭제 확인 모달 */}
@@ -297,15 +301,15 @@ export const ScheduleCanvas = () => {
             }
             useToastStore
               .getState()
-              .addToast("success", "시간표가 삭제되었습니다.");
+              .addToast("success", t("schedule.delete.success"));
           }
           setIsDeleteModalOpen(false);
         }}
         type="warning"
-        title="보관함에서 삭제"
-        message="이 시간표를 보관함에서 삭제하시겠습니까?"
-        confirmText="삭제"
-        cancelText="취소"
+        title={t("schedule.saved.delete")}
+        message={t("schedule.delete.confirm")}
+        confirmText={t("schedule.saved.delete")}
+        cancelText={t("common.cancel")}
       />
     </>
   );

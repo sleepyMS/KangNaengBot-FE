@@ -889,5 +889,133 @@
       "smart_city": "スマート都市工学専攻",
       "architectural": "建築工学専攻"
     }
+  },
+  "schedule": {
+    "title": "時間割作成",
+    "desc": "受けたい科目を入力すると、AIが時間割を作成します！",
+    "examples": {
+      "title": "このように聞いてみてください：",
+      "ex1": "月、水を全休にして",
+      "ex2": "専攻必修を含めて18単位に合わせて",
+      "ex3": "午前中の授業を中心に"
+    },
+    "generate": "時間割を生成",
+    "viewSaved": "保存済み",
+    "retry": "再試行",
+    "createSchedule": "時間割作成",
+    "createScheduleDesc": "AIが最適な時間割を作成します",
+    "exitMode": "時間割モード終了",
+    "exitModeDesc": "一般会話に戻る",
+    "modeActive": "時間割モード",
+    "inputPlaceholder": "受けたい科目を入力してください",
+    "days": {
+      "mon": "月",
+      "tue": "火",
+      "wed": "水",
+      "thu": "木",
+      "fri": "金"
+    },
+    "filter": {
+      "title": "フィルター設定",
+      "emptyDays": "全休曜日",
+      "excludeTime": "除外する時間帯（クリックして選択）",
+      "reset": "初期化",
+      "apply": "適用",
+      "emptyDay": "全休曜日",
+      "time": "除外する時限設定（全曜日共通）",
+      "excludeMorning": "1限（09:00）の授業を除外",
+      "timeDesc": "選択した時限は時間割生成から除外されます。",
+      "periods": "時限",
+      "noResults": "条件に合う時間割がありません 😢",
+      "autoApplyInfo": "選択した条件は即座に反映されます！"
+    },
+    "grid": {
+      "time": "時間",
+      "credit": "単位",
+      "professor": "教授",
+      "location": "講義室"
+    },
+    "status": {
+      "generating": "時間割を生成しています...",
+      "noResults": "条件に合う時間割がありません。",
+      "error": "時間割の生成中にエラーが発生しました。",
+      "idle": "科目を入力してください",
+      "parsing": "科目を探しています...",
+      "confirming": "科目を確認してください",
+      "complete": "時間割が完成しました！"
+    },
+    "generating": {
+      "analyzing": "最適な組み合わせを分析しています..."
+    },
+    "save": {
+      "title": "時間割を保存",
+      "placeholder": "時間割の名前を入力してください",
+      "success": "時間割が保存されました。",
+      "error": "保存に失敗しました。",
+      "confirm": "保存",
+      "overwrite": "同じ名前の時間割が既に存在します。上書きしますか？"
+    },
+    "delete": {
+      "confirm": "本当に削除しますか？",
+      "success": "削除されました。"
+    },
+    "generated": {
+      "title": "生成された時間割",
+      "subtitle": "計{{count}}個の時間割が生成されました。",
+      "prev": "前へ",
+      "next": "次へ"
+    },
+    "saved": {
+      "title": "保存済み時間割",
+      "empty": "保存された時間割がありません。",
+      "load": "読み込む",
+      "delete": "削除"
+    },
+    "course": {
+      "detail": "科目詳細情報",
+      "code": "科目コード",
+      "credit": "単位",
+      "prof": "教授",
+      "time": "時間",
+      "loc": "講義室"
+    },
+    "confirm": {
+      "title": "これらの科目でよろしいですか？",
+      "matched": "見つかった科目",
+      "ambiguous": "選択が必要",
+      "notFound": "見つからない科目",
+      "selectClass": "分班を選択",
+      "modify": "修正する",
+      "generate": "このまま生成する"
+    },
+    "canvas": {
+      "title": "時間割プレビュー",
+      "open": "Canvasで開く",
+      "close": "閉じる",
+      "save": "画像保存",
+      "share": "共有",
+      "prev": "前へ",
+      "next": "次へ",
+      "credits": "単位",
+      "emptyDay": "全休",
+      "noSchedule": "生成された時間割がありません",
+      "shareTitle": "私の時間割",
+      "shareText": "KangNaengBotで作った時間割です！",
+      "linkCopied": "リンクがコピーされました"
+    },
+    "error": {
+      "noCourseFound": "入力された科目が見つかりませんでした。もう一度入力してください。",
+      "parseFailed": "科目情報の読み込みに失敗しました。",
+      "noCoursesSelected": "選択された科目がありません。",
+      "generationFailed": "時間割の生成に失敗しました。もう一度お試しください。",
+      "allConflict": "すべての科目が衝突しています。他の科目を選択してください。"
+    },
+    "detail": {
+      "professor": "担当教授",
+      "time": "授業時間",
+      "location": "講義室",
+      "credits": "単位",
+      "enrollment": "受講定員"
+    }
   }
 }
