@@ -9,6 +9,7 @@ import { X, Download, Share2, Bookmark } from "lucide-react";
 import { useScheduleStore, useUIStore } from "@/store";
 import { ScheduleCarousel } from "./ScheduleCarousel";
 import { CourseDetailModal } from "./CourseDetailModal";
+import { FilterPanel } from "./FilterPanel";
 import { toPng } from "html-to-image";
 import type { Course } from "@/types";
 
@@ -24,7 +25,14 @@ export const ScheduleCanvas = () => {
     activeScheduleIndex,
     setActiveSchedule,
     saveSchedule,
+    status,
+    setFilters,
   } = useScheduleStore();
+
+  const handleResetFilters = () => {
+    setFilters({ emptyDays: [], excludePeriods: [] });
+    // 클라이언트 필터링이므로 재생성 필요 없음
+  };
 
   // ESC 키로 닫기
   useEffect(() => {
@@ -116,6 +124,9 @@ export const ScheduleCanvas = () => {
           </button>
         </div>
 
+        {/* 필터 패널 (항상 표시) */}
+        {status !== "idle" && <FilterPanel />}
+
         {/* 컨텐츠 */}
         <div className="flex-1 overflow-y-auto p-4">
           {generatedSchedules.length > 0 ? (
@@ -127,8 +138,20 @@ export const ScheduleCanvas = () => {
               onCourseClick={(course) => setSelectedCourse(course)}
             />
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-              {t("schedule.canvas.noSchedule")}
+            <div className="flex flex-col items-center justify-center h-full text-center p-4">
+              <div className="text-gray-500 dark:text-gray-400 mb-4">
+                {status === "complete"
+                  ? t("schedule.filter.noResults")
+                  : t("schedule.canvas.noSchedule")}
+              </div>
+              {status === "complete" && (
+                <button
+                  onClick={handleResetFilters}
+                  className="px-4 py-2 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium"
+                >
+                  {t("schedule.filter.reset")}
+                </button>
+              )}
             </div>
           )}
         </div>

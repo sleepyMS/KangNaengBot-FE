@@ -18,7 +18,7 @@ export const ScheduleMessageHandler = () => {
     status,
     parsedCourses,
     ambiguousCourses,
-    generatedSchedules,
+    allSchedules,
     error,
     confirmAllCourses,
     generateSchedules,
@@ -80,7 +80,7 @@ export const ScheduleMessageHandler = () => {
       )}
 
       {/* 완료 상태 */}
-      {status === "complete" && generatedSchedules.length > 0 && (
+      {status === "complete" && allSchedules && allSchedules.length > 0 && (
         <div className="flex gap-3 items-end animate-slide-up">
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-center overflow-hidden">
             <img
@@ -97,7 +97,7 @@ export const ScheduleMessageHandler = () => {
               </span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-              {generatedSchedules.length}개의 시간표 조합을 찾았어요!
+              {allSchedules.length}개의 시간표 조합을 찾았어요!
             </p>
             <button
               onClick={openCanvas}

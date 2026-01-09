@@ -36,6 +36,7 @@ interface ScheduleState {
   filters: ScheduleFilters;
 
   // 생성 결과
+  allSchedules: Schedule[];
   generatedSchedules: Schedule[];
   activeScheduleIndex: number;
 
@@ -75,6 +76,38 @@ const DEFAULT_FILTERS: ScheduleFilters = {
   preferCompact: false,
 };
 
+const filterSchedules = (
+  schedules: Schedule[],
+  filters: ScheduleFilters
+): Schedule[] => {
+  return schedules.filter((schedule) => {
+    // 1. 공강 요일 체크
+    // 사용자가 선택한 공강 요일이 스케줄의 emptyDays에 모두 포함되어야 함
+    const emptyDayPass = filters.emptyDays.every((day) =>
+      schedule.emptyDays.includes(day)
+    );
+    if (!emptyDayPass) return false;
+
+    // 2. 제외 시간대 체크
+    if (filters.excludePeriods.length > 0) {
+      for (const course of schedule.courses) {
+        for (const slot of course.slots) {
+          for (const ex of filters.excludePeriods) {
+            if (slot.day === ex.day) {
+              // 겹치는 시간이 있는지 확인
+              const hasOverlap = ex.periods.some(
+                (p) => p >= slot.startPeriod && p <= slot.endPeriod
+              );
+              if (hasOverlap) return false;
+            }
+          }
+        }
+      }
+    }
+    return true;
+  });
+};
+
 export const useScheduleStore = create<ScheduleState>((set, get) => ({
   // Initial State
   isScheduleMode: false,
@@ -84,6 +117,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   ambiguousCourses: [],
   confirmedCourses: [],
   filters: DEFAULT_FILTERS,
+  allSchedules: [], // 전체 스케줄 보관용
   generatedSchedules: [],
   activeScheduleIndex: 0,
   isCanvasOpen: false,
@@ -112,9 +146,17 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   },
 
   setFilters: (newFilters) => {
-    set((state) => ({
-      filters: { ...state.filters, ...newFilters },
-    }));
+    set((state) => {
+      const updatedFilters = { ...state.filters, ...newFilters };
+      // 필터 변경 시 즉시 필터링 적용
+      const filtered = filterSchedules(state.allSchedules, updatedFilters);
+
+      return {
+        filters: updatedFilters,
+        generatedSchedules: filtered,
+        activeScheduleIndex: 0,
+      };
+    });
   },
 
   generateSchedulesFromMessage: async (sessionId, message) => {
@@ -148,7 +190,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
 
       set({
         status: "complete",
-        generatedSchedules: response.schedules,
+        allSchedules: response.schedules, // 원본 저장
+        generatedSchedules: response.schedules, // 초기에는 필터링 없이 전체 표시 (또는 기본 필터 적용)
         activeScheduleIndex: 0,
         // 파싱된 코스는 응답에 없으므로 (Mock 구조상) 빈 배열 혹은 추후 응답 구조 변경 필요
         parsedCourses: [],
