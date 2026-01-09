@@ -960,7 +960,8 @@
       "failed_image_download": "课程表图片下载失败。"
     },
     "delete": {
-      "confirm": "确定要删除吗？",
+      "title": "确定要删除此课程表吗？",
+      "message": "已删除的课程表无法恢复。",
       "success": "已删除。"
     },
     "generated": {

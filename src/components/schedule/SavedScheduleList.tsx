@@ -117,8 +117,8 @@ export const SavedScheduleList = () => {
         onClose={() => setDeleteTargetId(null)}
         onConfirm={handleDeleteConfirm}
         type="warning"
-        title={t("schedule.saved.delete")}
-        message={t("schedule.delete.confirm")}
+        title={t("schedule.delete.title")}
+        message={t("schedule.delete.message")}
         confirmText={t("schedule.saved.delete")}
         cancelText={t("common.cancel")}
       />
