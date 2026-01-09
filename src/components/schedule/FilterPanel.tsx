@@ -3,7 +3,7 @@
  * 공강 요일 및 특정 시간대 제외 설정
  */
 import { useTranslation } from "react-i18next";
-import { Filter, Info } from "lucide-react";
+import { Filter } from "lucide-react";
 import { useScheduleStore } from "@/store";
 import type { Day } from "@/types";
 
@@ -116,13 +116,8 @@ export const FilterPanel = () => {
 
         {/* 시간대 설정 */}
         <div>
-          <div className="flex flex-col gap-1 mb-3">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {t("schedule.filter.time")}
-            </div>
-            <div className="text-[10px] text-gray-400 dark:text-gray-500">
-              {t("schedule.filter.timeDesc")}
-            </div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+            {t("schedule.filter.time")}
           </div>
 
           <div className="grid grid-cols-6 gap-1">
@@ -151,12 +146,6 @@ export const FilterPanel = () => {
               );
             })}
           </div>
-        </div>
-
-        {/* 안내 메시지 */}
-        <div className="flex items-center gap-2 py-2 px-3 bg-gray-50 dark:bg-slate-800 rounded text-xs text-gray-500 dark:text-gray-400">
-          <Info size={14} className="flex-shrink-0" />
-          {t("schedule.filter.autoApplyInfo")}
         </div>
       </div>
     </div>
