@@ -2,6 +2,7 @@
  * 시간표 상태 관리 Store
  */
 import { create } from "zustand";
+
 import type {
   Course,
   Schedule,
@@ -250,7 +251,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       // 채팅 스토어에 결과 메시지 추가 (영구 저장)
       const resultMessage =
         response.message ||
-        `${response.schedules.length}개의 시간표 조합을 찾았습니다!`;
+        i18n.t("schedule.status.found", { count: response.schedules.length });
 
       useChatStore.getState().addMessage({
         role: "assistant",

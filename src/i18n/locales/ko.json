@@ -851,7 +851,8 @@
       "idle": "과목을 입력해주세요",
       "parsing": "과목을 찾고 있어요...",
       "confirming": "과목을 확인해주세요",
-      "complete": "시간표가 완성됐어요!"
+      "complete": "시간표가 완성됐어요!",
+      "found": "{{count}}개의 시간표 조합을 찾았습니다!"
     },
     "generating": {
       "analyzing": "최적의 조합을 분석하고 있어요..."

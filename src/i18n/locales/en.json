@@ -851,7 +851,8 @@
       "idle": "Please enter course names",
       "parsing": "Searching for courses...",
       "confirming": "Please confirm the courses",
-      "complete": "Schedule generated!"
+      "complete": "Schedule generated!",
+      "found": "Found {{count}} schedule combinations!"
     },
     "generating": {
       "analyzing": "Analyzing optimal combinations..."

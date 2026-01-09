@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import type { MessageItem } from "@/types";
 import { Calendar, ExternalLink } from "lucide-react";
 import { useScheduleStore } from "@/store";
+import { useTranslation } from "react-i18next";
 
 interface ChatBubbleProps {
   message: MessageItem;
@@ -24,6 +25,7 @@ const convertHtmlToMarkdown = (content: string) => {
 };
 
 export const ChatBubble = ({ message }: ChatBubbleProps) => {
+  const { t } = useTranslation();
   const isUser = message.role === "user";
 
   return (
@@ -52,7 +54,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
             <div className="flex items-center gap-2 mb-1">
               <Calendar size={20} className="text-green-500" />
               <span className="font-medium text-gray-900 dark:text-white">
-                시간표가 완성됐어요!
+                {t("schedule.status.complete")}
               </span>
             </div>
             <p className="text-base text-gray-800 dark:text-gray-100 whitespace-pre-wrap leading-relaxed">
@@ -60,7 +62,9 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
             </p>
             {message.metadata?.scheduleCount && (
               <div className="text-xs text-gray-400 dark:text-gray-500 px-1">
-                총 {message.metadata.scheduleCount}개의 시간표가 생성되었습니다.
+                {t("schedule.generated.subtitle", {
+                  count: message.metadata.scheduleCount,
+                })}
               </div>
             )}
             <button
@@ -84,7 +88,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
               className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors mt-1"
             >
               <ExternalLink size={16} />
-              <span>Canvas로 열기</span>
+              <span>{t("schedule.canvas.open")}</span>
             </button>
           </div>
         ) : isUser ? (

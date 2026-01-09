@@ -943,7 +943,8 @@
       "idle": "请输入科目",
       "parsing": "正在查找科目...",
       "confirming": "请确认科目",
-      "complete": "课程表已完成！"
+      "complete": "课程表已完成！",
+      "found": "找到了{{count}}个课程表组合！"
     },
     "generating": {
       "analyzing": "正在分析最佳组合..."
