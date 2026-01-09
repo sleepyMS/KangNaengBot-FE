@@ -19,10 +19,11 @@ export const ScheduleMessageHandler = () => {
     parsedCourses,
     ambiguousCourses,
     allSchedules,
+    aiMessage,
     error,
     confirmAllCourses,
     generateSchedules,
-    openCanvas,
+    switchToGeneratedView, // 명시적 캔버스 열기
     reset,
   } = useScheduleStore();
 
@@ -79,36 +80,7 @@ export const ScheduleMessageHandler = () => {
         </div>
       )}
 
-      {/* 완료 상태 */}
-      {status === "complete" && allSchedules && allSchedules.length > 0 && (
-        <div className="flex gap-3 items-end animate-slide-up">
-          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-center overflow-hidden">
-            <img
-              src="/assets/images/logo.svg"
-              alt="강냉봇"
-              className="w-5 h-5"
-            />
-          </div>
-          <div className="bubble-ai max-w-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <Calendar size={20} className="text-green-500" />
-              <span className="font-medium text-gray-900 dark:text-white">
-                {t("schedule.status.complete")}
-              </span>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-              {allSchedules.length}개의 시간표 조합을 찾았어요!
-            </p>
-            <button
-              onClick={openCanvas}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
-            >
-              <ExternalLink size={16} />
-              <span>{t("schedule.canvas.open")}</span>
-            </button>
-          </div>
-        </div>
-      )}
+      {/* 완료 상태 - 이제 일반 채팅 메시지(type: schedule_result)로 처리되므로 여기서는 렌더링하지 않음 */}
 
       {/* 에러 상태 */}
       {status === "error" && error && (

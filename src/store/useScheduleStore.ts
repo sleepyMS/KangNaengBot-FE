@@ -12,6 +12,7 @@ import type {
 } from "@/types";
 import { scheduleService } from "@/api";
 import i18n from "@/i18n";
+import { useChatStore } from "./useChatStore";
 
 type ScheduleStatus =
   | "idle"
@@ -24,6 +25,7 @@ type ScheduleStatus =
 interface ScheduleState {
   // 모드 상태
   isScheduleMode: boolean;
+  viewMode: "generated" | "saved";
   status: ScheduleStatus;
 
   // 과목 선택
@@ -39,12 +41,15 @@ interface ScheduleState {
   allSchedules: Schedule[];
   generatedSchedules: Schedule[];
   activeScheduleIndex: number;
+  aiMessage: string | null;
 
   // Canvas UI
   isCanvasOpen: boolean;
+  isSavedListOpen: boolean;
 
   // 저장 기능
   savedSchedules: SavedSchedule[];
+  loadedSchedule: SavedSchedule | null; // 불러온 시간표 별도 저장
 
   // 에러 상태
   error: ScheduleError | null;
@@ -63,10 +68,13 @@ interface ScheduleState {
   setActiveSchedule: (index: number) => void;
   openCanvas: () => void;
   closeCanvas: () => void;
+  toggleSavedList: () => void;
   saveSchedule: (name?: string) => void;
+  loadSchedule: (schedule: SavedSchedule) => void;
   deleteSavedSchedule: (id: string) => void;
   clearError: () => void;
   reset: () => void;
+  switchToGeneratedView: () => void; // 생성된 결과 보기로 전환
 }
 
 const DEFAULT_FILTERS: ScheduleFilters = {
@@ -111,6 +119,7 @@ const filterSchedules = (
 export const useScheduleStore = create<ScheduleState>((set, get) => ({
   // Initial State
   isScheduleMode: false,
+  viewMode: "generated",
   status: "idle",
   userInput: "",
   parsedCourses: [],
@@ -120,8 +129,11 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   allSchedules: [], // 전체 스케줄 보관용
   generatedSchedules: [],
   activeScheduleIndex: 0,
+  aiMessage: null,
   isCanvasOpen: false,
+  isSavedListOpen: false,
   savedSchedules: [],
+  loadedSchedule: null,
   error: null,
 
   // Actions
@@ -133,6 +145,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       ambiguousCourses: [],
       confirmedCourses: [],
       generatedSchedules: [],
+      loadedSchedule: null,
+      aiMessage: null,
       error: null,
     });
   },
@@ -142,6 +156,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       isScheduleMode: false,
       status: "idle",
       isCanvasOpen: false,
+      isSavedListOpen: false,
+      loadedSchedule: null,
     });
   },
 
@@ -161,7 +177,13 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
 
   generateSchedulesFromMessage: async (sessionId, message) => {
     // 1. 생성 상태로 전환
-    set({ status: "generating", userInput: message, error: null });
+    set({
+      status: "generating",
+      userInput: message,
+      error: null,
+      viewMode: "generated",
+      loadedSchedule: null,
+    });
 
     try {
       // 2. 단일 API 호출로 시간표 생성
@@ -193,10 +215,26 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
         allSchedules: response.schedules, // 원본 저장
         generatedSchedules: response.schedules, // 초기에는 필터링 없이 전체 표시 (또는 기본 필터 적용)
         activeScheduleIndex: 0,
+        aiMessage: null, // 더 이상 사용하지 않음
         // 파싱된 코스는 응답에 없으므로 (Mock 구조상) 빈 배열 혹은 추후 응답 구조 변경 필요
         parsedCourses: [],
         confirmedCourses: [],
         ambiguousCourses: [],
+      });
+
+      // 채팅 스토어에 결과 메시지 추가 (영구 저장)
+      const resultMessage =
+        response.message ||
+        `${response.schedules.length}개의 시간표 조합을 찾았습니다!`;
+
+      useChatStore.getState().addMessage({
+        role: "assistant",
+        content: resultMessage,
+        created_at: new Date().toISOString(),
+        type: "schedule_result",
+        metadata: {
+          scheduleCount: response.schedules.length,
+        },
       });
     } catch {
       set({
@@ -302,7 +340,9 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   },
 
   openCanvas: () => set({ isCanvasOpen: true }),
-  closeCanvas: () => set({ isCanvasOpen: false }),
+  closeCanvas: () => set({ isCanvasOpen: false, isSavedListOpen: false }),
+  toggleSavedList: () =>
+    set((state) => ({ isSavedListOpen: !state.isSavedListOpen })),
 
   saveSchedule: (name) => {
     const { generatedSchedules, activeScheduleIndex, savedSchedules } = get();
@@ -310,17 +350,26 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
 
     if (!schedule) return;
 
-    const savedSchedule: SavedSchedule = {
+    const newSavedSchedule: SavedSchedule = {
       ...schedule,
-      id: `saved-${Date.now()}`,
+      id: crypto.randomUUID(),
       savedAt: new Date().toISOString(),
-      name: name || `시간표 ${savedSchedules.length + 1}`,
+      name: name || "",
       isFavorite: false,
     };
 
-    set((state) => ({
-      savedSchedules: [savedSchedule, ...state.savedSchedules],
-    }));
+    set((state) => {
+      // 현재 생성된 스케줄 중 저장된 것과 같은 스케줄이 있다면 savedId 업데이트
+      const updatedGeneratedSchedules = state.generatedSchedules.map((s) =>
+        s.id === schedule.id ? { ...s, savedId: newSavedSchedule.id } : s
+      );
+
+      return {
+        savedSchedules: [newSavedSchedule, ...state.savedSchedules],
+        generatedSchedules: updatedGeneratedSchedules,
+        // viewMode는 변경하지 않음
+      };
+    });
 
     // localStorage에도 저장
     try {
@@ -328,7 +377,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       const existing = stored ? JSON.parse(stored) : [];
       localStorage.setItem(
         "kangnaeng-saved-schedules",
-        JSON.stringify([savedSchedule, ...existing])
+        JSON.stringify([newSavedSchedule, ...existing])
       );
     } catch {
       // localStorage 실패 시 무시
@@ -336,9 +385,17 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   },
 
   deleteSavedSchedule: (id) => {
-    set((state) => ({
-      savedSchedules: state.savedSchedules.filter((s) => s.id !== id),
-    }));
+    set((state) => {
+      // 삭제된 스케줄이 현재 보고 있는 생성 목록에 있다면 savedId 제거
+      const updatedGeneratedSchedules = state.generatedSchedules.map((s) =>
+        s.savedId === id ? { ...s, savedId: undefined } : s
+      );
+
+      return {
+        savedSchedules: state.savedSchedules.filter((s) => s.id !== id),
+        generatedSchedules: updatedGeneratedSchedules,
+      };
+    });
 
     // localStorage에서도 삭제
     try {
@@ -355,6 +412,22 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     }
   },
 
+  loadSchedule: (schedule) => {
+    set({
+      // generatedSchedules, status, aiMessage 등은 건드리지 않음 (Backpreservation)
+      loadedSchedule: schedule,
+      isCanvasOpen: true,
+      viewMode: "saved",
+    });
+  },
+
+  switchToGeneratedView: () => {
+    set({
+      viewMode: "generated",
+      isCanvasOpen: true,
+    });
+  },
+
   clearError: () => set({ error: null }),
 
   reset: () => {
@@ -368,7 +441,10 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       filters: DEFAULT_FILTERS,
       generatedSchedules: [],
       activeScheduleIndex: 0,
+      aiMessage: null,
       isCanvasOpen: false,
+      isSavedListOpen: false,
+      viewMode: "generated", // Reset view mode
       error: null,
     });
   },

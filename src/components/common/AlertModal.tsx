@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { AlertTriangle, Info, CheckCircle, XCircle } from "lucide-react";
 
 type AlertType = "info" | "warning" | "success" | "danger";
@@ -33,9 +34,9 @@ export const AlertModal = ({
 }: AlertModalProps) => {
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       onClick={onClose}
     >
       {/* Backdrop */}
@@ -79,6 +80,7 @@ export const AlertModal = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

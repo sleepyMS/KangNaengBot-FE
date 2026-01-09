@@ -1,5 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import type { MessageItem } from "@/types";
+import { Calendar, ExternalLink } from "lucide-react";
+import { useScheduleStore } from "@/store";
 
 interface ChatBubbleProps {
   message: MessageItem;
@@ -44,7 +46,34 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
           ${isUser ? "bubble-user" : "bubble-ai"}
         `}
       >
-        {isUser ? (
+        {message.type === "schedule_result" ? (
+          // 시간표 생성 결과 메시지 UI
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 mb-1">
+              <Calendar size={20} className="text-green-500" />
+              <span className="font-medium text-gray-900 dark:text-white">
+                시간표가 완성됐어요!
+              </span>
+            </div>
+            <p className="text-base text-gray-800 dark:text-gray-100 whitespace-pre-wrap leading-relaxed">
+              {message.content}
+            </p>
+            {message.metadata?.scheduleCount && (
+              <div className="text-xs text-gray-400 dark:text-gray-500 px-1">
+                총 {message.metadata.scheduleCount}개의 시간표가 생성되었습니다.
+              </div>
+            )}
+            <button
+              onClick={() =>
+                useScheduleStore.getState().switchToGeneratedView()
+              }
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors mt-1"
+            >
+              <ExternalLink size={16} />
+              <span>Canvas로 열기</span>
+            </button>
+          </div>
+        ) : isUser ? (
           <p className="text-base leading-relaxed whitespace-pre-wrap">
             {message.content}
           </p>

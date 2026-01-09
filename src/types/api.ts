@@ -71,6 +71,8 @@ export interface MessageItem {
   role: MessageRole;
   content: string;
   created_at: string;
+  type?: "text" | "schedule_result"; // 메시지 타입 확장
+  metadata?: any; // 추가 데이터 (예: 생성된 시간표 개수 등)
 }
 
 /** 메시지 전송 요청 (POST /chat/message) */

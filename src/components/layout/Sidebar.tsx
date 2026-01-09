@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useUIStore, useChatStore, useAuthStore, useToastStore } from "@/store";
 import { AlertModal, Spinner } from "@/components/common";
+import { SavedScheduleList } from "@/components/schedule/SavedScheduleList";
 import { UNIVERSITY_TRANS_KEYS } from "@/constants/universityTranslation";
 
 export const Sidebar = () => {
@@ -41,6 +42,7 @@ export const Sidebar = () => {
   const { user, profile, isAuthenticated, logout } = useAuthStore();
   const { addToast } = useToastStore();
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
+  const [isSavedSchedulesOpen, setIsSavedSchedulesOpen] = useState(true);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isHistoryMenuOpen, setIsHistoryMenuOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
@@ -390,6 +392,34 @@ export const Sidebar = () => {
                   )}
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Saved Schedules Section */}
+          <div
+            className={`
+            flex-1 overflow-hidden border-t border-gray-100
+            transition-opacity duration-300 ease-in-out
+            ${isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
+          `}
+          >
+            <div className="overflow-y-auto overflow-x-hidden h-full min-w-[200px] px-4 py-4">
+              <div className="flex items-center justify-between mb-3">
+                <button
+                  onClick={() => setIsSavedSchedulesOpen(!isSavedSchedulesOpen)}
+                  className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 whitespace-nowrap flex-shrink-0"
+                >
+                  보관함
+                  <ChevronDown
+                    size={16}
+                    className={`text-gray-500 transition-transform ${
+                      isSavedSchedulesOpen ? "" : "-rotate-90"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {isSavedSchedulesOpen && <SavedScheduleList />}
             </div>
           </div>
 

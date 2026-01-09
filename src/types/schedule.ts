@@ -49,6 +49,7 @@ export interface Schedule {
   compactScore: number; // 0~100
   warnings: ScheduleWarning[];
   recommendations: string[];
+  savedId?: string; // 저장된 경우 해당 ID
 }
 
 // 저장된 시간표
