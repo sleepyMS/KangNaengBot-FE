@@ -66,21 +66,18 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
             <button
               onClick={() => {
                 const store = useScheduleStore.getState();
-                // 1. Store에 이미 데이터가 있으면 그냥 뷰만 전환
-                if (store.generatedSchedules.length > 0) {
-                  store.switchToGeneratedView();
-                  return;
-                }
 
-                // 2. Store가 비어있으면(새로고침 등) 메타데이터에서 복원 시도
+                // 메타데이터에서 스케줄 데이터 확인 (과거 기록 보기 지원)
                 const schedulesInMeta = message.metadata?.schedules;
+
                 if (
                   Array.isArray(schedulesInMeta) &&
                   schedulesInMeta.length > 0
                 ) {
+                  // 메타데이터가 있으면 무조건 해당 데이터로 복원 (히스토리 기능)
                   store.restoreSchedules(schedulesInMeta);
                 } else {
-                  // 3. 메타데이터도 없으면 에러 혹은 재생성 안내 (지금은 뷰 전환만 시도)
+                  // 메타데이터가 없으면(예전 데이터 등) 현재 스토어 상태 유지하며 뷰만 전환
                   store.switchToGeneratedView();
                 }
               }}

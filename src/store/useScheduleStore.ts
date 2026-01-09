@@ -446,6 +446,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       generatedSchedules: schedules,
       viewMode: "generated",
       isCanvasOpen: true,
+      activeScheduleIndex: 0,
+      filters: DEFAULT_FILTERS,
     });
   },
 
