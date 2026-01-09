@@ -69,9 +69,10 @@ interface ScheduleState {
   openCanvas: () => void;
   closeCanvas: () => void;
   toggleSavedList: () => void;
-  saveSchedule: (name?: string) => void;
+  loadSavedSchedules: () => Promise<void>;
+  saveSchedule: (name?: string) => Promise<void>;
   loadSchedule: (schedule: SavedSchedule) => void;
-  deleteSavedSchedule: (id: string) => void;
+  deleteSavedSchedule: (id: string) => Promise<void>;
   clearError: () => void;
   reset: () => void;
   switchToGeneratedView: () => void; // 생성된 결과 보기로 전환
@@ -344,7 +345,13 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   toggleSavedList: () =>
     set((state) => ({ isSavedListOpen: !state.isSavedListOpen })),
 
-  saveSchedule: (name) => {
+  loadSavedSchedules: async () => {
+    // 초기 로딩
+    const saved = await scheduleService.getSavedSchedules();
+    set({ savedSchedules: saved });
+  },
+
+  saveSchedule: async (name) => {
     const { generatedSchedules, activeScheduleIndex, savedSchedules } = get();
     const schedule = generatedSchedules[activeScheduleIndex];
 
@@ -358,8 +365,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       isFavorite: false,
     };
 
+    // 1. 낙관적 UI 업데이트
     set((state) => {
-      // 현재 생성된 스케줄 중 저장된 것과 같은 스케줄이 있다면 savedId 업데이트
       const updatedGeneratedSchedules = state.generatedSchedules.map((s) =>
         s.id === schedule.id ? { ...s, savedId: newSavedSchedule.id } : s
       );
@@ -367,26 +374,16 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       return {
         savedSchedules: [newSavedSchedule, ...state.savedSchedules],
         generatedSchedules: updatedGeneratedSchedules,
-        // viewMode는 변경하지 않음
       };
     });
 
-    // localStorage에도 저장
-    try {
-      const stored = localStorage.getItem("kangnaeng-saved-schedules");
-      const existing = stored ? JSON.parse(stored) : [];
-      localStorage.setItem(
-        "kangnaeng-saved-schedules",
-        JSON.stringify([newSavedSchedule, ...existing])
-      );
-    } catch {
-      // localStorage 실패 시 무시
-    }
+    // 2. 비동기 저장 (API or LocalStorage)
+    await scheduleService.saveSchedule(newSavedSchedule);
   },
 
-  deleteSavedSchedule: (id) => {
+  deleteSavedSchedule: async (id) => {
+    // 1. 낙관적 UI 업데이트
     set((state) => {
-      // 삭제된 스케줄이 현재 보고 있는 생성 목록에 있다면 savedId 제거
       const updatedGeneratedSchedules = state.generatedSchedules.map((s) =>
         s.savedId === id ? { ...s, savedId: undefined } : s
       );
@@ -397,19 +394,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       };
     });
 
-    // localStorage에서도 삭제
-    try {
-      const stored = localStorage.getItem("kangnaeng-saved-schedules");
-      if (stored) {
-        const existing = JSON.parse(stored);
-        localStorage.setItem(
-          "kangnaeng-saved-schedules",
-          JSON.stringify(existing.filter((s: SavedSchedule) => s.id !== id))
-        );
-      }
-    } catch {
-      // localStorage 실패 시 무시
-    }
+    // 2. 비동기 삭제 (API or LocalStorage)
+    await scheduleService.deleteSavedSchedule(id);
   },
 
   loadSchedule: (schedule) => {

@@ -1,12 +1,20 @@
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useEffect } from "react";
 import { useScheduleStore, useToastStore, useUIStore } from "@/store";
 import { Trash2, Star, Calendar } from "lucide-react";
 import type { SavedSchedule } from "@/types";
 import { AlertModal } from "@/components/common";
 
 export const SavedScheduleList = () => {
-  const { savedSchedules, deleteSavedSchedule, loadSchedule } =
-    useScheduleStore();
+  const {
+    savedSchedules,
+    deleteSavedSchedule,
+    loadSchedule,
+    loadSavedSchedules,
+  } = useScheduleStore();
+
+  useEffect(() => {
+    loadSavedSchedules();
+  }, [loadSavedSchedules]);
 
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
