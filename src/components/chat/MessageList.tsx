@@ -59,7 +59,7 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
       container.scrollHeight - container.scrollTop - container.clientHeight;
 
     // Hysteresis: 현재 상태에 따라 다른 threshold
-    const threshold = isAtBottomRef.current ? 60 : 20;
+    const threshold = isAtBottomRef.current ? 30 : 20;
     const shouldBeAtBottom = distanceFromBottom < threshold;
 
     if (shouldBeAtBottom !== isAtBottomRef.current) {
