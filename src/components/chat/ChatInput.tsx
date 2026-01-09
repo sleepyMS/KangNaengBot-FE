@@ -2,7 +2,12 @@ import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus, Calendar, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useChatStore, useAuthStore, useScheduleStore } from "@/store";
+import {
+  useChatStore,
+  useAuthStore,
+  useScheduleStore,
+  useUIStore,
+} from "@/store";
 import { AlertModal } from "@/components/common";
 import { ToolDropdown } from "./ToolDropdown";
 
@@ -25,6 +30,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   const { sendMessage, isSending, currentSessionId } = useChatStore();
   const { isAuthenticated } = useAuthStore();
+  const { isMobile } = useUIStore();
   const {
     isScheduleMode,
     exitScheduleMode,
@@ -163,7 +169,9 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
                 onKeyDown={handleKeyDown}
                 placeholder={
                   isScheduleMode
-                    ? t("schedule.inputPlaceholder")
+                    ? isMobile
+                      ? t("schedule.inputPlaceholderShort")
+                      : t("schedule.inputPlaceholder")
                     : t("chat.placeholder")
                 }
                 rows={1}

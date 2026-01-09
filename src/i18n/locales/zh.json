@@ -1017,6 +1017,7 @@
       "location": "教室",
       "credits": "学分",
       "enrollment": "选课人数"
-    }
+    },
+    "inputPlaceholderShort": "输入科目"
   }
 }

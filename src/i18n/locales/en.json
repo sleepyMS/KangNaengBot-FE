@@ -925,7 +925,8 @@
       "location": "Location",
       "credits": "Credits",
       "enrollment": "Enrollment"
-    }
+    },
+    "inputPlaceholderShort": "Enter courses"
   },
   "sidebar": {
     "history": "My Conversations",

@@ -1017,6 +1017,7 @@
       "location": "講義室",
       "credits": "単位",
       "enrollment": "受講定員"
-    }
+    },
+    "inputPlaceholderShort": "科目名を入力"
   }
 }

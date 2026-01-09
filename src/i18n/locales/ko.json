@@ -925,7 +925,8 @@
       "location": "강의실",
       "credits": "학점",
       "enrollment": "수강 인원"
-    }
+    },
+    "inputPlaceholderShort": "과목을 입력하세요"
   },
   "sidebar": {
     "history": "내 대화 모아보기",
