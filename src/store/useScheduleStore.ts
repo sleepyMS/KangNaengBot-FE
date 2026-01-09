@@ -76,6 +76,7 @@ interface ScheduleState {
   clearError: () => void;
   reset: () => void;
   switchToGeneratedView: () => void; // 생성된 결과 보기로 전환
+  restoreSchedules: (schedules: Schedule[]) => void; // 메타데이터로부터 시간표 복원
 }
 
 const DEFAULT_FILTERS: ScheduleFilters = {
@@ -258,6 +259,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
         type: "schedule_result",
         metadata: {
           scheduleCount: response.schedules.length,
+          schedules: response.schedules, // 복원을 위해 전체 데이터 저장
         },
       });
     } catch {
@@ -432,6 +434,16 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
 
   switchToGeneratedView: () => {
     set({
+      viewMode: "generated",
+      isCanvasOpen: true,
+    });
+  },
+
+  restoreSchedules: (schedules) => {
+    set({
+      status: "complete",
+      allSchedules: schedules,
+      generatedSchedules: schedules,
       viewMode: "generated",
       isCanvasOpen: true,
     });

@@ -21,6 +21,12 @@
 
 자연어 입력을 받아 시간표를 생성합니다.
 
+> [!IMPORTANT] > **Persistence & Metadata Rule**
+>
+> 1. 백엔드는 이 요청에 대해 **사용자 메시지**와 생성된 **AI 응답 메시지**를 DB(채팅 내역)에 반드시 저장해야 합니다.
+> 2. AI 응답 메시지로 저장할 때, `type`은 `"schedule_result"`로 설정하고, **`metadata` 필드에 생성된 전체 `schedules` JSON 데이터를 포함**해야 합니다.
+> 3. 그래야 사용자가 새로고침하거나 나중에 다시 접속했을 때도 시간표 결과를 그대로 볼 수 있습니다.
+
 #### Request
 
 ```json
@@ -90,6 +96,55 @@
 | `warnings`  | ScheduleWarning[] | ✅   | 전체 경고 메시지 배열 (수강신청 경쟁률 등)              |
 | `message`   | string            | ❌   | **UI에 표시할 AI 응답 메시지** (친근한 톤, 이모지 권장) |
 | `fallback`  | object            | ❌   | 시간표 생성 실패 시 대안 정보                           |
+
+---
+
+### 1.1 데이터 저장 및 응답 규격 (Persistence)
+
+> [!IMPORTANT] > **프론트엔드 상태 복원을 위한 필수 구현 사항입니다.**
+> 백엔드는 시간표 생성 요청 시, **반드시** 아래 규격에 맞춰 메시지를 DB에 저장해야 합니다.
+
+1. **저장 시점:** `/schedules/generate/text` API가 성공적으로 시간표를 생성했을 때
+2. **저장 대상:** 사용자 입력 메시지 (User) + AI 응답 메시지 (Assistant)
+3. **핵심 규칙:** AI 메시지에 `type: "schedule_result"`와 `metadata`를 포함하여 저장
+
+#### DB 저장 및 `GET /sessions/{id}/messages` 응답 예시
+
+나중에 세션 메시지 목록을 조회했을 때, 아래와 같은 형태로 데이터가 내려와야 합니다.
+
+```json
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "컴공과 시간표 짜줘",
+      "created_at": "..."
+    },
+    {
+      "role": "assistant",
+      "content": "3개의 시간표 조합을 찾았습니다! (사용자에게 보여질 텍스트)",
+      "type": "schedule_result",  // 핵심 1: 타입 지정
+      "metadata": {               // 핵심 2: 여기에 전체 데이터 포함
+        "schedules": [
+          {
+            "id": "schedule-1",
+            "courses": [ ... ],
+            "totalCredits": 18,
+            "compactScore": 90,
+            ...
+          },
+          ...
+        ]
+      }
+    }
+  ]
+}
+```
+
+- **`type`**: `"schedule_result"` (프론트엔드가 시간표 메시지임을 식별하는 키)
+- **`metadata.schedules`**: 위 Response의 `schedules` 배열 전체 (새로고침 시 이 데이터를 사용해 시간표를 다시 그림)
+
+---
 
 #### Schedule 객체 필드 설명
 

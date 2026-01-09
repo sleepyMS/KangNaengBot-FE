@@ -64,9 +64,26 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
               </div>
             )}
             <button
-              onClick={() =>
-                useScheduleStore.getState().switchToGeneratedView()
-              }
+              onClick={() => {
+                const store = useScheduleStore.getState();
+                // 1. Store에 이미 데이터가 있으면 그냥 뷰만 전환
+                if (store.generatedSchedules.length > 0) {
+                  store.switchToGeneratedView();
+                  return;
+                }
+
+                // 2. Store가 비어있으면(새로고침 등) 메타데이터에서 복원 시도
+                const schedulesInMeta = message.metadata?.schedules;
+                if (
+                  Array.isArray(schedulesInMeta) &&
+                  schedulesInMeta.length > 0
+                ) {
+                  store.restoreSchedules(schedulesInMeta);
+                } else {
+                  // 3. 메타데이터도 없으면 에러 혹은 재생성 안내 (지금은 뷰 전환만 시도)
+                  store.switchToGeneratedView();
+                }
+              }}
               className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors mt-1"
             >
               <ExternalLink size={16} />
