@@ -352,7 +352,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   },
 
   saveSchedule: async (name) => {
-    const { generatedSchedules, activeScheduleIndex, savedSchedules } = get();
+    const { generatedSchedules, activeScheduleIndex } = get();
     const schedule = generatedSchedules[activeScheduleIndex];
 
     if (!schedule) return;

@@ -10,7 +10,7 @@ import { useScheduleStore, useUIStore, useToastStore } from "@/store";
 import { ScheduleCarousel } from "./ScheduleCarousel";
 
 import { InputModal, AlertModal } from "@/components/common";
-import { SavedSchedule, Course } from "@/types";
+import { Course } from "@/types";
 import { toPng } from "html-to-image";
 import { FilterPanel } from "./FilterPanel";
 import { CourseDetailModal } from "./CourseDetailModal";
@@ -31,7 +31,6 @@ export const ScheduleCanvas = () => {
 
     status,
     setFilters,
-    savedSchedules,
     saveSchedule,
     deleteSavedSchedule,
     viewMode,

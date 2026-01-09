@@ -2,7 +2,7 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="강남대학교 AI 챗봇 - 강냉봇" />
     <title>강냉봇 - 강남대학교 AI 도우미</title>
@@ -12,10 +12,31 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/assets/index-DJzmcjIS.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BSN1oWnZ.css" />
+    <!-- FOUC 방지: HTML 파싱 시점에 테마 즉시 적용 -->
+    <script>
+      (function () {
+        try {
+          const stored = localStorage.getItem("kangnaeng-settings");
+          if (stored) {
+            const settings = JSON.parse(stored);
+            const theme = settings.state?.theme;
+            const isDark =
+              theme === "dark" ||
+              (theme === "system" &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches);
+            if (isDark) document.documentElement.classList.add("dark");
+          } else if (
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          ) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-D-STP4QQ.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Di48dvMp.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>

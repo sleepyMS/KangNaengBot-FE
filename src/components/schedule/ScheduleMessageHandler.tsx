@@ -8,7 +8,6 @@ import {
   ScheduleGeneratingMessage,
 } from "@/components/schedule";
 import { useTranslation } from "react-i18next";
-import { Calendar, ExternalLink } from "lucide-react";
 
 export const ScheduleMessageHandler = () => {
   const { t } = useTranslation();
@@ -18,12 +17,9 @@ export const ScheduleMessageHandler = () => {
     status,
     parsedCourses,
     ambiguousCourses,
-    allSchedules,
-    aiMessage,
     error,
     confirmAllCourses,
     generateSchedules,
-    switchToGeneratedView, // 명시적 캔버스 열기
     reset,
   } = useScheduleStore();
 
