@@ -73,7 +73,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
     const trimmedMessage = message.trim();
     setMessage("");
 
-    // 시간표 모드일 때는 과목 파싱
+    // 시간표 모드일 때는 시간표 생성 요청
     if (isScheduleMode) {
       let targetSessionId = currentSessionId;
 
