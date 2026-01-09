@@ -927,7 +927,8 @@
       "timeDesc": "選択した時限は時間割生成から除外されます。",
       "periods": "時限",
       "noResults": "条件に合う時間割がありません 😢",
-      "autoApplyInfo": "選択した条件は即座に反映されます！"
+      "autoApplyInfo": "選択した条件は即座に反映されます！",
+      "maxCredits": "単位"
     },
     "grid": {
       "time": "時間",

@@ -835,7 +835,8 @@
       "timeDesc": "Selected periods will be excluded from the schedule.",
       "periods": "Period",
       "noResults": "No schedules found matching the criteria 😢",
-      "autoApplyInfo": "Selections are applied immediately!"
+      "autoApplyInfo": "Selections are applied immediately!",
+      "maxCredits": " Credits"
     },
     "grid": {
       "time": "Time",

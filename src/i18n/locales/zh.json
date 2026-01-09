@@ -927,7 +927,8 @@
       "timeDesc": "选择的节次将在生成课程表时排除。",
       "periods": "节次",
       "noResults": "没有符合条件的课程表 😢",
-      "autoApplyInfo": "选择的条件会立即反映！"
+      "autoApplyInfo": "选择的条件会立即反映！",
+      "maxCredits": "学分"
     },
     "grid": {
       "time": "时间",
