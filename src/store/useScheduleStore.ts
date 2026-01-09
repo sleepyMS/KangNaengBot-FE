@@ -81,8 +81,28 @@ interface ScheduleState {
 const DEFAULT_FILTERS: ScheduleFilters = {
   maxCredits: null,
   emptyDays: [],
-  excludePeriods: [],
+  excludeTimeRanges: [],
   preferCompact: false,
+};
+
+// 시간 문자열을 분 단위로 변환 (비교용)
+const timeToMinutes = (time: string): number => {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+};
+
+// 시간 범위가 겹치는지 확인
+const timeRangesOverlap = (
+  start1: string,
+  end1: string,
+  start2: string,
+  end2: string
+): boolean => {
+  const s1 = timeToMinutes(start1);
+  const e1 = timeToMinutes(end1);
+  const s2 = timeToMinutes(start2);
+  const e2 = timeToMinutes(end2);
+  return s1 < e2 && s2 < e1;
 };
 
 const filterSchedules = (
@@ -91,23 +111,26 @@ const filterSchedules = (
 ): Schedule[] => {
   return schedules.filter((schedule) => {
     // 1. 공강 요일 체크
-    // 사용자가 선택한 공강 요일이 스케줄의 emptyDays에 모두 포함되어야 함
     const emptyDayPass = filters.emptyDays.every((day) =>
       schedule.emptyDays.includes(day)
     );
     if (!emptyDayPass) return false;
 
     // 2. 제외 시간대 체크
-    if (filters.excludePeriods.length > 0) {
+    if (filters.excludeTimeRanges.length > 0) {
       for (const course of schedule.courses) {
         for (const slot of course.slots) {
-          for (const ex of filters.excludePeriods) {
-            if (slot.day === ex.day) {
-              // 겹치는 시간이 있는지 확인
-              const hasOverlap = ex.periods.some(
-                (p) => p >= slot.startPeriod && p <= slot.endPeriod
-              );
-              if (hasOverlap) return false;
+          for (const ex of filters.excludeTimeRanges) {
+            if (
+              slot.day === ex.day &&
+              timeRangesOverlap(
+                slot.startTime,
+                slot.endTime,
+                ex.startTime,
+                ex.endTime
+              )
+            ) {
+              return false;
             }
           }
         }

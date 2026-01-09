@@ -39,7 +39,7 @@ export const ScheduleCanvas = () => {
   } = useScheduleStore();
 
   const handleResetFilters = () => {
-    setFilters({ emptyDays: [], excludePeriods: [] });
+    setFilters({ emptyDays: [], excludeTimeRanges: [] });
     // 클라이언트 필터링이므로 재생성 필요 없음
   };
 

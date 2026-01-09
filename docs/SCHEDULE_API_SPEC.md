@@ -53,14 +53,14 @@
           "slots": [
             {
               "day": "mon",
-              "startPeriod": 2,
-              "endPeriod": 3,
+              "startTime": "10:00",
+              "endTime": "12:00",
               "location": "공학관 301"
             },
             {
               "day": "wed",
-              "startPeriod": 2,
-              "endPeriod": 3,
+              "startTime": "10:00",
+              "endTime": "12:00",
               "location": "공학관 301"
             }
           ],
@@ -119,12 +119,12 @@
 
 #### TimeSlot 객체 필드 설명
 
-| 필드          | 타입   | 필수 | 설명                                              | 예시             |
-| ------------- | ------ | ---- | ------------------------------------------------- | ---------------- |
-| `day`         | Day    | ✅   | 요일: `"mon"`, `"tue"`, `"wed"`, `"thu"`, `"fri"` | `"mon"`          |
-| `startPeriod` | number | ✅   | **시작 교시** (1~10, 1교시=9:00)                  | `2` = 10:00 시작 |
-| `endPeriod`   | number | ✅   | **종료 교시** (1~10)                              | `3` = 11:00 종료 |
-| `location`    | string | ❌   | 강의실                                            | `"공학관 301"`   |
+| 필드        | 타입   | 필수 | 설명                                              | 예시           |
+| ----------- | ------ | ---- | ------------------------------------------------- | -------------- |
+| `day`       | Day    | ✅   | 요일: `"mon"`, `"tue"`, `"wed"`, `"thu"`, `"fri"` | `"mon"`        |
+| `startTime` | string | ✅   | **시작 시간** (HH:MM 형식, 24시간)                | `"10:00"`      |
+| `endTime`   | string | ✅   | **종료 시간** (HH:MM 형식, 24시간)                | `"12:00"`      |
+| `location`  | string | ❌   | 강의실                                            | `"공학관 301"` |
 
 ---
 
@@ -230,8 +230,8 @@ type Day = "mon" | "tue" | "wed" | "thu" | "fri";
 ```typescript
 interface TimeSlot {
   day: Day; // 요일
-  startPeriod: number; // 시작 교시 (1~10)
-  endPeriod: number; // 종료 교시 (1~10)
+  startTime: string; // 시작 시간 (HH:MM 형식, 예: "09:00")
+  endTime: string; // 종료 시간 (HH:MM 형식, 예: "12:00")
   location?: string; // 강의실 (선택)
 }
 ```
@@ -306,11 +306,12 @@ interface GenerateSchedulesResponse {
 
 ## ⚡ 주의사항
 
-1. **교시 체계**: 1~10교시 (9:00 ~ 18:00)
-2. **색상**: 프론트엔드에서 사용할 HEX 색상 코드 (`#RRGGBB`)
-3. **emptyDays**: 해당 시간표에서 수업이 없는 요일 배열
-4. **compactScore**: 빈 시간이 적을수록 높은 점수 (0~100)
-5. **message**: AI 스타일 친근한 응답 메시지 (이모지 사용 권장)
+1. **시간 형식**: 24시간 형식 HH:MM 문자열 (예: `"09:00"`, `"14:30"`)
+2. **시간 범위**: 09:00 ~ 21:00 권장 (12시간)
+3. **색상**: 프론트엔드에서 사용할 HEX 색상 코드 (`#RRGGBB`)
+4. **emptyDays**: 해당 시간표에서 수업이 없는 요일 배열
+5. **compactScore**: 빈 시간이 적을수록 높은 점수 (0~100)
+6. **message**: AI 스타일 친근한 응답 메시지 (이모지 사용 권장)
 
 ---
 
@@ -334,14 +335,14 @@ interface GenerateSchedulesResponse {
           "slots": [
             {
               "day": "mon",
-              "startPeriod": 2,
-              "endPeriod": 3,
+              "startTime": "10:00",
+              "endTime": "12:00",
               "location": "공학관 301"
             },
             {
               "day": "wed",
-              "startPeriod": 2,
-              "endPeriod": 3,
+              "startTime": "10:00",
+              "endTime": "12:00",
               "location": "공학관 301"
             }
           ],
@@ -357,14 +358,14 @@ interface GenerateSchedulesResponse {
           "slots": [
             {
               "day": "tue",
-              "startPeriod": 3,
-              "endPeriod": 4,
+              "startTime": "11:00",
+              "endTime": "13:00",
               "location": "공학관 201"
             },
             {
               "day": "thu",
-              "startPeriod": 3,
-              "endPeriod": 4,
+              "startTime": "11:00",
+              "endTime": "13:00",
               "location": "공학관 201"
             }
           ],

@@ -1,6 +1,6 @@
 /**
  * 시간표 그리드 컴포넌트
- * 5일 x 10교시 그리드에 과목 표시
+ * 5일 x 12시간 (09:00~21:00) 그리드에 과목 표시
  * forwardRef로 이미지 저장 시 ref 전달 가능
  */
 import { useMemo, forwardRef } from "react";
@@ -13,43 +13,46 @@ interface ScheduleGridProps {
   onCourseClick?: (course: Course) => void;
 }
 
-// 교시별 시작 시간
-const PERIOD_TIMES = [
-  "09:00",
-  "10:00",
-  "11:00",
-  "12:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-  "18:00",
-];
-
+// 시간 범위: 09:00 ~ 21:00 (12시간)
 const DAYS: Day[] = ["mon", "tue", "wed", "thu", "fri"];
+
+// 시간 문자열을 시간 인덱스로 변환 (09:00 = 0, 10:00 = 1, ...)
+const timeToIndex = (time: string): number => {
+  const hour = parseInt(time.split(":")[0], 10);
+  return hour - 9; // 09:00 기준
+};
+
+// 인덱스를 시간 문자열로 변환
+const indexToTime = (index: number): string => {
+  const hour = index + 9;
+  return `${hour.toString().padStart(2, "0")}:00`;
+};
 
 export const ScheduleGrid = forwardRef<HTMLDivElement, ScheduleGridProps>(
   ({ courses, compact = false, onCourseClick }, ref) => {
     const { t } = useTranslation();
 
-    // 그리드 셀 데이터 생성 (day x period)
+    // 그리드 셀 데이터 생성 (day x hour)
     const gridData = useMemo(() => {
       const grid: Record<string, { course: Course; slot: TimeSlot } | null> =
         {};
 
-      // 빈 그리드 초기화
+      // 빈 그리드 초기화 (12 시간슬롯)
       DAYS.forEach((day) => {
-        for (let period = 1; period <= 10; period++) {
-          grid[`${day}-${period}`] = null;
+        for (let hour = 0; hour < 12; hour++) {
+          grid[`${day}-${hour}`] = null;
         }
       });
 
       // 과목 배치
       courses.forEach((course) => {
         course.slots.forEach((slot) => {
-          for (let p = slot.startPeriod; p <= slot.endPeriod; p++) {
-            grid[`${slot.day}-${p}`] = { course, slot };
+          const startIdx = timeToIndex(slot.startTime);
+          const endIdx = timeToIndex(slot.endTime);
+          for (let h = startIdx; h < endIdx; h++) {
+            if (h >= 0 && h < 12) {
+              grid[`${slot.day}-${h}`] = { course, slot };
+            }
           }
         });
       });
@@ -57,7 +60,7 @@ export const ScheduleGrid = forwardRef<HTMLDivElement, ScheduleGridProps>(
       return grid;
     }, [courses]);
 
-    // 병합된 셀 정보 계산 (연속 교시 합치기)
+    // 병합된 셀 정보 계산 (연속 시간 합치기)
     const mergedCells = useMemo(() => {
       const merged: Record<
         string,
@@ -65,16 +68,18 @@ export const ScheduleGrid = forwardRef<HTMLDivElement, ScheduleGridProps>(
       > = {};
 
       DAYS.forEach((day) => {
-        for (let period = 1; period <= 10; period++) {
-          const key = `${day}-${period}`;
+        for (let hour = 0; hour < 12; hour++) {
+          const key = `${day}-${hour}`;
           const cell = gridData[key];
 
           if (cell) {
-            // 해당 슬롯의 시작 교시인지 확인
-            if (cell.slot.startPeriod === period) {
+            const startIdx = timeToIndex(cell.slot.startTime);
+            // 해당 슬롯의 시작 시간인지 확인
+            if (startIdx === hour) {
+              const endIdx = timeToIndex(cell.slot.endTime);
               merged[key] = {
                 ...cell,
-                span: cell.slot.endPeriod - cell.slot.startPeriod + 1,
+                span: Math.min(endIdx, 12) - startIdx,
                 isStart: true,
               };
             } else {
@@ -89,7 +94,7 @@ export const ScheduleGrid = forwardRef<HTMLDivElement, ScheduleGridProps>(
 
     const cellHeight = compact ? 32 : 48; // px
     const fontSize = compact ? "text-[10px]" : "text-xs";
-    const timeColWidth = compact ? 32 : 48; // px
+    const timeColWidth = compact ? 36 : 52; // px
 
     return (
       <div
@@ -98,7 +103,7 @@ export const ScheduleGrid = forwardRef<HTMLDivElement, ScheduleGridProps>(
         style={{
           display: "grid",
           gridTemplateColumns: `${timeColWidth}px repeat(5, minmax(0, 1fr))`,
-          gridTemplateRows: `auto repeat(10, ${cellHeight}px)`,
+          gridTemplateRows: `auto repeat(12, ${cellHeight}px)`,
         }}
       >
         {/* 헤더 행: 빈 칸 + 5개 요일 */}
@@ -112,25 +117,24 @@ export const ScheduleGrid = forwardRef<HTMLDivElement, ScheduleGridProps>(
           </div>
         ))}
 
-        {/* 10교시 x (시간라벨 + 5요일) */}
-        {Array.from({ length: 10 }, (_, periodIdx) => {
-          const period = periodIdx + 1;
-          const rowStart = periodIdx + 2; // 헤더가 1행
+        {/* 12시간 x (시간라벨 + 5요일) */}
+        {Array.from({ length: 12 }, (_, hourIdx) => {
+          const rowStart = hourIdx + 2; // 헤더가 1행
 
           return (
             <>
               {/* 시간 라벨 */}
               <div
-                key={`time-${period}`}
+                key={`time-${hourIdx}`}
                 className={`flex items-center justify-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 ${fontSize}`}
                 style={{ gridRow: rowStart, gridColumn: 1 }}
               >
-                {compact ? period : PERIOD_TIMES[periodIdx]}
+                {indexToTime(hourIdx)}
               </div>
 
               {/* 요일별 셀 */}
               {DAYS.map((day, dayIdx) => {
-                const key = `${day}-${period}`;
+                const key = `${day}-${hourIdx}`;
                 const cell = mergedCells[key];
                 const colIdx = dayIdx + 2; // 시간열이 1열
 

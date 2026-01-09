@@ -23,7 +23,7 @@ const COURSE_COLORS = [
   "#84CC16", // lime
 ];
 
-// 샘플 과목 데이터
+// 샘플 과목 데이터 (24시간 형식)
 export const MOCK_COURSES: Course[] = [
   {
     id: "CSE101-01",
@@ -32,8 +32,18 @@ export const MOCK_COURSES: Course[] = [
     professor: "김철수",
     credits: 3,
     slots: [
-      { day: "mon", startPeriod: 2, endPeriod: 3, location: "공학관 301" },
-      { day: "wed", startPeriod: 2, endPeriod: 3, location: "공학관 301" },
+      {
+        day: "mon",
+        startTime: "10:00",
+        endTime: "12:00",
+        location: "공학관 301",
+      },
+      {
+        day: "wed",
+        startTime: "10:00",
+        endTime: "12:00",
+        location: "공학관 301",
+      },
     ],
     category: "major",
     color: COURSE_COLORS[0],
@@ -45,8 +55,18 @@ export const MOCK_COURSES: Course[] = [
     professor: "박영희",
     credits: 3,
     slots: [
-      { day: "tue", startPeriod: 1, endPeriod: 2, location: "공학관 302" },
-      { day: "thu", startPeriod: 1, endPeriod: 2, location: "공학관 302" },
+      {
+        day: "tue",
+        startTime: "09:00",
+        endTime: "11:00",
+        location: "공학관 302",
+      },
+      {
+        day: "thu",
+        startTime: "09:00",
+        endTime: "11:00",
+        location: "공학관 302",
+      },
     ],
     category: "major",
     color: COURSE_COLORS[0],
@@ -58,8 +78,18 @@ export const MOCK_COURSES: Course[] = [
     professor: "이민호",
     credits: 3,
     slots: [
-      { day: "tue", startPeriod: 3, endPeriod: 4, location: "공학관 201" },
-      { day: "thu", startPeriod: 3, endPeriod: 4, location: "공학관 201" },
+      {
+        day: "tue",
+        startTime: "11:00",
+        endTime: "13:00",
+        location: "공학관 201",
+      },
+      {
+        day: "thu",
+        startTime: "11:00",
+        endTime: "13:00",
+        location: "공학관 201",
+      },
     ],
     category: "major",
     color: COURSE_COLORS[1],
@@ -71,8 +101,18 @@ export const MOCK_COURSES: Course[] = [
     professor: "정수진",
     credits: 3,
     slots: [
-      { day: "mon", startPeriod: 4, endPeriod: 5, location: "공학관 202" },
-      { day: "wed", startPeriod: 4, endPeriod: 5, location: "공학관 202" },
+      {
+        day: "mon",
+        startTime: "12:00",
+        endTime: "14:00",
+        location: "공학관 202",
+      },
+      {
+        day: "wed",
+        startTime: "12:00",
+        endTime: "14:00",
+        location: "공학관 202",
+      },
     ],
     category: "major",
     color: COURSE_COLORS[1],
@@ -84,7 +124,12 @@ export const MOCK_COURSES: Course[] = [
     professor: "Smith John",
     credits: 2,
     slots: [
-      { day: "fri", startPeriod: 1, endPeriod: 2, location: "어학관 101" },
+      {
+        day: "fri",
+        startTime: "09:00",
+        endTime: "11:00",
+        location: "어학관 101",
+      },
     ],
     category: "liberal",
     color: COURSE_COLORS[2],
@@ -96,7 +141,12 @@ export const MOCK_COURSES: Course[] = [
     professor: "Johnson Emily",
     credits: 2,
     slots: [
-      { day: "wed", startPeriod: 6, endPeriod: 7, location: "어학관 102" },
+      {
+        day: "wed",
+        startTime: "14:00",
+        endTime: "16:00",
+        location: "어학관 102",
+      },
     ],
     category: "liberal",
     color: COURSE_COLORS[3],
@@ -108,8 +158,18 @@ export const MOCK_COURSES: Course[] = [
     professor: "최지능",
     credits: 3,
     slots: [
-      { day: "mon", startPeriod: 6, endPeriod: 7, location: "공학관 401" },
-      { day: "wed", startPeriod: 6, endPeriod: 7, location: "공학관 401" },
+      {
+        day: "mon",
+        startTime: "14:00",
+        endTime: "16:00",
+        location: "공학관 401",
+      },
+      {
+        day: "wed",
+        startTime: "14:00",
+        endTime: "16:00",
+        location: "공학관 401",
+      },
     ],
     category: "major",
     color: COURSE_COLORS[4],
@@ -121,8 +181,18 @@ export const MOCK_COURSES: Course[] = [
     professor: "한구조",
     credits: 3,
     slots: [
-      { day: "tue", startPeriod: 5, endPeriod: 6, location: "공학관 303" },
-      { day: "thu", startPeriod: 5, endPeriod: 6, location: "공학관 303" },
+      {
+        day: "tue",
+        startTime: "13:00",
+        endTime: "15:00",
+        location: "공학관 303",
+      },
+      {
+        day: "thu",
+        startTime: "13:00",
+        endTime: "15:00",
+        location: "공학관 303",
+      },
     ],
     category: "major",
     isRequired: true,
@@ -134,7 +204,9 @@ export const MOCK_COURSES: Course[] = [
     code: "GEN101-01",
     professor: "목사님",
     credits: 0.5,
-    slots: [{ day: "thu", startPeriod: 8, endPeriod: 8, location: "채플실" }],
+    slots: [
+      { day: "thu", startTime: "16:00", endTime: "17:00", location: "채플실" },
+    ],
     category: "other",
     isRequired: true,
     color: COURSE_COLORS[6],
@@ -146,8 +218,18 @@ export const MOCK_COURSES: Course[] = [
     professor: "박시스템",
     credits: 3,
     slots: [
-      { day: "mon", startPeriod: 8, endPeriod: 9, location: "공학관 305" },
-      { day: "wed", startPeriod: 8, endPeriod: 9, location: "공학관 305" },
+      {
+        day: "mon",
+        startTime: "16:00",
+        endTime: "18:00",
+        location: "공학관 305",
+      },
+      {
+        day: "wed",
+        startTime: "16:00",
+        endTime: "18:00",
+        location: "공학관 305",
+      },
     ],
     category: "major",
     color: COURSE_COLORS[7],
@@ -284,13 +366,18 @@ export const mockParseCoursesFromMessage = async (
   if (lowerMessage.includes("금공강") || lowerMessage.includes("금요일 공강")) {
     extractedFilters.emptyDays = ["fri"];
   }
-  if (lowerMessage.includes("1교시 싫") || lowerMessage.includes("아침 싫")) {
-    extractedFilters.excludePeriods = [
-      { day: "mon", periods: [1] },
-      { day: "tue", periods: [1] },
-      { day: "wed", periods: [1] },
-      { day: "thu", periods: [1] },
-      { day: "fri", periods: [1] },
+  if (
+    lowerMessage.includes("1교시 싫") ||
+    lowerMessage.includes("아침 싫") ||
+    lowerMessage.includes("9시 싫")
+  ) {
+    // 09:00~10:00 제외
+    extractedFilters.excludeTimeRanges = [
+      { day: "mon", startTime: "09:00", endTime: "10:00" },
+      { day: "tue", startTime: "09:00", endTime: "10:00" },
+      { day: "wed", startTime: "09:00", endTime: "10:00" },
+      { day: "thu", startTime: "09:00", endTime: "10:00" },
+      { day: "fri", startTime: "09:00", endTime: "10:00" },
     ];
   }
 

@@ -15,7 +15,16 @@ const DAYS: { id: Day; label: string }[] = [
   { id: "fri", label: "금" },
 ];
 
-const PERIODS = Array.from({ length: 9 }, (_, i) => i + 1);
+// 시간 슬롯 (09:00 ~ 20:00, 12개)
+const TIME_HOURS = Array.from({ length: 12 }, (_, i) => {
+  const hour = i + 9;
+  return {
+    startTime: `${hour.toString().padStart(2, "0")}:00`,
+    endTime: `${(hour + 1).toString().padStart(2, "0")}:00`,
+    label: `${hour}시`,
+  };
+});
+
 const ALL_DAYS: Day[] = ["mon", "tue", "wed", "thu", "fri"];
 
 export const FilterPanel = () => {
@@ -31,48 +40,42 @@ export const FilterPanel = () => {
     setFilters({ emptyDays: next });
   };
 
-  // 특정 교시가 모든 요일에서 제외되었는지 확인
-  const isPeriodGloballyExcluded = (period: number) => {
-    // 모든 요일에 대해 해당 교시가 excludePeriods에 포함되어 있는지 확인
+  // 특정 시간대가 모든 요일에서 제외되었는지 확인
+  const isTimeGloballyExcluded = (startTime: string, endTime: string) => {
     return ALL_DAYS.every((day) =>
-      filters.excludePeriods.some(
-        (ep) => ep.day === day && ep.periods.includes(period)
+      filters.excludeTimeRanges.some(
+        (ex) =>
+          ex.day === day && ex.startTime === startTime && ex.endTime === endTime
       )
     );
   };
 
-  // 교시 제외 토글 (전체 요일 적용)
-  const togglePeriodExclusion = (period: number) => {
-    const isExcluded = isPeriodGloballyExcluded(period);
-    let nextFilters = [...filters.excludePeriods];
+  // 시간대 제외 토글 (전체 요일 적용)
+  const toggleTimeExclusion = (startTime: string, endTime: string) => {
+    const isExcluded = isTimeGloballyExcluded(startTime, endTime);
+    let nextFilters = [...filters.excludeTimeRanges];
 
     if (isExcluded) {
-      // 제외 해제: 모든 요일의 해당 교시 제거
-      nextFilters = nextFilters.map((ep) => ({
-        ...ep,
-        periods: ep.periods.filter((p) => p !== period),
-      }));
-      // 빈 배열 정리
-      nextFilters = nextFilters.filter((ep) => ep.periods.length > 0);
+      // 제외 해제: 모든 요일의 해당 시간대 제거
+      nextFilters = nextFilters.filter(
+        (ex) => !(ex.startTime === startTime && ex.endTime === endTime)
+      );
     } else {
-      // 제외 추가: 모든 요일에 해당 교시 추가
+      // 제외 추가: 모든 요일에 해당 시간대 추가
       ALL_DAYS.forEach((day) => {
-        const existing = nextFilters.find((ep) => ep.day === day);
-        if (existing) {
-          // 이미 해당 요일 설정이 있으면 추가
-          if (!existing.periods.includes(period)) {
-            existing.periods = [...existing.periods, period].sort(
-              (a, b) => a - b
-            );
-          }
-        } else {
-          // 없으면 새로 생성
-          nextFilters.push({ day, periods: [period] });
+        const exists = nextFilters.some(
+          (ex) =>
+            ex.day === day &&
+            ex.startTime === startTime &&
+            ex.endTime === endTime
+        );
+        if (!exists) {
+          nextFilters.push({ day, startTime, endTime });
         }
       });
     }
 
-    setFilters({ excludePeriods: nextFilters });
+    setFilters({ excludeTimeRanges: nextFilters });
   };
 
   return (
@@ -122,15 +125,20 @@ export const FilterPanel = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-9 gap-1">
-            {PERIODS.map((period) => {
-              const isExcluded = isPeriodGloballyExcluded(period);
+          <div className="grid grid-cols-6 gap-1">
+            {TIME_HOURS.map((slot) => {
+              const isExcluded = isTimeGloballyExcluded(
+                slot.startTime,
+                slot.endTime
+              );
               return (
                 <button
-                  key={period}
-                  onClick={() => togglePeriodExclusion(period)}
+                  key={slot.startTime}
+                  onClick={() =>
+                    toggleTimeExclusion(slot.startTime, slot.endTime)
+                  }
                   className={`
-                    aspect-square rounded-lg text-sm font-medium transition-all flex items-center justify-center
+                    py-1.5 px-1 rounded-lg text-xs font-medium transition-all flex items-center justify-center
                     ${
                       isExcluded
                         ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800"
@@ -138,7 +146,7 @@ export const FilterPanel = () => {
                     }
                   `}
                 >
-                  {period}
+                  {slot.label}
                 </button>
               );
             })}

@@ -19,19 +19,6 @@ const DAY_MAP: Record<Day, string> = {
   fri: "금",
 };
 
-const PERIOD_TIMES = [
-  "09:00",
-  "10:00",
-  "11:00",
-  "12:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-  "18:00",
-];
-
 export const CourseDetailModal = ({
   course,
   onClose,
@@ -45,9 +32,7 @@ export const CourseDetailModal = ({
     return course.slots
       .map((slot) => {
         const day = DAY_MAP[slot.day];
-        const startTime = PERIOD_TIMES[slot.startPeriod - 1];
-        const endTime = PERIOD_TIMES[slot.endPeriod] || "19:00";
-        return `${day} ${startTime}~${endTime}`;
+        return `${day} ${slot.startTime}~${slot.endTime}`;
       })
       .join(", ");
   };

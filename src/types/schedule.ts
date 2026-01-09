@@ -5,11 +5,11 @@
 // 요일 타입
 export type Day = "mon" | "tue" | "wed" | "thu" | "fri";
 
-// 시간 슬롯
+// 시간 슬롯 (24시간 형식)
 export interface TimeSlot {
   day: Day;
-  startPeriod: number; // 1~10교시
-  endPeriod: number;
+  startTime: string; // "09:00" 형식 (HH:MM)
+  endTime: string; // "12:00" 형식 (HH:MM)
   location?: string;
 }
 
@@ -59,11 +59,11 @@ export interface SavedSchedule extends Schedule {
   isFavorite: boolean;
 }
 
-// 필터 설정
+// 필터 설정 (시간 기반)
 export interface ScheduleFilters {
   maxCredits: number | null;
   emptyDays: Day[];
-  excludePeriods: { day: Day; periods: number[] }[];
+  excludeTimeRanges: { day: Day; startTime: string; endTime: string }[]; // 제외할 시간대
   preferCompact: boolean;
 }
 

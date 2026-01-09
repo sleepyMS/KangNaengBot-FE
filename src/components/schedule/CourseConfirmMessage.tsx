@@ -130,9 +130,9 @@ export const CourseConfirmMessage = ({
                           {candidate.slots
                             .map(
                               (s) =>
-                                `${s.day.charAt(0).toUpperCase()}${
-                                  s.startPeriod
-                                }-${s.endPeriod}`
+                                `${s.day.charAt(0).toUpperCase()} ${
+                                  s.startTime
+                                }~${s.endTime}`
                             )
                             .join(", ")}
                         </div>
