@@ -368,26 +368,70 @@ if (!responseText?.trim()) {
   <!-- �️ [IMAGE_5] Axios 인터셉터 흐름도 -->
   <div class="diagram-container">
     [##_Image|kage@s89rH/dJMcaaYcIQh/AAAAAAAAAAAAAAAAAAAAALKP-clHsVBGHWNUIhVC2OU3VexCVDTxeLvWyqAFKlkE/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1767193199&amp;allow_ip=&amp;allow_referer=&amp;signature=4oB7cGIsNnURHpHO4q6AB7WuLEo%3D|CDM|1.3|{"originWidth":8457,"originHeight":3338,"style":"alignCenter","alt":"Axios
-    인터셉터 흐름도","caption":"Axios 인터셉터 흐름도","filename":"Axios
-    인터셉터 흐름도.png"}_##]
+    인터셉터 흐름도","caption":"Axios 인터셉터 흐름도 (토큰 자동 갱신
+    포함)","filename":"Axios 인터셉터 흐름도.png"}_##]
   </div>
   <h4 data-ke-size="size20">💻 코드 구현</h4>
-  <pre class="moonscript"><code>// apiClient.ts - 응답 인터셉터
+  <pre class="typescript"><code>// apiClient.ts - 응답 인터셉터 & 토큰 갱신 로직
+
+// 토큰 갱신 중복 요청 방지를 위한 플래그
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+// 갱신 완료 후 대기 중인 요청 재시도
+const onRefreshed = (token: string) => {
+  refreshSubscribers.forEach((callback) => callback(token));
+  refreshSubscribers = [];
+};
 
 apiClient.interceptors.response.use(
-  (response) =&gt; response,
-  (error) =&gt; {
-    if (error.response?.status === 401) {
-      // 토큰 만료: 자동 로그아웃 처리
-      localStorage.removeItem("access_token");
-      window.location.href = "/login";
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config;
+
+    // 401 에러 발생 시 토큰 갱신 시도
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // 이미 갱신 중이라면 대기열에 추가
+        return new Promise((resolve) => {
+          refreshSubscribers.push((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            resolve(apiClient(originalRequest));
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        // 리프레시 토큰으로 새 엑세스 토큰 발급
+        const { data } = await apiClient.post("/auth/refresh");
+        const newToken = data.access_token;
+        
+        setAccessToken(newToken);
+        isRefreshing = false;
+        onRefreshed(newToken); // 대기 중인 요청들 실행
+
+        // 실패했던 원래 요청 재시도
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        // 갱신 실패 시 로그아웃
+        removeAccessToken();
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      }
     }
     return Promise.reject(error);
   }
 );</code></pre>
   <p data-ke-size="size16">
-    이 패턴으로 <b>모든 API 호출에 대해 일관된 에러 처리</b>가 가능해졌고, 각
-    컴포넌트에서 반복적인 401 처리 코드를 제거할 수 있었습니다.
+    단순히 로그아웃시키는 방식을 넘어,
+    <b>사용자 개입 없이 토큰을 자동으로 갱신</b>하는 로직을 구현했습니다. 갱신
+    요청이 동시에 여러 번 발생하는 것을 막기 위해
+    <code>isRefreshing</code> 플래그와 <code>Subscribers</code> 패턴을 사용하여
+    한 번의 갱신으로 모든 보류된 요청을 처리하도록 최적화했습니다.
   </p>
   <hr data-ke-style="style1" />
   <h2 id="section-results" data-ke-size="size26">📈 결과 및 학습</h2>
