@@ -1,10 +1,11 @@
-import { X, CheckCircle, AlertCircle } from "lucide-react";
+import { X, CheckCircle, AlertCircle, Info } from "lucide-react";
 import { useToastStore, ToastType } from "@/store/useToastStore";
 import { useSettingsStore } from "@/store";
 
 const icons: Record<ToastType, React.ReactNode> = {
   success: <CheckCircle size={18} className="text-primary-500" />,
   error: <AlertCircle size={18} className="text-red-500" />,
+  info: <Info size={18} className="text-blue-500" />,
 };
 
 export const ToastContainer = () => {
@@ -17,6 +18,11 @@ export const ToastContainer = () => {
       return isDark
         ? "bg-slate-800 border-primary-500"
         : "bg-primary-50 border-primary-200";
+    }
+    if (type === "info") {
+      return isDark
+        ? "bg-slate-800 border-blue-500"
+        : "bg-blue-50 border-blue-200";
     }
     return isDark ? "bg-slate-800 border-red-500" : "bg-red-50 border-red-200";
   };

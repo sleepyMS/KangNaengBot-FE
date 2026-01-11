@@ -865,12 +865,14 @@
       "confirm": "저장",
       "overwrite": "이미 같은 이름의 시간표가 있습니다. 덮어쓰시겠습니까?",
       "success_image_download": "시간표 이미지가 성공적으로 다운로드되었습니다.",
-      "failed_image_download": "시간표 이미지 다운로드에 실패했습니다."
+      "failed_image_download": "시간표 이미지 다운로드에 실패했습니다.",
+      "comingSoon": "시간표 저장 기능은 준비 중이에요! 곧 만나요 🚀"
     },
     "delete": {
       "title": "이 시간표를 삭제하시겠습니까?",
       "message": "삭제된 시간표는 복구할 수 없습니다.",
-      "success": "삭제되었습니다."
+      "success": "삭제되었습니다.",
+      "comingSoon": "시간표 삭제 기능은 준비 중이에요! 곧 만나요 🚀"
     },
     "generated": {
       "title": "생성된 시간표",

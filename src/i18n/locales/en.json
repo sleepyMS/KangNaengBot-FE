@@ -865,12 +865,14 @@
       "confirm": "Save",
       "overwrite": "A schedule with the same name already exists. Overwrite?",
       "success_image_download": "Timetable image downloaded successfully.",
-      "failed_image_download": "Failed to download timetable image."
+      "failed_image_download": "Failed to download timetable image.",
+      "comingSoon": "Schedule save feature is coming soon! Stay tuned 🚀"
     },
     "delete": {
       "title": "Delete this schedule?",
       "message": "Deleted schedules cannot be recovered.",
-      "success": "Deleted successfully."
+      "success": "Deleted successfully.",
+      "comingSoon": "Schedule delete feature is coming soon! Stay tuned 🚀"
     },
     "generated": {
       "title": "Generated Schedules",

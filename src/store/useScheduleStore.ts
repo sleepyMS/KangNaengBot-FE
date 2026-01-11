@@ -14,6 +14,7 @@ import type {
 import { scheduleService } from "@/api";
 import i18n from "@/i18n";
 import { useChatStore } from "./useChatStore";
+import { useToastStore } from "./useToastStore";
 
 type ScheduleStatus =
   | "idle"
@@ -405,7 +406,18 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     });
 
     // 2. 비동기 저장 (API or LocalStorage)
-    await scheduleService.saveSchedule(newSavedSchedule);
+    try {
+      await scheduleService.saveSchedule(newSavedSchedule);
+    } catch (error) {
+      // API 에러 시 "준비 중" 메시지 표시 (낙관적 UI는 유지)
+      console.warn(
+        "[saveSchedule] API not ready, keeping optimistic UI:",
+        error
+      );
+      useToastStore
+        .getState()
+        .addToast("info", i18n.t("schedule.save.comingSoon"));
+    }
   },
 
   deleteSavedSchedule: async (id) => {
@@ -422,7 +434,18 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     });
 
     // 2. 비동기 삭제 (API or LocalStorage)
-    await scheduleService.deleteSavedSchedule(id);
+    try {
+      await scheduleService.deleteSavedSchedule(id);
+    } catch (error) {
+      // API 에러 시 "준비 중" 메시지 표시 (낙관적 UI는 유지)
+      console.warn(
+        "[deleteSavedSchedule] API not ready, keeping optimistic UI:",
+        error
+      );
+      useToastStore
+        .getState()
+        .addToast("info", i18n.t("schedule.delete.comingSoon"));
+    }
   },
 
   loadSchedule: (schedule) => {
