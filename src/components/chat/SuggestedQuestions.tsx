@@ -58,7 +58,7 @@ export const SuggestedQuestions = () => {
   const handleQuestionClick = async (question: string) => {
     try {
       // 세션이 없으면 sendMessage에서 자동 생성 (낙관적 UI)
-      await sendMessage(question, !currentSessionId);
+      await sendMessage(question, { createSessionIfNeeded: !currentSessionId });
     } catch {
       // 에러는 store에서 처리됨
     }

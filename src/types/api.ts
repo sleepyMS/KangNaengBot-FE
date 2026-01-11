@@ -75,17 +75,23 @@ export interface MessageItem {
   metadata?: any; // 추가 데이터 (예: 생성된 시간표 개수 등)
 }
 
+/** Chat 모드 타입 */
+export type ChatMode = "chat" | "schedule";
+
 /** 메시지 전송 요청 (POST /chat/message) */
 export interface MessageRequest {
   session_id: string;
   message: string;
   user_id?: number | null;
+  mode?: ChatMode;
 }
 
 /** 메시지 전송 응답 */
 export interface MessageResponse {
   text: string;
   done: boolean;
+  type?: "text" | "schedule_result";
+  schedules?: import("./schedule").Schedule[];
 }
 
 /** 세션 메시지 목록 응답 (GET /sessions/{session_id}/messages) */

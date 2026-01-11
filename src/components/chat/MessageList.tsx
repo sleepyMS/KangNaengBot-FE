@@ -1,7 +1,7 @@
 import { useEffect, useRef, useMemo, useCallback } from "react";
 import { ChatBubble } from "./ChatBubble";
 import { Spinner } from "@/components/common";
-import { useChatStore } from "@/store";
+import { useChatStore, useScheduleStore } from "@/store";
 import type { MessageItem } from "@/types";
 import { ScheduleMessageHandler } from "@/components/schedule";
 
@@ -40,6 +40,7 @@ interface MessageListProps {
 
 export const MessageList = ({ onScrollChange }: MessageListProps) => {
   const { messages, isSending, isLoading } = useChatStore();
+  const { isScheduleMode, status: scheduleStatus } = useScheduleStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const isAtBottomRef = useRef(true);
@@ -126,8 +127,8 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
           <ChatBubble key={index} message={message} />
         ))}
 
-        {/* Loading Indicator */}
-        {isSending && (
+        {/* Loading Indicator - 시간표 생성 중엔 ScheduleGeneratingMessage가 대신 표시됨 */}
+        {isSending && !(isScheduleMode && scheduleStatus === "generating") && (
           <div className="flex gap-3 items-end animate-slide-up">
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-center overflow-hidden">
               <img

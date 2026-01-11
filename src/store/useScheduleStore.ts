@@ -78,6 +78,7 @@ interface ScheduleState {
   reset: () => void;
   switchToGeneratedView: () => void; // 생성된 결과 보기로 전환
   restoreSchedules: (schedules: Schedule[]) => void; // 메타데이터로부터 시간표 복원
+  setGeneratedSchedules: (schedules: Schedule[]) => void; // Chat store에서 호출 - UI 상태 업데이트
 }
 
 const DEFAULT_FILTERS: ScheduleFilters = {
@@ -449,6 +450,20 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       isCanvasOpen: true,
       activeScheduleIndex: 0,
       filters: DEFAULT_FILTERS,
+    });
+  },
+
+  // Chat store에서 호출되는 시간표 설정 액션
+  setGeneratedSchedules: (schedules) => {
+    set({
+      status: "complete",
+      allSchedules: schedules,
+      generatedSchedules: schedules,
+      activeScheduleIndex: 0,
+      viewMode: "generated",
+      isCanvasOpen: true,
+      loadedSchedule: null,
+      error: null,
     });
   },
 

@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import type { MessageItem, SessionItem } from "@/types";
+import type { MessageItem, SessionItem, ChatMode } from "@/types";
 import { sessionsService, chatService } from "@/api";
 import i18n from "@/i18n";
+import { useScheduleStore } from "./useScheduleStore";
 
 // 진행 중인 프리페치 요청을 추적하기 위한 Map (컴포넌트 외부에 선언)
 const pendingPrefetches = new Map<string, Promise<MessageItem[]>>();
@@ -26,7 +27,10 @@ interface ChatState {
   deleteAllSessions: () => Promise<void>;
   sendMessage: (
     message: string,
-    createSessionIfNeeded?: boolean
+    options?: {
+      createSessionIfNeeded?: boolean;
+      mode?: ChatMode;
+    }
   ) => Promise<void>;
   addMessage: (message: MessageItem) => void;
   clearCurrentSession: () => void;
@@ -307,12 +311,22 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   sendMessage: async (
     message: string,
-    createSessionIfNeeded: boolean = false
+    options?: {
+      createSessionIfNeeded?: boolean;
+      mode?: ChatMode;
+    }
   ) => {
+    const createSessionIfNeeded = options?.createSessionIfNeeded ?? false;
+    const mode = options?.mode ?? "chat";
     let { currentSessionId, guestUserId } = get();
 
     // 세션이 없고, 새 세션 생성이 필요한 경우 (첫 메시지)
     const needsNewSession = !currentSessionId && createSessionIfNeeded;
+
+    // 시간표 모드일 때 생성 상태로 전환
+    if (mode === "schedule") {
+      useScheduleStore.setState({ status: "generating" });
+    }
 
     // 낙관적 UI: 사용자 메시지 즉시 표시
     const userMessage: MessageItem = {
@@ -359,6 +373,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         session_id: currentSessionId,
         message,
         user_id: guestUserId ?? undefined,
+        mode,
       });
 
       // 빈 응답 재시도 로직 (최대 5번)
@@ -378,6 +393,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           session_id: currentSessionId,
           message,
           user_id: guestUserId ?? undefined,
+          mode,
         });
         responseText = retryResponse.text;
       }
@@ -387,16 +403,47 @@ export const useChatStore = create<ChatState>((set, get) => ({
         responseText = i18n.t("store.error.emptyResponseFallback");
       }
 
-      // AI 응답 추가
-      const assistantMessage: MessageItem = {
-        role: "assistant",
-        content: responseText,
-        created_at: new Date().toISOString(),
-      };
-      set((state) => ({
-        messages: [...state.messages, assistantMessage],
-        isSending: false,
-      }));
+      // 시간표 응답 처리
+      if (response.type === "schedule_result" && response.schedules?.length) {
+        // Schedule store에 결과 전달 (UI 표시용)
+        useScheduleStore.getState().setGeneratedSchedules(response.schedules);
+
+        // 메시지 히스토리에 시간표 결과 추가
+        const scheduleMessage: MessageItem = {
+          role: "assistant",
+          content:
+            responseText ||
+            i18n.t("schedule.status.found", {
+              count: response.schedules.length,
+            }),
+          created_at: new Date().toISOString(),
+          type: "schedule_result",
+          metadata: {
+            scheduleCount: response.schedules.length,
+            schedules: response.schedules,
+          },
+        };
+        set((state) => ({
+          messages: [...state.messages, scheduleMessage],
+          isSending: false,
+        }));
+      } else {
+        // 일반 텍스트 응답 처리
+        // schedule 모드였는데 일반 응답이 온 경우 status 초기화
+        if (mode === "schedule") {
+          useScheduleStore.setState({ status: "idle" });
+        }
+
+        const assistantMessage: MessageItem = {
+          role: "assistant",
+          content: responseText,
+          created_at: new Date().toISOString(),
+        };
+        set((state) => ({
+          messages: [...state.messages, assistantMessage],
+          isSending: false,
+        }));
+      }
 
       // 세션 제목 업데이트 (첫 메시지인 경우, 새 세션이 아닌 기존 세션일 때만)
       if (!needsNewSession && get().messages.length <= 2) {
@@ -420,6 +467,21 @@ export const useChatStore = create<ChatState>((set, get) => ({
         set({ messageCache: newCache });
       }
     } catch (error) {
+      // schedule 모드였으면 status 초기화 (에러 상태로)
+      if (mode === "schedule") {
+        useScheduleStore.setState({
+          status: "error",
+          error: {
+            type: "generation_failed",
+            message:
+              error instanceof Error
+                ? error.message
+                : i18n.t("store.error.sendMessage"),
+            retryable: true,
+          },
+        });
+      }
+
       // 실패 시 낙관적 메시지 롤백
       set((state) => ({
         messages: needsNewSession ? [] : state.messages.slice(0, -1),
