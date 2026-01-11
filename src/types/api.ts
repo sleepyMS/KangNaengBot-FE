@@ -84,6 +84,7 @@ export interface MessageRequest {
   message: string;
   user_id?: number | null;
   mode?: ChatMode;
+  language?: string; // 사용자 언어 설정 (e.g., 'ko', 'en')
 }
 
 /** 메시지 전송 응답 */

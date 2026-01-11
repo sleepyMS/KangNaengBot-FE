@@ -374,6 +374,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         message,
         user_id: guestUserId ?? undefined,
         mode,
+        language: i18n.language,
       });
 
       // 빈 응답 재시도 로직 (최대 5번)
@@ -394,6 +395,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           message,
           user_id: guestUserId ?? undefined,
           mode,
+          language: i18n.language,
         });
         responseText = retryResponse.text;
       }
