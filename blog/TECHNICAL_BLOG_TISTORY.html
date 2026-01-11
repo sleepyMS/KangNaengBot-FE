@@ -1,72 +1,5 @@
 <!-- Tistory Blog Post Content --><!-- Copy content below into Tistory HTML Editor -->
-<style>
-  .link-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    border: none;
-    transition: all 0.2s ease;
-    transform: translateY(0);
-  }
-  .link-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.25);
-    filter: brightness(1.1);
-  }
-  .link-btn-github {
-    background: #1f2937;
-    color: white !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-  }
-  .link-btn-demo {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    color: white !important;
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-  }
-  .link-btn-portfolio {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-    color: white !important;
-    box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
-  }
-  .toc-tag {
-    display: inline-block;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  .toc-tag:hover {
-    transform: scale(1.05);
-    filter: brightness(0.95);
-  }
-  .toc-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 1.5rem 0;
-    padding: 1rem;
-    background: rgba(248, 250, 252, 0.95);
-    backdrop-filter: blur(8px);
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    align-items: center;
-    position: sticky;
-    top: 20px;
-    z-index: 100;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  h2[id^="section-"] {
-    scroll-margin-top: 100px;
-  }
-</style>
-<div class="kangnaeng-tech-blog">
-  <!-- 프로젝트 링크 박스 -->
+<div class="gangnaeng-tech-blog">
   <div style="display: flex; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap">
     <a
       class="link-btn link-btn-github"
@@ -74,15 +7,13 @@
       target="_blank"
       rel="noopener noreferrer"
       >📂 GitHub 저장소</a
-    >
-    <a
+    ><a
       class="link-btn link-btn-demo"
       href="https://kang-naeng-bot-fe.vercel.app/"
       target="_blank"
       rel="noopener noreferrer"
       >🌐 라이브 데모</a
-    >
-    <a
+    ><a
       class="link-btn link-btn-portfolio"
       href="https://ms-mind.vercel.app/"
       target="_blank"
@@ -96,57 +27,52 @@
       근본적인 한계를 프론트엔드 기술로 어떻게 극복했는지 공유합니다.
     </p>
   </blockquote>
-  <div style="padding: 1rem"></div>
+  <div style="padding: 1rem">&nbsp;</div>
   <!-- 목차 태그 네비게이션 -->
   <p
     style="
       margin: 2rem 0 0.5rem 0.25rem;
-      font-weight: 700;
+      font-weight: bold;
       color: #475569;
       font-size: 1.1rem;
     "
+    data-ke-size="size16"
   >
     📑 바로가기
   </p>
   <div class="toc-container">
     <a
-      href="#section-problem"
       class="toc-tag"
       style="background: #fee2e2; color: #dc2626"
+      href="#section-problem"
       >🎯 문제 정의</a
-    >
-    <a
-      href="#section-architecture"
+    ><a
       class="toc-tag"
       style="background: #e0e7ff; color: #4338ca"
+      href="#section-architecture"
       >🏗️ 아키텍처</a
-    >
-    <a
-      href="#section-challenges"
+    ><a
       class="toc-tag"
       style="background: #fef3c7; color: #d97706"
+      href="#section-challenges"
       >🔥 도전과제</a
-    >
-    <a
-      href="#section-solutions"
+    ><a
       class="toc-tag"
       style="background: #dcfce7; color: #16a34a"
+      href="#section-solutions"
       >💡 해결 과정</a
-    >
-    <a
-      href="#section-results"
+    ><a
       class="toc-tag"
       style="background: #dbeafe; color: #2563eb"
+      href="#section-results"
       >📈 결과</a
-    >
-    <a
-      href="#section-techstack"
+    ><a
       class="toc-tag"
       style="background: #f3e8ff; color: #7c3aed"
+      href="#section-techstack"
       >🛠 기술 스택</a
     >
   </div>
-
   <hr data-ke-style="style1" />
   <h2 id="section-problem" data-ke-size="size26">
     🎯 문제 정의: 왜 AI 챗봇은 느리게 느껴질까?
@@ -161,6 +87,10 @@
     더 심각한 문제는 <b>사이드바에서 다른 채팅방으로 이동할 때</b>였습니다.
     클릭할 때마다 로딩 스피너가 나타나고, 이전 대화 내용을 불러오는 동안
     사용자는 무의미한 대기 시간을 경험했습니다.
+  </p>
+  <p data-ke-size="size16">
+    특히 <b>Google Cloud Run</b>과 같은 서버리스 환경에서는 Cold Start
+    지연(~2-5초)까지 더해져, 첫 요청 시 체감 지연이 더욱 심해집니다.
   </p>
   <blockquote data-ke-style="style2">
     <p data-ke-size="size16">
@@ -178,11 +108,10 @@
     <b>Zustand</b>를 활용한 단방향 데이터 흐름과 <b>Axios 인터셉터</b> 패턴이
     유기적으로 연결되어 안정적인 채팅 경험을 제공합니다.
   </p>
-  <!-- �️ [IMAGE_1] 시스템 아키텍처 다이어그램 -->
-  <div class="diagram-container">
-    [##_Image|kage@bUs2Af/dJMcagqzLVc/AAAAAAAAAAAAAAAAAAAAABdzAmHHcQcZmQMr1PP73IyrAtVc8R4WYmDa7nrNtRxh/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1767193199&amp;allow_ip=&amp;allow_referer=&amp;signature=feMeS%2BL1hZt%2BochrMEa1gfCDHjg%3D|CDM|1.3|{"originWidth":7219,"originHeight":930,"style":"alignCenter","width":866,"height":112,"alt":"시스템
-    아키텍처","caption":"시스템 아키텍처","filename":"시스템 아키텍처.png"}_##]
-  </div>
+  [##_Image|kage@bUs2Af/dJMcagqzLVc/AAAAAAAAAAAAAAAAAAAAABdzAmHHcQcZmQMr1PP73IyrAtVc8R4WYmDa7nrNtRxh/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=8Bw%2F4yB5fxPy7tJzQWfqvSFWK5o%3D|CDM|1.3|{"originWidth":7219,"originHeight":930,"style":"alignCenter","width":816,"height":105,"alt":"시스템
+  아키텍처","caption":"시스템 아키텍처"}_##]
+  <p data-ke-size="size16">&nbsp;</p>
+  <!--  ️ [IMAGE_1] 시스템 아키텍처 다이어그램 -->
   <h3 data-ke-size="size23">프로젝트 구조</h3>
   <pre class="axapta"><code>src/
 ├── api/                    # API 통신 계층
@@ -205,8 +134,8 @@
   <p data-ke-size="size16">
     <code
       >[사용자 입력] &rarr; [API 요청] &rarr; (대기 😴) &rarr; [응답 수신]
-      &rarr; [UI 업데이트]&lt;/code &gt;
-    </code>
+      &rarr; [UI 업데이트]</code
+    >
   </p>
   <p data-ke-size="size16">
     이 동기적 흐름에서 "대기" 구간이 사용자 경험을 해칩니다. 스피너나 스켈레톤
@@ -231,12 +160,10 @@
     <b>"낙관"</b>하여 즉시 UI를 업데이트하는 패턴입니다.
   </p>
   <h4 data-ke-size="size20">📊 Optimistic UI 시퀀스 다이어그램</h4>
-  <!-- �️ [IMAGE_2] Optimistic UI 시퀀스 다이어그램 -->
-  <div class="diagram-container">
-    [##_Image|kage@beKeLt/dJMcaiu7y6B/AAAAAAAAAAAAAAAAAAAAAKN53PB_HxVAw0wMkpSTffTsbEx_Ls6zModCmS2xtV7w/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1767193199&amp;allow_ip=&amp;allow_referer=&amp;signature=a35NYquHMrmp6x5ZM4%2F4F%2FlRjHk%3D|CDM|1.3|{"originWidth":3720,"originHeight":5090,"style":"alignCenter","width":521,"height":713,"alt":"Optimistic
-    UI 시퀀스 다이어그램","caption":"Optimistic UI 시퀀스
-    다이어그램","filename":"Optimistic UI 시퀀스 다이어그램.png"}_##]
-  </div>
+  [##_Image|kage@beKeLt/dJMcaiu7y6B/AAAAAAAAAAAAAAAAAAAAAKN53PB_HxVAw0wMkpSTffTsbEx_Ls6zModCmS2xtV7w/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=1Dy%2FAw5n9J3RWlItBXy5DgSvH9U%3D|CDM|1.3|{"originWidth":3720,"originHeight":5090,"style":"alignCenter","width":468,"height":640,"alt":"Optimistic
+  UI 시퀀스 다이어그램","caption":"Optimistic UI 시퀀스 다이어그램"}_##]
+  <p data-ke-size="size16">&nbsp;</p>
+  <!--  ️ [IMAGE_2] Optimistic UI 시퀀스 다이어그램 -->
   <h4 data-ke-size="size20">💻 코드 구현</h4>
   <pre class="pf"><code>// useChatStore.ts - Optimistic UI 적용
 
@@ -288,15 +215,11 @@ sendMessage: async (message: string) =&gt; {
     재검증(Revalidate)하여 최신 상태를 동기화합니다.
   </p>
   <h4 data-ke-size="size20">📊 SWR 데이터 흐름</h4>
-  <!-- ️ [IMAGE_3] 프리페칭 시퀀스 다이어그램 -->
-  <div class="diagram-container">
-    [##_Image|kage@dFjQ71/dJMcai2WPFv/AAAAAAAAAAAAAAAAAAAAAF3VfgyMAj9-D5CPVQJNjJqj35IugpzSxlfsV9vlawRa/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1767193199&amp;allow_ip=&amp;allow_referer=&amp;signature=%2FVs1c5oxABhEgvrV2ay9tSWE%2BVg%3D|CDM|1.3|{"originWidth":5410,"originHeight":4170,"style":"alignCenter","width":766,"height":590,"alt":"호버
-    프리페칭 시퀀스 다이어그램","caption":"호버 프리페칭 시퀀스
-    다이어그램","filename":"호버 프리페칭 시퀀스 다이어그램.png"}_##]
-  </div>
+  [##_Image|kage@dFjQ71/dJMcai2WPFv/AAAAAAAAAAAAAAAAAAAAAF3VfgyMAj9-D5CPVQJNjJqj35IugpzSxlfsV9vlawRa/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=uDakVZxtT0w%2FCeMi8Lz4ZN8JTzU%3D|CDM|1.3|{"originWidth":5410,"originHeight":4170,"style":"alignCenter","width":758,"height":584,"alt":"SWR
+  데이터 흐름도","caption":"SWR 데이터 흐름도"}_##]<!-- ️ [IMAGE_3] 프리페칭 시퀀스 다이어그램 -->
   <h4 data-ke-size="size20">💻 코드 구현</h4>
   <pre class="typescript"><code>// useChatStore.ts - SWR 구현
-selectSession: async (sessionId: string) => {
+selectSession: async (sessionId: string) =&gt; {
   // 1. (Fast) 캐시된 데이터가 있다면 즉시 렌더링
   if (messageCache.has(sessionId)) {
     set({ messages: messageCache.get(sessionId) });
@@ -331,12 +254,19 @@ selectSession: async (sessionId: string) => {
     <b>백그라운드에서 자동으로 재시도</b>합니다.
   </p>
   <h4 data-ke-size="size20">📊 재시도 로직 플로우</h4>
-  <!-- 🖼️ [IMAGE_4] 재시도 로직 플로우차트 -->
-  <div class="diagram-container">
-    [##_Image|kage@yfff2/dJMcaajAStg/AAAAAAAAAAAAAAAAAAAAAPxXCImnYM4SwYVJAYwg2brv7M46kR8mx-FyyqO_CBoh/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1767193199&amp;allow_ip=&amp;allow_referer=&amp;signature=BmG5QYwook8Za4IskitGrZtKUM4%3D|CDM|1.3|{"originWidth":2034,"originHeight":4064,"style":"alignCenter","width":295,"height":589,"alt":"재시도
-    로직 플로우차트","caption":"재시도 로직 플로우차트","filename":"재시도 로직
-    플로우차트.png"}_##]
-  </div>
+  [##_Image|kage@yfff2/dJMcaajAStg/AAAAAAAAAAAAAAAAAAAAAPxXCImnYM4SwYVJAYwg2brv7M46kR8mx-FyyqO_CBoh/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=deTWaZ%2FcbxT9ScSqDCGdHb%2BWtZE%3D|CDM|1.3|{"originWidth":2034,"originHeight":4064,"style":"alignCenter","width":298,"height":595,"alt":"재시도
+  로직 다이어그램","caption":"재시도 로직 다이어그램"}_##]
+  <h4 data-ke-size="size20">
+    <span
+      style="
+        font-size: 1.1rem;
+        background-color: #fafafa;
+        color: #333333;
+        letter-spacing: 0px;
+      "
+      >&nbsp;</span
+    >
+  </h4>
   <h4 data-ke-size="size20">💻 코드 구현</h4>
   <pre class="javascript"><code>const MAX_RETRIES = 5;
 const RETRY_DELAY = 500; // ms
@@ -365,36 +295,37 @@ if (!responseText?.trim()) {
     일괄 처리합니다.
   </p>
   <h4 data-ke-size="size20">📊 API 요청 흐름</h4>
-  <!-- �️ [IMAGE_5] Axios 인터셉터 흐름도 -->
-  <div class="diagram-container">
-    [##_Image|kage@s89rH/dJMcaaYcIQh/AAAAAAAAAAAAAAAAAAAAALKP-clHsVBGHWNUIhVC2OU3VexCVDTxeLvWyqAFKlkE/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1767193199&amp;allow_ip=&amp;allow_referer=&amp;signature=4oB7cGIsNnURHpHO4q6AB7WuLEo%3D|CDM|1.3|{"originWidth":8457,"originHeight":3338,"style":"alignCenter","alt":"Axios
-    인터셉터 흐름도","caption":"Axios 인터셉터 흐름도 (토큰 자동 갱신
-    포함)","filename":"Axios 인터셉터 흐름도.png"}_##]
-  </div>
+  [##_Image|kage@nmSpa/dJMcac2QZvi/AAAAAAAAAAAAAAAAAAAAALzexOYgIEuIKfURSCiHvWcecbLjyw2xkbyA_kVrBBV0/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=TfCWAjcsWufZeW9JRdMB1bD6Brs%3D|CDM|1.3|{"originWidth":8191,"originHeight":3091,"style":"alignCenter","alt":"Axios
+  인터셉터 흐름도","caption":"Axios 인터셉터 흐름도","filename":"Axios 인터셉터
+  흐름도.png"}_##]
+  <p data-ke-size="size16">&nbsp;</p>
+  <!--  ️ [IMAGE_5] Axios 인터셉터 흐름도 -->
   <h4 data-ke-size="size20">💻 코드 구현</h4>
-  <pre class="typescript"><code>// apiClient.ts - 응답 인터셉터 & 토큰 갱신 로직
+  <pre
+    class="typescript"
+  ><code>// apiClient.ts - 응답 인터셉터 &amp; 토큰 갱신 로직
 
 // 토큰 갱신 중복 요청 방지를 위한 플래그
 let isRefreshing = false;
-let refreshSubscribers: ((token: string) => void)[] = [];
+let refreshSubscribers: ((token: string) =&gt; void)[] = [];
 
 // 갱신 완료 후 대기 중인 요청 재시도
-const onRefreshed = (token: string) => {
-  refreshSubscribers.forEach((callback) => callback(token));
+const onRefreshed = (token: string) =&gt; {
+  refreshSubscribers.forEach((callback) =&gt; callback(token));
   refreshSubscribers = [];
 };
 
 apiClient.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
+  (response) =&gt; response,
+  async (error: AxiosError) =&gt; {
     const originalRequest = error.config;
 
     // 401 에러 발생 시 토큰 갱신 시도
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 &amp;&amp; !originalRequest._retry) {
       if (isRefreshing) {
         // 이미 갱신 중이라면 대기열에 추가
-        return new Promise((resolve) => {
-          refreshSubscribers.push((token) => {
+        return new Promise((resolve) =&gt; {
+          refreshSubscribers.push((token) =&gt; {
             originalRequest.headers.Authorization = `Bearer ${token}`;
             resolve(apiClient(originalRequest));
           });
@@ -439,30 +370,30 @@ apiClient.interceptors.response.use(
   <table data-ke-align="alignLeft">
     <thead>
       <tr>
-        <th>항목</th>
-        <th>개선 전</th>
-        <th>개선 후</th>
-        <th>적용 기술</th>
+        <th>&nbsp;항목</th>
+        <th>&nbsp;개선 전</th>
+        <th>&nbsp;개선 후</th>
+        <th>&nbsp;적용 기술</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>메시지 전송 체감 시간</td>
-        <td>1-2초</td>
-        <td><b>0ms ⚡</b></td>
-        <td>Optimistic UI</td>
+        <td>&nbsp;메시지 전송 체감 시간</td>
+        <td>&nbsp;1-2초</td>
+        <td><b>&nbsp;0ms ⚡</b></td>
+        <td>&nbsp;Optimistic UI</td>
       </tr>
       <tr>
-        <td>세션 전환 로딩</td>
-        <td>500ms~1s</td>
-        <td><b>즉시 ⚡</b></td>
-        <td>Prefetching + Caching</td>
+        <td>&nbsp;세션 전환 로딩</td>
+        <td>&nbsp;500ms~1s</td>
+        <td><b>&nbsp;즉시 ⚡</b></td>
+        <td>&nbsp;Prefetching + Caching</td>
       </tr>
       <tr>
-        <td>네트워크 에러 노출</td>
-        <td>빈번함</td>
-        <td><b>대폭 감소 ✅</b></td>
-        <td>Retry Logic</td>
+        <td>&nbsp;네트워크 에러 노출</td>
+        <td>&nbsp;빈번함</td>
+        <td><b>&nbsp;대폭 감소 ✅</b></td>
+        <td>&nbsp;Retry Logic</td>
       </tr>
     </tbody>
   </table>
@@ -496,41 +427,41 @@ apiClient.interceptors.response.use(
   <table data-ke-align="alignLeft">
     <thead>
       <tr>
-        <th>영역</th>
-        <th>기술</th>
-        <th>선택 이유</th>
+        <th>&nbsp;영역</th>
+        <th>&nbsp;기술</th>
+        <th>&nbsp;선택 이유</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>Framework</td>
-        <td>React 19 + TypeScript</td>
-        <td>타입 안정성과 최신 기능 활용</td>
+        <td>&nbsp;Framework</td>
+        <td>&nbsp;React 19 + TypeScript</td>
+        <td>&nbsp;타입 안정성과 최신 기능 활용</td>
       </tr>
       <tr>
-        <td>상태 관리</td>
-        <td>Zustand</td>
-        <td>가벼운 번들 크기, 직관적 API</td>
+        <td>&nbsp;상태 관리</td>
+        <td>&nbsp;Zustand</td>
+        <td>&nbsp;가벼운 번들 크기, 직관적 API</td>
       </tr>
       <tr>
-        <td>HTTP 클라이언트</td>
-        <td>Axios</td>
-        <td>인터셉터를 통한 중앙화된 에러 처리</td>
+        <td>&nbsp;HTTP 클라이언트</td>
+        <td>&nbsp;Axios</td>
+        <td>&nbsp;인터셉터를 통한 중앙화된 에러 처리</td>
       </tr>
       <tr>
-        <td>스타일링</td>
-        <td>TailwindCSS</td>
-        <td>JIT 컴파일로 작은 CSS 번들</td>
+        <td>&nbsp;스타일링</td>
+        <td>&nbsp;TailwindCSS</td>
+        <td>&nbsp;JIT 컴파일로 작은 CSS 번들</td>
       </tr>
       <tr>
-        <td>빌드 도구</td>
-        <td>Vite</td>
-        <td>빠른 HMR, ES Modules 기반</td>
+        <td>&nbsp;빌드 도구</td>
+        <td>&nbsp;Vite</td>
+        <td>&nbsp;빠른 HMR, ES Modules 기반</td>
       </tr>
       <tr>
-        <td>다국어</td>
-        <td>i18next</td>
-        <td>KO, EN, JA, ZH 4개 언어 지원</td>
+        <td>&nbsp;다국어</td>
+        <td>&nbsp;i18next</td>
+        <td>&nbsp;KO, EN, JA, ZH 4개 언어 지원</td>
       </tr>
     </tbody>
   </table>
@@ -539,15 +470,16 @@ apiClient.interceptors.response.use(
     <i
       >이 글이 비슷한 문제를 고민하는 프론트엔드 개발자분들께 도움이 되었으면
       합니다.</i
-    ><i></i>
+    >
   </p>
   <p style="color: #333333; text-align: start" data-ke-size="size16">
-    <b>📂 프로젝트 저장소</b>:<span>&nbsp;</span
-    ><a
-      style="color: #2563eb"
-      title="https://github.com/sleepyMS/KangNaengBot-FE"
-      href="https://github.com/sleepyMS/KangNaengBot-FE"
-      >KangNaengBot-FE</a
+    <b>📂 프로젝트 저장소</b>:<span>
+      <a
+        style="color: #2563eb"
+        title="https://github.com/sleepyMS/KangNaengBot-FE"
+        href="https://github.com/sleepyMS/KangNaengBot-FE"
+        >KangNaengBot-FE</a
+      ></span
     >
   </p>
   <p style="color: #333333; text-align: start" data-ke-size="size16">
@@ -561,9 +493,32 @@ apiClient.interceptors.response.use(
     >
   </p>
 </div>
+<hr
+  contenteditable="false"
+  data-ke-type="horizontalRule"
+  data-ke-style="style5"
+/>
+<p style="color: #333333; text-align: start" data-ke-size="size16">
+  <b>◆ 함께 보면 좋은 글</b>
+</p>
+<ul style="list-style-type: disc" data-ke-list-type="disc">
+  <li>
+    <span style="background-color: #e6f5ff; color: #006dd7"
+      ><span style="background-color: #e6f5ff; color: #006dd7"
+        ><b
+          ><a
+            href="https://me-in-journey.tistory.com/entry/React-%EC%9E%90%EC%97%B0%EC%96%B4-%EA%B8%B0%EB%B0%98-%EC%8B%9C%EA%B0%84%ED%91%9C-%EC%9E%90%EB%8F%99-%EC%83%9D%EC%84%B1%EC%9D%84-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%97%AC%EC%A0%95"
+            >[React] 자연어 기반 시간표 자동 생성을 위한 프론트엔드 최적화
+            여정</a
+          ></b
+        ></span
+      ></span
+    ><span style="background-color: #e6f5ff; color: #006dd7"><b></b></span>
+  </li>
+</ul>
 <div>
   <style>
-    .kangnaeng-tech-blog {
+    .gangnaeng-tech-blog {
       font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
         Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
         "Malgun Gothic", sans-serif;
@@ -574,7 +529,7 @@ apiClient.interceptors.response.use(
       padding: 20px 0;
     }
 
-    .kangnaeng-tech-blog h1 {
+    .gangnaeng-tech-blog h1 {
       font-size: 2.5rem;
       font-weight: 800;
       margin-bottom: 1.5rem;
@@ -584,7 +539,7 @@ apiClient.interceptors.response.use(
       padding-bottom: 1rem;
     }
 
-    .kangnaeng-tech-blog h2 {
+    .gangnaeng-tech-blog h2 {
       font-size: 1.8rem;
       font-weight: 700;
       margin-top: 3rem;
@@ -592,7 +547,7 @@ apiClient.interceptors.response.use(
       color: #2563eb;
     }
 
-    .kangnaeng-tech-blog h3 {
+    .gangnaeng-tech-blog h3 {
       font-size: 1.4rem;
       font-weight: 600;
       margin-top: 2rem;
@@ -600,7 +555,7 @@ apiClient.interceptors.response.use(
       color: #1f2937;
     }
 
-    .kangnaeng-tech-blog h4 {
+    .gangnaeng-tech-blog h4 {
       font-size: 1.2rem;
       font-weight: 600;
       margin-top: 1.5rem;
@@ -608,13 +563,13 @@ apiClient.interceptors.response.use(
       color: #374151;
     }
 
-    .kangnaeng-tech-blog p {
+    .gangnaeng-tech-blog p {
       margin-bottom: 1.25rem;
       font-size: 1.1rem;
       word-break: keep-all;
     }
 
-    .kangnaeng-tech-blog blockquote {
+    .gangnaeng-tech-blog blockquote {
       background-color: #f3f4f6;
       border-left: 5px solid #2563eb;
       margin: 1.5rem 0;
@@ -622,13 +577,13 @@ apiClient.interceptors.response.use(
       border-radius: 0 8px 8px 0;
     }
 
-    .kangnaeng-tech-blog blockquote p {
+    .gangnaeng-tech-blog blockquote p {
       margin: 0;
       font-weight: 500;
       color: #4b5563;
     }
 
-    .kangnaeng-tech-blog strong {
+    .gangnaeng-tech-blog strong {
       color: #2563eb;
       background: linear-gradient(
         120deg,
@@ -639,7 +594,7 @@ apiClient.interceptors.response.use(
       border-radius: 3px;
     }
 
-    .kangnaeng-tech-blog pre {
+    .gangnaeng-tech-blog pre {
       background: #1e1e1e;
       color: #d4d4d4;
       padding: 1.5rem;
@@ -652,12 +607,12 @@ apiClient.interceptors.response.use(
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
-    .kangnaeng-tech-blog code {
+    .gangnaeng-tech-blog code {
       font-family: "Fira Code", Consolas, Monaco, monospace;
     }
 
-    .kangnaeng-tech-blog p code,
-    .kangnaeng-tech-blog li code {
+    .gangnaeng-tech-blog p code,
+    .gangnaeng-tech-blog li code {
       background-color: #eff6ff;
       color: #2563eb;
       padding: 2px 6px;
@@ -666,18 +621,18 @@ apiClient.interceptors.response.use(
       border: 1px solid #dbeafe;
     }
 
-    .kangnaeng-tech-blog ul,
-    .kangnaeng-tech-blog ol {
+    .gangnaeng-tech-blog ul,
+    .gangnaeng-tech-blog ol {
       margin-bottom: 1.5rem;
       padding-left: 1.5rem;
     }
 
-    .kangnaeng-tech-blog li {
+    .gangnaeng-tech-blog li {
       margin-bottom: 0.5rem;
       font-size: 1.1rem;
     }
 
-    .kangnaeng-tech-blog table {
+    .gangnaeng-tech-blog table {
       width: 100%;
       border-collapse: collapse;
       margin: 2rem 0;
@@ -687,7 +642,7 @@ apiClient.interceptors.response.use(
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     }
 
-    .kangnaeng-tech-blog th {
+    .gangnaeng-tech-blog th {
       background-color: #f8fafc;
       font-weight: 600;
       color: #1e293b;
@@ -696,20 +651,20 @@ apiClient.interceptors.response.use(
       border-bottom: 2px solid #e2e8f0;
     }
 
-    .kangnaeng-tech-blog td {
+    .gangnaeng-tech-blog td {
       padding: 1rem;
       border-bottom: 1px solid #e2e8f0;
       color: #334155;
     }
 
-    .kangnaeng-tech-blog hr {
+    .gangnaeng-tech-blog hr {
       border: 0;
       height: 1px;
       background: linear-gradient(to right, transparent, #e5e7eb, transparent);
       margin: 3rem 0;
     }
 
-    .kangnaeng-tech-blog .diagram-container {
+    .gangnaeng-tech-blog .diagram-container {
       display: flex;
       justify-content: center;
       margin: 2rem 0;
@@ -719,23 +674,23 @@ apiClient.interceptors.response.use(
       border: 1px solid #e5e7eb;
     }
 
-    .kangnaeng-tech-blog .diagram-container img {
+    .gangnaeng-tech-blog .diagram-container img {
       max-width: 100%;
       height: auto;
     }
 
-    .kangnaeng-tech-blog a {
+    .gangnaeng-tech-blog a {
       color: #2563eb;
       text-decoration: none;
       border-bottom: 1px solid transparent;
       transition: border-color 0.2s;
     }
 
-    .kangnaeng-tech-blog a:hover {
+    .gangnaeng-tech-blog a:hover {
       border-bottom-color: #2563eb;
     }
 
-    .kangnaeng-tech-blog .highlight-box {
+    .gangnaeng-tech-blog .highlight-box {
       background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
       border: 1px solid #bfdbfe;
       border-radius: 12px;
@@ -743,13 +698,81 @@ apiClient.interceptors.response.use(
       margin: 2rem 0;
     }
 
-    .kangnaeng-tech-blog .highlight-box h4 {
+    .gangnaeng-tech-blog .highlight-box h4 {
       margin-top: 0;
       color: #1d4ed8;
     }
 
-    .kangnaeng-tech-blog .highlight-box p {
+    .gangnaeng-tech-blog .highlight-box p {
       margin-bottom: 0;
+    }
+  </style>
+</div>
+<div>
+  <style>
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s ease;
+      transform: translateY(0);
+    }
+    .link-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.25);
+      filter: brightness(1.1);
+    }
+    .link-btn-github {
+      background: #1f2937;
+      color: white !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+    .link-btn-demo {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white !important;
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+    }
+    .link-btn-portfolio {
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      color: white !important;
+      box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+    }
+    .toc-tag {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .toc-tag:hover {
+      transform: scale(1.05);
+      filter: brightness(0.95);
+    }
+    .toc-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      align-items: center;
+      position: sticky;
+      top: 20px;
+      z-index: 100;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    h2[id^="section-"] {
+      scroll-margin-top: 100px;
     }
   </style>
 </div>
