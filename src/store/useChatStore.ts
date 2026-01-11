@@ -160,7 +160,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
     // 진행 중인 프리페치가 있으면 해당 요청을 재사용
     const pendingPrefetch = pendingPrefetches.get(sessionId);
     if (pendingPrefetch && !forceRefresh) {
-      set({ isLoading: true, error: null, currentSessionId: sessionId });
+      set({
+        isLoading: true,
+        error: null,
+        currentSessionId: sessionId,
+        messages: [],
+      });
 
       try {
         const messages = await pendingPrefetch;
@@ -176,7 +181,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
 
     // 캐시도 없고 프리페치도 없으면 로딩 표시 후 API 호출
-    set({ isLoading: true, error: null, currentSessionId: sessionId });
+    // messages를 즉시 비워서 이전 세션 대화가 보이지 않도록 함
+    set({
+      isLoading: true,
+      error: null,
+      currentSessionId: sessionId,
+      messages: [],
+    });
 
     try {
       const response = await sessionsService.getSessionMessages(sessionId);
