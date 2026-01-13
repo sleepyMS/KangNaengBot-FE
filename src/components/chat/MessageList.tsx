@@ -39,7 +39,7 @@ interface MessageListProps {
 }
 
 export const MessageList = ({ onScrollChange }: MessageListProps) => {
-  const { messages, isSending, isLoading } = useChatStore();
+  const { messages, isSending, isLoading, streamingMessage } = useChatStore();
   const { isScheduleMode, status: scheduleStatus } = useScheduleStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -139,7 +139,7 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
             </div>
             <div className="bubble-ai flex items-center gap-1">
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                생각중
+                {streamingMessage || "생각중"}
               </span>
               <span className="flex gap-0.5 ml-1">
                 <span

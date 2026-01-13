@@ -102,6 +102,93 @@ export interface GetMessagesResponse {
 }
 
 // ============================================
+// SSE 스트리밍 관련 타입
+// ============================================
+
+/** SSE 이벤트 타입 */
+export type SSEEventType =
+  | "thinking"
+  | "tool"
+  | "tool_result"
+  | "text"
+  | "schedule"
+  | "done"
+  | "error";
+
+/** SSE 기본 이벤트 */
+export interface SSEBaseEvent {
+  type: SSEEventType;
+}
+
+/** SSE thinking 이벤트 - AI 추론 과정 */
+export interface SSEThinkingEvent extends SSEBaseEvent {
+  type: "thinking";
+  content: string;
+  message: string;
+}
+
+/** SSE tool 이벤트 - 도구 실행 시작 */
+export interface SSEToolEvent extends SSEBaseEvent {
+  type: "tool";
+  tool_name: string;
+  message: string;
+}
+
+/** SSE tool_result 이벤트 - 도구 실행 완료 */
+export interface SSEToolResultEvent extends SSEBaseEvent {
+  type: "tool_result";
+  tool_name: string;
+  message: string;
+}
+
+/** SSE text 이벤트 - 응답 텍스트 (chunk) */
+export interface SSETextEvent extends SSEBaseEvent {
+  type: "text";
+  content: string;
+}
+
+/** SSE schedule 이벤트 - 시간표 결과 */
+export interface SSEScheduleEvent extends SSEBaseEvent {
+  type: "schedule";
+  success: boolean;
+  schedules: import("./schedule").Schedule[];
+  warnings?: string[];
+  message: string;
+}
+
+/** SSE done 이벤트 - 스트리밍 완료 */
+export interface SSEDoneEvent extends SSEBaseEvent {
+  type: "done";
+}
+
+/** SSE error 이벤트 - 에러 */
+export interface SSEErrorEvent extends SSEBaseEvent {
+  type: "error";
+  message: string;
+}
+
+/** SSE 이벤트 유니온 타입 */
+export type SSEEvent =
+  | SSEThinkingEvent
+  | SSEToolEvent
+  | SSEToolResultEvent
+  | SSETextEvent
+  | SSEScheduleEvent
+  | SSEDoneEvent
+  | SSEErrorEvent;
+
+/** SSE 스트리밍 콜백 */
+export interface SSECallbacks {
+  onThinking?: (content: string, message: string) => void;
+  onTool?: (toolName: string, message: string) => void;
+  onToolResult?: (toolName: string, message: string) => void;
+  onText?: (content: string) => void;
+  onSchedule?: (data: SSEScheduleEvent) => void;
+  onDone?: () => void;
+  onError?: (message: string) => void;
+}
+
+// ============================================
 // Profile 관련 타입
 // ============================================
 

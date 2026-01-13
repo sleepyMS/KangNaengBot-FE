@@ -4,9 +4,11 @@
  */
 import { useTranslation } from "react-i18next";
 import { Calendar, Loader2 } from "lucide-react";
+import { useChatStore } from "@/store";
 
 export const ScheduleGeneratingMessage = () => {
   const { t } = useTranslation();
+  const streamingMessage = useChatStore((state) => state.streamingMessage);
 
   return (
     <div className="bubble-ai max-w-sm">
@@ -24,7 +26,7 @@ export const ScheduleGeneratingMessage = () => {
           <div className="flex items-center gap-2 mt-1">
             <Loader2 size={14} className="animate-spin text-primary-500" />
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {t("schedule.generating.analyzing")}
+              {streamingMessage || t("schedule.generating.analyzing")}
             </div>
           </div>
         </div>

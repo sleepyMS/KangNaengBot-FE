@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import type { MessageItem, SessionItem, ChatMode } from "@/types";
+import type {
+  MessageItem,
+  SessionItem,
+  ChatMode,
+  SSEScheduleEvent,
+} from "@/types";
 import { sessionsService, chatService } from "@/api";
 import i18n from "@/i18n";
 import { useScheduleStore } from "./useScheduleStore";
@@ -17,6 +22,8 @@ interface ChatState {
   isLoading: boolean;
   isSending: boolean;
   error: string | null;
+  streamingMessage: string | null; // SSE 스트리밍 상태 메시지 (UI 표시용)
+  abortController: AbortController | null; // 스트리밍 취소용
 
   // Actions
   fetchSessions: () => Promise<void>;
@@ -48,6 +55,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
   isLoading: true, // 초기 로딩 시 스피너 표시
   isSending: false,
   error: null,
+  streamingMessage: null, // SSE 상태 메시지
+  abortController: null, // 스트리밍 취소 컨트롤러
 
   // Actions
   fetchSessions: async () => {
@@ -380,105 +389,134 @@ export const useChatStore = create<ChatState>((set, get) => ({
         return;
       }
 
-      const response = await chatService.sendMessage({
-        session_id: currentSessionId,
-        message,
-        user_id: guestUserId ?? undefined,
-        mode,
-        language: i18n.language,
-      });
+      // 진행 중인 스트리밍 취소
+      get().abortController?.abort();
 
-      // 빈 응답 재시도 로직 (최대 5번)
-      let responseText = response.text;
-      const MAX_RETRIES = 5;
-      const RETRY_DELAY = 500; // ms
+      // 새 AbortController 생성
+      const abortController = new AbortController();
+      set({ abortController, streamingMessage: null });
 
-      for (
-        let attempt = 1;
-        attempt < MAX_RETRIES && !responseText?.trim();
-        attempt++
-      ) {
-        // 재시도 전 대기
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+      // 응답 텍스트 누적용
+      let accumulatedText = "";
+      let scheduleData: SSEScheduleEvent | null = null;
 
-        const retryResponse = await chatService.sendMessage({
+      // SSE 스트리밍 호출
+      await chatService.sendMessageStream(
+        {
           session_id: currentSessionId,
           message,
           user_id: guestUserId ?? undefined,
           mode,
           language: i18n.language,
-        });
-        responseText = retryResponse.text;
-      }
-
-      // 5번 다 실패하면 친절한 재질문 안내 메시지로 응답
-      if (!responseText?.trim()) {
-        responseText = i18n.t("store.error.emptyResponseFallback");
-      }
-
-      // 시간표 응답 처리
-      if (response.type === "schedule_result" && response.schedules?.length) {
-        // Schedule store에 결과 전달 (UI 표시용)
-        useScheduleStore.getState().setGeneratedSchedules(response.schedules);
-
-        // 메시지 히스토리에 시간표 결과 추가
-        const scheduleMessage: MessageItem = {
-          role: "assistant",
-          content:
-            responseText ||
-            i18n.t("schedule.status.found", {
-              count: response.schedules.length,
-            }),
-          created_at: new Date().toISOString(),
-          type: "schedule_result",
-          metadata: {
-            scheduleCount: response.schedules.length,
-            schedules: response.schedules,
+        },
+        {
+          onThinking: (_content, statusMessage) => {
+            set({ streamingMessage: statusMessage });
           },
-        };
-        set((state) => ({
-          messages: [...state.messages, scheduleMessage],
-          isSending: false,
-        }));
-      } else {
-        // 일반 텍스트 응답 처리
-        // schedule 모드였는데 일반 응답이 온 경우 status 초기화
-        if (mode === "schedule") {
-          useScheduleStore.setState({ status: "idle" });
-        }
+          onTool: (_toolName, statusMessage) => {
+            set({ streamingMessage: statusMessage });
+          },
+          onToolResult: (_toolName, statusMessage) => {
+            set({ streamingMessage: statusMessage });
+          },
+          onText: (chunk) => {
+            accumulatedText += chunk;
+            // 스트리밍 메시지 초기화 (텍스트가 오면 로딩 표시 끝)
+            set({ streamingMessage: null });
+          },
+          onSchedule: (data) => {
+            scheduleData = data;
+            // 시간표 결과를 Schedule store에 전달
+            if (data.success && data.schedules?.length) {
+              useScheduleStore.getState().setGeneratedSchedules(data.schedules);
+            }
+          },
+          onDone: () => {
+            // 스트리밍 완료 - 최종 메시지 처리
+            set({ streamingMessage: null, abortController: null });
 
-        const assistantMessage: MessageItem = {
-          role: "assistant",
-          content: responseText,
-          created_at: new Date().toISOString(),
-        };
-        set((state) => ({
-          messages: [...state.messages, assistantMessage],
-          isSending: false,
-        }));
-      }
+            if (
+              scheduleData &&
+              scheduleData.success &&
+              scheduleData.schedules?.length
+            ) {
+              // 시간표 응답 처리
+              const scheduleMessage: MessageItem = {
+                role: "assistant",
+                content:
+                  scheduleData.message ||
+                  i18n.t("schedule.status.found", {
+                    count: scheduleData.schedules.length,
+                  }),
+                created_at: new Date().toISOString(),
+                type: "schedule_result",
+                metadata: {
+                  scheduleCount: scheduleData.schedules.length,
+                  schedules: scheduleData.schedules,
+                },
+              };
+              set((state) => ({
+                messages: [...state.messages, scheduleMessage],
+                isSending: false,
+              }));
+            } else if (accumulatedText.trim()) {
+              // 일반 텍스트 응답 처리
+              if (mode === "schedule") {
+                useScheduleStore.setState({ status: "idle" });
+              }
 
-      // 세션 제목 업데이트 (첫 메시지인 경우, 새 세션이 아닌 기존 세션일 때만)
-      if (!needsNewSession && get().messages.length <= 2) {
-        set((state) => ({
-          sessions: state.sessions.map((s) =>
-            s.sid === currentSessionId
-              ? {
-                  ...s,
-                  title:
-                    message.slice(0, 50) + (message.length > 50 ? "..." : ""),
-                }
-              : s
-          ),
-        }));
-      }
+              const assistantMessage: MessageItem = {
+                role: "assistant",
+                content: accumulatedText,
+                created_at: new Date().toISOString(),
+              };
+              set((state) => ({
+                messages: [...state.messages, assistantMessage],
+                isSending: false,
+              }));
+            } else {
+              // 빈 응답
+              const fallbackMessage: MessageItem = {
+                role: "assistant",
+                content: i18n.t("store.error.emptyResponseFallback"),
+                created_at: new Date().toISOString(),
+              };
+              set((state) => ({
+                messages: [...state.messages, fallbackMessage],
+                isSending: false,
+              }));
+            }
 
-      // 캐시 업데이트 (현재 메시지 내역 저장)
-      if (currentSessionId) {
-        const newCache = new Map(get().messageCache);
-        newCache.set(currentSessionId, get().messages);
-        set({ messageCache: newCache });
-      }
+            // 세션 제목 업데이트 (첫 메시지인 경우)
+            if (!needsNewSession && get().messages.length <= 2) {
+              set((state) => ({
+                sessions: state.sessions.map((s) =>
+                  s.sid === currentSessionId
+                    ? {
+                        ...s,
+                        title:
+                          message.slice(0, 50) +
+                          (message.length > 50 ? "..." : ""),
+                      }
+                    : s
+                ),
+              }));
+            }
+
+            // 캐시 업데이트
+            if (currentSessionId) {
+              const newCache = new Map(get().messageCache);
+              newCache.set(currentSessionId, get().messages);
+              set({ messageCache: newCache });
+            }
+          },
+          onError: (errorMessage) => {
+            set({ streamingMessage: null, abortController: null });
+            throw new Error(errorMessage);
+          },
+        },
+        abortController.signal
+      );
     } catch (error) {
       // schedule 모드였으면 status 초기화 (에러 상태로)
       if (mode === "schedule") {
@@ -499,6 +537,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set((state) => ({
         messages: needsNewSession ? [] : state.messages.slice(0, -1),
         isSending: false,
+        streamingMessage: null,
+        abortController: null,
         error:
           error instanceof Error
             ? error.message
