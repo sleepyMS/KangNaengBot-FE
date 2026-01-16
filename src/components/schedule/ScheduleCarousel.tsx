@@ -5,8 +5,14 @@
 import { RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { Course, Schedule } from "@/types";
+import type { Course, Day, Schedule } from "@/types";
 import { ScheduleGrid } from "./ScheduleGrid";
+
+// 요일 정렬 순서 (월화수목금)
+const DAY_ORDER: Day[] = ["mon", "tue", "wed", "thu", "fri"];
+
+const sortDays = (days: Day[]): Day[] =>
+  [...days].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
 
 interface ScheduleCarouselProps {
   schedules: Schedule[];
@@ -104,7 +110,7 @@ export const ScheduleCarousel = ({
           </span>
           {currentSchedule.emptyDays.length > 0 && (
             <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded">
-              {currentSchedule.emptyDays
+              {sortDays(currentSchedule.emptyDays)
                 .map((d) => t(`schedule.days.${d}`))
                 .join(", ")}{" "}
               {t("schedule.canvas.emptyDay")}
@@ -124,7 +130,7 @@ export const ScheduleCarousel = ({
               key={idx}
               className="text-xs text-amber-700 dark:text-amber-300"
             >
-              ⚠️ {warning.message}
+              ⚠️ {typeof warning === "string" ? warning : warning.message}
             </div>
           ))}
         </div>

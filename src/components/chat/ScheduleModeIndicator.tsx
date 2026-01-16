@@ -34,6 +34,7 @@ export const ScheduleModeIndicator = () => {
   // 필터 태그 표시
   const filterTags = [];
   if (filters.emptyDays.length > 0) {
+    const dayOrder = ["mon", "tue", "wed", "thu", "fri"];
     const dayNames: Record<string, string> = {
       mon: t("schedule.days.mon"),
       tue: t("schedule.days.tue"),
@@ -41,8 +42,12 @@ export const ScheduleModeIndicator = () => {
       thu: t("schedule.days.thu"),
       fri: t("schedule.days.fri"),
     };
+    // 월화수목금 순서로 정렬
+    const sortedDays = [...filters.emptyDays].sort(
+      (a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b)
+    );
     filterTags.push(
-      `${filters.emptyDays.map((d) => dayNames[d]).join(", ")} ${t(
+      `${sortedDays.map((d) => dayNames[d]).join(", ")} ${t(
         "schedule.filter.emptyDay"
       )}`
     );
