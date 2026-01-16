@@ -3,7 +3,7 @@ import type {
   MessageItem,
   SessionItem,
   ChatMode,
-  SSEScheduleEvent,
+  SSEScheduleData,
 } from "@/types";
 import { sessionsService, chatService } from "@/api";
 import i18n from "@/i18n";
@@ -398,7 +398,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       // 응답 텍스트 누적용
       let accumulatedText = "";
-      let scheduleData: SSEScheduleEvent | null = null;
+      let scheduleData: SSEScheduleData | null = null;
 
       // SSE 스트리밍 호출
       await chatService.sendMessageStream(

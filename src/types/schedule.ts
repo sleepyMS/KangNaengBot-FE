@@ -18,6 +18,8 @@ export interface Course {
   id: string;
   name: string;
   code: string;
+  courseNumber?: string; // 학수번호 (code와 동일할 수 있음)
+  section?: string; // 분반 (예: "03")
   professor: string;
   credits: number;
   slots: TimeSlot[];
@@ -43,11 +45,12 @@ export interface ScheduleWarning {
 // 생성된 시간표
 export interface Schedule {
   id: string;
+  rank?: number; // 시간표 순위 (1, 2, 3...)
   courses: Course[];
   totalCredits: number;
   emptyDays: Day[];
   compactScore: number; // 0~100
-  warnings: ScheduleWarning[];
+  warnings: (ScheduleWarning | string)[]; // 문자열 또는 객체 형태 모두 지원
   recommendations: string[];
   savedId?: string; // 저장된 경우 해당 ID
 }

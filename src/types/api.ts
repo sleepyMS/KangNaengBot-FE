@@ -147,13 +147,24 @@ export interface SSETextEvent extends SSEBaseEvent {
   content: string;
 }
 
-/** SSE schedule 이벤트 - 시간표 결과 */
-export interface SSEScheduleEvent extends SSEBaseEvent {
-  type: "schedule";
+/** SSE schedule 이벤트 데이터 (공통) */
+export interface SSEScheduleData {
   success: boolean;
   schedules: import("./schedule").Schedule[];
   warnings?: string[];
-  message: string;
+  message?: string;
+}
+
+/** SSE schedule 이벤트 - 시간표 결과 (직접 또는 content 래핑) */
+export interface SSEScheduleEvent extends SSEBaseEvent {
+  type: "schedule";
+  // 직접 형태
+  success?: boolean;
+  schedules?: import("./schedule").Schedule[];
+  warnings?: string[];
+  message?: string;
+  // content 래핑 형태
+  content?: SSEScheduleData;
 }
 
 /** SSE done 이벤트 - 스트리밍 완료 */
@@ -183,7 +194,7 @@ export interface SSECallbacks {
   onTool?: (toolName: string, message: string) => void;
   onToolResult?: (toolName: string, message: string) => void;
   onText?: (content: string) => void;
-  onSchedule?: (data: SSEScheduleEvent) => void;
+  onSchedule?: (data: SSEScheduleData) => void; // 정규화된 데이터
   onDone?: () => void;
   onError?: (message: string) => void;
 }

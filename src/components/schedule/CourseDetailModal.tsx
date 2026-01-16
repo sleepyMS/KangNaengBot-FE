@@ -3,7 +3,7 @@
  * 시간표에서 과목 클릭 시 표시
  */
 import { useTranslation } from "react-i18next";
-import { X, Clock, MapPin, User, BookOpen } from "lucide-react";
+import { X, Clock, MapPin, User, BookOpen, Hash } from "lucide-react";
 import type { Course, Day } from "@/types";
 
 interface CourseDetailModalProps {
@@ -45,6 +45,11 @@ export const CourseDetailModal = ({
     return locations.join(", ") || "-";
   };
 
+  // 과목 코드-분반 문자열
+  const getCodeSection = () => {
+    return course.section ? `${course.code}[${course.section}]` : course.code;
+  };
+
   return (
     <>
       {/* 백드롭 */}
@@ -60,7 +65,7 @@ export const CourseDetailModal = ({
           <div className="flex items-start justify-between">
             <div>
               <h3 className="text-lg font-bold">{course.name}</h3>
-              <p className="text-white/80 text-sm mt-0.5">{course.code}</p>
+              <p className="text-white/80 text-sm mt-0.5">{getCodeSection()}</p>
             </div>
             <button
               onClick={onClose}
@@ -87,6 +92,23 @@ export const CourseDetailModal = ({
               </div>
             </div>
           </div>
+
+          {/* 분반 */}
+          {course.section && (
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center">
+                <Hash size={16} className="text-gray-500 dark:text-gray-400" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {t("schedule.detail.section")}
+                </div>
+                <div className="text-sm font-medium text-gray-900 dark:text-white">
+                  {course.section}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* 시간 */}
           <div className="flex items-center gap-3">

@@ -264,12 +264,19 @@ export const ScheduleGrid = forwardRef<HTMLDivElement, ScheduleGridProps>(
                         <div className="font-medium truncate">
                           {compact ? course.name.slice(0, 4) : course.name}
                         </div>
-                        {!compact && height > 30 && (
+                        {!compact && height > 28 && (
+                          <div className="text-white/85 truncate text-[10px]">
+                            {course.section
+                              ? `${course.code}[${course.section}]`
+                              : course.code}
+                          </div>
+                        )}
+                        {!compact && height > 42 && (
                           <div className="text-white/80 truncate text-[10px]">
                             {slot.location}
                           </div>
                         )}
-                        {!compact && height > 45 && (
+                        {!compact && height > 58 && (
                           <div className="text-white/70 text-[9px] mt-auto">
                             {slot.startTime}~{slot.endTime}
                           </div>

@@ -1019,6 +1019,7 @@
     },
     "detail": {
       "professor": "担当教授",
+      "section": "分班",
       "time": "上课时间",
       "location": "教室",
       "credits": "学分",

@@ -927,6 +927,7 @@
     },
     "detail": {
       "professor": "Professor",
+      "section": "Section",
       "time": "Time",
       "location": "Location",
       "credits": "Credits",

@@ -927,6 +927,7 @@
     },
     "detail": {
       "professor": "담당 교수",
+      "section": "분반",
       "time": "수업 시간",
       "location": "강의실",
       "credits": "학점",

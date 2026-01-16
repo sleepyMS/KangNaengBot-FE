@@ -4,6 +4,7 @@ import type {
   MessageResponse,
   SSECallbacks,
   SSEEvent,
+  SSEScheduleData,
   SSEScheduleEvent,
 } from "@/types";
 
@@ -106,9 +107,30 @@ export const sendMessageStream = async (
               case "text":
                 callbacks.onText?.(event.content);
                 break;
-              case "schedule":
-                callbacks.onSchedule?.(event as SSEScheduleEvent);
+              case "schedule": {
+                const scheduleEvent = event as SSEScheduleEvent;
+                let data: SSEScheduleData | null = null;
+
+                // content 래핑 형태 우선 체크
+                if (scheduleEvent.content?.schedules) {
+                  data = scheduleEvent.content;
+                } else if (scheduleEvent.schedules) {
+                  // 직접 형태
+                  data = {
+                    success: scheduleEvent.success ?? false,
+                    schedules: scheduleEvent.schedules,
+                    warnings: scheduleEvent.warnings,
+                    message: scheduleEvent.message,
+                  };
+                }
+
+                if (data && data.schedules?.length > 0) {
+                  callbacks.onSchedule?.(data);
+                } else {
+                  console.warn("Invalid schedule event data:", scheduleEvent);
+                }
                 break;
+              }
               case "done":
                 callbacks.onDone?.();
                 break;
