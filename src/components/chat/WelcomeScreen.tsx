@@ -36,7 +36,7 @@ export const WelcomeScreen = () => {
         // 타이핑 완료, 잠시 대기 후 다음 문장으로
         const timeout = setTimeout(() => {
           setIsTyping(false);
-        }, 2000); // 문장 표시 유지 시간
+        }, 3000); // 문장 표시 유지 시간
         return () => clearTimeout(timeout);
       }
     } else {
@@ -46,7 +46,7 @@ export const WelcomeScreen = () => {
         setDisplayedText("");
         setCurrentMessageIndex(nextIndex);
         setIsTyping(true);
-      }, 500); // 전환 대기 시간
+      }, 1200); // 전환 대기 시간
       return () => clearTimeout(timeout);
     }
   }, [displayedText, isTyping, currentMessageIndex]);
