@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import type { MessageItem } from "@/types";
 import { Calendar, ExternalLink } from "lucide-react";
@@ -15,7 +16,7 @@ const convertHtmlToMarkdown = (content: string) => {
   // <a> 태그 변환: <a href="...">text</a> -> [text](href)
   let markdown = content.replace(
     /<a\s+(?:[^>]*?\s+)?href="([^"]*)"[^>]*>(.*?)<\/a>/g,
-    "[$2]($1)"
+    "[$2]($1)",
   );
 
   // 필요하다면 다른 태그 변환도 추가 가능 (예: <br> -> \n)
@@ -27,6 +28,42 @@ const convertHtmlToMarkdown = (content: string) => {
 export const ChatBubble = ({ message }: ChatBubbleProps) => {
   const { t } = useTranslation();
   const isUser = message.role === "user";
+
+  // 메시지가 시간표 데이터인지 확인하고 파싱
+  const scheduleData = useMemo(() => {
+    // 1. 메타데이터가 있는 경우 (실시간 생성 직후 등)
+    if (message.type === "schedule_result" && message.metadata?.schedules) {
+      return {
+        schedules: message.metadata.schedules,
+        count:
+          message.metadata.scheduleCount || message.metadata.schedules.length,
+        text: message.content, // 이 경우 content는 안내 메시지
+        isValid: true,
+      };
+    }
+
+    // 2. Content가 JSON 형태인 경우 (새로고침/히스토리 복원 시)
+    try {
+      const content = message.content.trim();
+      if (content.startsWith("{") && content.endsWith("}")) {
+        const parsed = JSON.parse(content);
+        if (parsed.success && Array.isArray(parsed.schedules)) {
+          return {
+            schedules: parsed.schedules,
+            count: parsed.schedules.length,
+            text:
+              parsed.message ||
+              t("schedule.status.found", { count: parsed.schedules.length }),
+            isValid: true,
+          };
+        }
+      }
+    } catch {
+      // JSON 파싱 실패 시 일반 텍스트로 처리
+    }
+
+    return { isValid: false, schedules: [], count: 0, text: message.content };
+  }, [message, t]);
 
   return (
     <div
@@ -48,7 +85,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
           ${isUser ? "bubble-user" : "bubble-ai"}
         `}
       >
-        {message.type === "schedule_result" ? (
+        {scheduleData.isValid ? (
           // 시간표 생성 결과 메시지 UI
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 mb-1">
@@ -58,32 +95,18 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
               </span>
             </div>
             <p className="text-base text-gray-800 dark:text-gray-100 whitespace-pre-wrap leading-relaxed">
-              {message.content}
+              {scheduleData.text}
             </p>
-            {message.metadata?.scheduleCount && (
-              <div className="text-xs text-gray-400 dark:text-gray-500 px-1">
-                {t("schedule.generated.subtitle", {
-                  count: message.metadata.scheduleCount,
-                })}
-              </div>
-            )}
+            <div className="text-xs text-gray-400 dark:text-gray-500 px-1">
+              {t("schedule.generated.subtitle", {
+                count: scheduleData.count,
+              })}
+            </div>
             <button
               onClick={() => {
                 const store = useScheduleStore.getState();
-
-                // 메타데이터에서 스케줄 데이터 확인 (과거 기록 보기 지원)
-                const schedulesInMeta = message.metadata?.schedules;
-
-                if (
-                  Array.isArray(schedulesInMeta) &&
-                  schedulesInMeta.length > 0
-                ) {
-                  // 메타데이터가 있으면 무조건 해당 데이터로 복원 (히스토리 기능)
-                  store.restoreSchedules(schedulesInMeta);
-                } else {
-                  // 메타데이터가 없으면(예전 데이터 등) 현재 스토어 상태 유지하며 뷰만 전환
-                  store.switchToGeneratedView();
-                }
+                // 복원 및 뷰 전환
+                store.restoreSchedules(scheduleData.schedules);
               }}
               className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors mt-1"
             >
