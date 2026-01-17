@@ -398,6 +398,25 @@ export const useChatStore = create<ChatState>((set, get) => ({
         });
       }
 
+      // 캐시에도 사용자 메시지 즉시 반영 (세션 이동 시 소실 방지)
+      set((state) => {
+        const newCache = new Map(state.messageCache);
+        const existingMessages = newCache.get(targetSessionId) || [];
+        // 낙관적 업데이트 중복 방지: 마지막 메시지와 동일하면 캐시 업데이트 스킵
+        if (existingMessages.length > 0) {
+          const last = existingMessages[existingMessages.length - 1];
+          if (
+            last.created_at === userMessage.created_at &&
+            last.content === userMessage.content
+          ) {
+            return {};
+          }
+        }
+
+        newCache.set(targetSessionId, [...existingMessages, userMessage]);
+        return { messageCache: newCache };
+      });
+
       // 진행 중인 스트리밍 취소
       get().abortController?.abort();
 
