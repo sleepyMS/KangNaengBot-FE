@@ -440,7 +440,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
               scheduleData.success &&
               scheduleData.schedules?.length
             ) {
-              // 시간표 응답 처리
+              // 시간표 응답 처리 - 성공 상태로 전환
+              if (mode === "schedule") {
+                useScheduleStore.setState({ status: "complete" });
+              }
+
               const scheduleMessage: MessageItem = {
                 role: "assistant",
                 content:
@@ -460,7 +464,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 isSending: false,
               }));
             } else if (accumulatedText.trim()) {
-              // 일반 텍스트 응답 처리
+              // 일반 텍스트 응답 처리 - idle 상태로 전환
               if (mode === "schedule") {
                 useScheduleStore.setState({ status: "idle" });
               }
@@ -475,7 +479,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 isSending: false,
               }));
             } else {
-              // 빈 응답
+              // 빈 응답 - idle 상태로 전환
+              if (mode === "schedule") {
+                useScheduleStore.setState({ status: "idle" });
+              }
+
               const fallbackMessage: MessageItem = {
                 role: "assistant",
                 content: i18n.t("store.error.emptyResponseFallback"),
