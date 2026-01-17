@@ -21,6 +21,7 @@ interface ChatState {
   messageCache: Map<string, MessageItem[]>; // 세션별 메시지 캐시
   isLoading: boolean;
   isSending: boolean;
+  sendingSessionId: string | null; // 현재 응답 생성 중인 세션 ID
   error: string | null;
   streamingMessage: string | null; // SSE 스트리밍 상태 메시지 (UI 표시용)
   abortController: AbortController | null; // 스트리밍 취소용
@@ -37,7 +38,7 @@ interface ChatState {
     options?: {
       createSessionIfNeeded?: boolean;
       mode?: ChatMode;
-    }
+    },
   ) => Promise<void>;
   addMessage: (message: MessageItem) => void;
   clearCurrentSession: () => void;
@@ -54,6 +55,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messageCache: new Map(), // 세션별 메시지 캐시
   isLoading: true, // 초기 로딩 시 스피너 표시
   isSending: false,
+  sendingSessionId: null,
   error: null,
   streamingMessage: null, // SSE 상태 메시지
   abortController: null, // 스트리밍 취소 컨트롤러
@@ -311,8 +313,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
       // 2. 백엔드 API 호출 (모든 세션 삭제)
       await Promise.all(
         deletedSessions.map((session) =>
-          sessionsService.deleteSession(session.sid)
-        )
+          sessionsService.deleteSession(session.sid),
+        ),
       );
     } catch (error) {
       // 3. 실패 시 롤백
@@ -334,7 +336,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     options?: {
       createSessionIfNeeded?: boolean;
       mode?: ChatMode;
-    }
+    },
   ) => {
     const createSessionIfNeeded = options?.createSessionIfNeeded ?? false;
     const mode = options?.mode ?? "chat";
@@ -342,11 +344,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     // 세션이 없고, 새 세션 생성이 필요한 경우 (첫 메시지)
     const needsNewSession = !currentSessionId && createSessionIfNeeded;
-
-    // 시간표 모드일 때 생성 상태로 전환
-    if (mode === "schedule") {
-      useScheduleStore.setState({ status: "generating" });
-    }
 
     // 낙관적 UI: 사용자 메시지 즉시 표시
     const userMessage: MessageItem = {
@@ -357,6 +354,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set((state) => ({
       messages: [...state.messages, userMessage],
       isSending: true,
+      sendingSessionId: currentSessionId,
       error: null,
     }));
 
@@ -369,7 +367,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
         const newSession: SessionItem = {
           sid: response.session_id,
-          // 첫 메시지로 제목 설정
           title: message.slice(0, 50) + (message.length > 50 ? "..." : ""),
           is_active: true,
           created_at: response.created_at || new Date().toISOString(),
@@ -378,15 +375,27 @@ export const useChatStore = create<ChatState>((set, get) => ({
           sessions: [newSession, ...state.sessions],
           currentSessionId: response.session_id,
           guestUserId: response.user_id,
+          sendingSessionId: response.session_id, // Update to new session ID
         }));
       }
 
-      if (!currentSessionId) {
+      const targetSessionId = currentSessionId as string; // Closure capture for callbacks, confirmed not null above
+
+      if (!targetSessionId) {
         set({
           error: i18n.t("store.error.sessionNotSelected"),
           isSending: false,
+          sendingSessionId: null,
         });
         return;
+      }
+
+      // 시간표 모드일 때 생성 상태로 전환 (세션 ID 확정 후)
+      if (mode === "schedule") {
+        useScheduleStore.setState({
+          status: "generating",
+          relatedSessionId: targetSessionId,
+        });
       }
 
       // 진행 중인 스트리밍 취소
@@ -403,7 +412,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       // SSE 스트리밍 호출
       await chatService.sendMessageStream(
         {
-          session_id: currentSessionId,
+          session_id: targetSessionId,
           message,
           user_id: guestUserId ?? undefined,
           mode,
@@ -411,41 +420,53 @@ export const useChatStore = create<ChatState>((set, get) => ({
         },
         {
           onThinking: (_content, statusMessage) => {
-            set({ streamingMessage: statusMessage });
+            if (get().currentSessionId === targetSessionId) {
+              set({ streamingMessage: statusMessage });
+            }
           },
           onTool: (_toolName, statusMessage) => {
-            set({ streamingMessage: statusMessage });
+            if (get().currentSessionId === targetSessionId) {
+              set({ streamingMessage: statusMessage });
+            }
           },
           onToolResult: (_toolName, statusMessage) => {
-            set({ streamingMessage: statusMessage });
+            if (get().currentSessionId === targetSessionId) {
+              set({ streamingMessage: statusMessage });
+            }
           },
           onText: (chunk) => {
             accumulatedText += chunk;
             // 스트리밍 메시지 초기화 (텍스트가 오면 로딩 표시 끝)
-            set({ streamingMessage: null });
+            if (get().currentSessionId === targetSessionId) {
+              set({ streamingMessage: null });
+            }
           },
           onSchedule: (data) => {
             scheduleData = data;
             // 시간표 결과를 Schedule store에 전달
-            if (data.success && data.schedules?.length) {
-              useScheduleStore.getState().setGeneratedSchedules(data.schedules);
+            // 현재 보고 있는 세션(currentSessionId)이 아니라,
+            // 시간표 생성을 요청했던 세션(relatedSessionId)과 일치하는 경우에만 업데이트
+            const scheduleStoreState = useScheduleStore.getState();
+            if (
+              data.success &&
+              data.schedules?.length &&
+              scheduleStoreState.relatedSessionId === targetSessionId
+            ) {
+              scheduleStoreState.setGeneratedSchedules(data.schedules);
             }
           },
           onDone: () => {
-            // 스트리밍 완료 - 최종 메시지 처리
-            set({ streamingMessage: null, abortController: null });
+            // 1. 항상 캐시 업데이트 (백그라운드 완료 지원)
+            const { messageCache, currentSessionId, sendingSessionId } = get();
+
+            let finalMessage: MessageItem;
 
             if (
               scheduleData &&
               scheduleData.success &&
               scheduleData.schedules?.length
             ) {
-              // 시간표 응답 처리 - 성공 상태로 전환
-              if (mode === "schedule") {
-                useScheduleStore.setState({ status: "complete" });
-              }
-
-              const scheduleMessage: MessageItem = {
+              finalMessage = {
                 role: "assistant",
                 content:
                   scheduleData.message ||
@@ -459,71 +480,101 @@ export const useChatStore = create<ChatState>((set, get) => ({
                   schedules: scheduleData.schedules,
                 },
               };
-              set((state) => ({
-                messages: [...state.messages, scheduleMessage],
-                isSending: false,
-              }));
-            } else if (accumulatedText.trim()) {
-              // 일반 텍스트 응답 처리 - idle 상태로 전환
-              if (mode === "schedule") {
-                useScheduleStore.setState({ status: "idle" });
+              // 시간표 모드 완료 처리
+              // 사용자가 다른 세션에 있어도, store의 상태는 업데이트되어야 함 (단, 요청 세션과 일치할 때)
+              const scheduleStoreState = useScheduleStore.getState();
+              if (
+                mode === "schedule" &&
+                scheduleStoreState.relatedSessionId === targetSessionId
+              ) {
+                useScheduleStore.setState({ status: "complete" });
               }
-
-              const assistantMessage: MessageItem = {
+            } else if (accumulatedText.trim()) {
+              finalMessage = {
                 role: "assistant",
                 content: accumulatedText,
                 created_at: new Date().toISOString(),
               };
-              set((state) => ({
-                messages: [...state.messages, assistantMessage],
-                isSending: false,
-              }));
-            } else {
-              // 빈 응답 - idle 상태로 전환
-              if (mode === "schedule") {
+              // 일반 텍스트 완료
+              const scheduleStoreState = useScheduleStore.getState();
+              if (
+                mode === "schedule" &&
+                scheduleStoreState.relatedSessionId === targetSessionId
+              ) {
                 useScheduleStore.setState({ status: "idle" });
               }
-
-              const fallbackMessage: MessageItem = {
+            } else {
+              finalMessage = {
                 role: "assistant",
                 content: i18n.t("store.error.emptyResponseFallback"),
                 created_at: new Date().toISOString(),
               };
-              set((state) => ({
-                messages: [...state.messages, fallbackMessage],
-                isSending: false,
-              }));
-            }
-
-            // 세션 제목 업데이트 (첫 메시지인 경우)
-            if (!needsNewSession && get().messages.length <= 2) {
-              set((state) => ({
-                sessions: state.sessions.map((s) =>
-                  s.sid === currentSessionId
-                    ? {
-                        ...s,
-                        title:
-                          message.slice(0, 50) +
-                          (message.length > 50 ? "..." : ""),
-                      }
-                    : s
-                ),
-              }));
+              // 빈 응답 완료
+              const scheduleStoreState = useScheduleStore.getState();
+              if (
+                mode === "schedule" &&
+                scheduleStoreState.relatedSessionId === targetSessionId
+              ) {
+                useScheduleStore.setState({ status: "idle" });
+              }
             }
 
             // 캐시 업데이트
-            if (currentSessionId) {
-              const newCache = new Map(get().messageCache);
-              newCache.set(currentSessionId, get().messages);
-              set({ messageCache: newCache });
+            const newCache = new Map(messageCache);
+            const sessionMessages = newCache.get(targetSessionId) || [];
+            // 마지막 user 메시지 이후에 추가되어야 함 (이미 캐시에 user msg가 있다고 가정)
+            // 하지만 여기서는 안전하게 전체 리스트를 다시 구성하거나 append
+            // fetchSessions 등에서 캐시를 초기화했을 수 있으므로 주의
+
+            // 기존 캐시에 append
+            newCache.set(targetSessionId, [...sessionMessages, finalMessage]);
+
+            // 2. 현재 세션이 targetSessionId와 같으면 UI 업데이트
+            if (currentSessionId === targetSessionId) {
+              set({
+                streamingMessage: null,
+                abortController: null,
+                messages: [...get().messages, finalMessage],
+                isSending: false,
+                sendingSessionId: null,
+                messageCache: newCache,
+              });
+            } else {
+              // 다른 세션에 있으면 캐시만 업데이트하고 전송 상태 해제 (만약 내가 보낸 요청이었다면)
+              set((state) => ({
+                messageCache: newCache,
+                // 만약 내가 보낸 요청이 끝난거라면 isSending false
+                isSending:
+                  state.sendingSessionId === targetSessionId
+                    ? false
+                    : state.isSending,
+                sendingSessionId:
+                  state.sendingSessionId === targetSessionId
+                    ? null
+                    : state.sendingSessionId,
+              }));
             }
+
+            // 세션 제목 업데이트 (비동기라 체크 필요)
+            set((state) => ({
+              sessions: state.sessions.map((s) =>
+                s.sid === targetSessionId && state.messages.length <= 2 // 조건은 대략적임
+                  ? {
+                      ...s,
+                      title:
+                        message.slice(0, 50) +
+                        (message.length > 50 ? "..." : ""),
+                    }
+                  : s,
+              ),
+            }));
           },
           onError: (errorMessage) => {
             set({ streamingMessage: null, abortController: null });
             throw new Error(errorMessage);
           },
         },
-        abortController.signal
+        abortController.signal,
       );
     } catch (error) {
       // schedule 모드였으면 status 초기화 (에러 상태로)
@@ -545,6 +596,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set((state) => ({
         messages: needsNewSession ? [] : state.messages.slice(0, -1),
         isSending: false,
+        sendingSessionId: null, // Reset sending session
         streamingMessage: null,
         abortController: null,
         error:
@@ -577,6 +629,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       messageCache: new Map(),
       isLoading: true,
       isSending: false,
+      sendingSessionId: null,
       error: null,
     });
   },

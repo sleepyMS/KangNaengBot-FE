@@ -15,6 +15,7 @@ export const ScheduleMessageHandler = () => {
   const {
     isScheduleMode,
     status,
+    relatedSessionId,
     parsedCourses,
     ambiguousCourses,
     error,
@@ -23,8 +24,10 @@ export const ScheduleMessageHandler = () => {
     reset,
   } = useScheduleStore();
 
-  // 시간표 모드가 아니면 아무것도 렌더링하지 않음
+  // 시간표 모드가 아니거나, 현재 세션이 시간표 생성을 요청한 세션이 아니면 아무것도 렌더링하지 않음
   if (!isScheduleMode) return null;
+  // relatedSessionId가 현재 세션과 일치하지 않으면 렌더링하지 않음 (null일 때도 숨김)
+  if (relatedSessionId !== currentSessionId) return null;
 
   // 과목 확인 → 생성 핸들러
   const handleConfirm = async () => {

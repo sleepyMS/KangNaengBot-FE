@@ -39,7 +39,14 @@ interface MessageListProps {
 }
 
 export const MessageList = ({ onScrollChange }: MessageListProps) => {
-  const { messages, isSending, isLoading, streamingMessage } = useChatStore();
+  const {
+    messages,
+    isSending,
+    isLoading,
+    streamingMessage,
+    sendingSessionId,
+    currentSessionId,
+  } = useChatStore();
   const { isScheduleMode, status: scheduleStatus } = useScheduleStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -48,7 +55,7 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
 
   const filteredMessages = useMemo(
     () => deduplicateMessages(messages),
-    [messages]
+    [messages],
   );
 
   // 스크롤 위치 체크 (단순화: throttle 제거, 항상 체크)
@@ -108,7 +115,6 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
     }, 50);
   }, []);
 
-  const { currentSessionId } = useChatStore();
   if (isLoading && currentSessionId && filteredMessages.length === 0) {
     return (
       <div className="flex-1 w-full flex items-center justify-center">
@@ -128,36 +134,38 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
         ))}
 
         {/* Loading Indicator - 시간표 생성 중엔 ScheduleGeneratingMessage가 대신 표시됨 */}
-        {isSending && !(isScheduleMode && scheduleStatus === "generating") && (
-          <div className="flex gap-3 items-end animate-slide-up">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-center overflow-hidden">
-              <img
-                src="/assets/images/logo.svg"
-                alt="강냉봇"
-                className="w-5 h-5"
-              />
+        {isSending &&
+          sendingSessionId === currentSessionId &&
+          !(isScheduleMode && scheduleStatus === "generating") && (
+            <div className="flex gap-3 items-end animate-slide-up">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-center overflow-hidden">
+                <img
+                  src="/assets/images/logo.svg"
+                  alt="강냉봇"
+                  className="w-5 h-5"
+                />
+              </div>
+              <div className="bubble-ai flex items-center gap-1">
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {streamingMessage || "생각중"}
+                </span>
+                <span className="flex gap-0.5 ml-1">
+                  <span
+                    className="w-1 h-1 bg-primary-400 rounded-full animate-bounce-dot"
+                    style={{ animationDelay: "0ms" }}
+                  />
+                  <span
+                    className="w-1 h-1 bg-primary-400 rounded-full animate-bounce-dot"
+                    style={{ animationDelay: "160ms" }}
+                  />
+                  <span
+                    className="w-1 h-1 bg-primary-400 rounded-full animate-bounce-dot"
+                    style={{ animationDelay: "320ms" }}
+                  />
+                </span>
+              </div>
             </div>
-            <div className="bubble-ai flex items-center gap-1">
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {streamingMessage || "생각중"}
-              </span>
-              <span className="flex gap-0.5 ml-1">
-                <span
-                  className="w-1 h-1 bg-primary-400 rounded-full animate-bounce-dot"
-                  style={{ animationDelay: "0ms" }}
-                />
-                <span
-                  className="w-1 h-1 bg-primary-400 rounded-full animate-bounce-dot"
-                  style={{ animationDelay: "160ms" }}
-                />
-                <span
-                  className="w-1 h-1 bg-primary-400 rounded-full animate-bounce-dot"
-                  style={{ animationDelay: "320ms" }}
-                />
-              </span>
-            </div>
-          </div>
-        )}
+          )}
 
         {/* Schedule Mode Messages */}
         <ScheduleMessageHandler />

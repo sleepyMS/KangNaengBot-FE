@@ -29,6 +29,7 @@ interface ScheduleState {
   isScheduleMode: boolean;
   viewMode: "generated" | "saved";
   status: ScheduleStatus;
+  relatedSessionId: string | null; // 시간표 생성을 요청한 세션 ID
 
   // 과목 선택
   userInput: string;
@@ -62,7 +63,7 @@ interface ScheduleState {
   setFilters: (filters: Partial<ScheduleFilters>) => void;
   generateSchedulesFromMessage: (
     sessionId: string,
-    message: string
+    message: string,
   ) => Promise<void>;
   selectAmbiguousCourse: (ambiguousIndex: number, courseIndex: number) => void;
   confirmAllCourses: () => void;
@@ -100,7 +101,7 @@ const timeRangesOverlap = (
   start1: string,
   end1: string,
   start2: string,
-  end2: string
+  end2: string,
 ): boolean => {
   const s1 = timeToMinutes(start1);
   const e1 = timeToMinutes(end1);
@@ -111,12 +112,12 @@ const timeRangesOverlap = (
 
 const filterSchedules = (
   schedules: Schedule[],
-  filters: ScheduleFilters
+  filters: ScheduleFilters,
 ): Schedule[] => {
   return schedules.filter((schedule) => {
     // 1. 공강 요일 체크
     const emptyDayPass = filters.emptyDays.every((day) =>
-      schedule.emptyDays.includes(day)
+      schedule.emptyDays.includes(day),
     );
     if (!emptyDayPass) return false;
 
@@ -131,7 +132,7 @@ const filterSchedules = (
                 slot.startTime,
                 slot.endTime,
                 ex.startTime,
-                ex.endTime
+                ex.endTime,
               )
             ) {
               return false;
@@ -149,6 +150,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   isScheduleMode: false,
   viewMode: "generated",
   status: "idle",
+  relatedSessionId: null,
   userInput: "",
   parsedCourses: [],
   ambiguousCourses: [],
@@ -169,6 +171,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     set({
       isScheduleMode: true,
       status: "idle",
+      relatedSessionId: null,
       parsedCourses: [],
       ambiguousCourses: [],
       confirmedCourses: [],
@@ -207,6 +210,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     // 1. 생성 상태로 전환
     set({
       status: "generating",
+      relatedSessionId: sessionId,
       userInput: message,
       error: null,
       viewMode: "generated",
@@ -217,7 +221,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       // 2. 단일 API 호출로 시간표 생성
       const response = await scheduleService.generateSchedulesFromText(
         sessionId,
-        message
+        message,
       );
 
       if (!response.success || response.schedules.length === 0) {
@@ -320,14 +324,14 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       return;
     }
 
-    set({ status: "generating", error: null });
+    set({ status: "generating", relatedSessionId: sessionId, error: null });
 
     try {
       const courseIds = confirmedCourses.map((c) => c.id);
       const response = await scheduleService.generateSchedules(
         sessionId,
         courseIds,
-        filters
+        filters,
       );
 
       if (!response.success || response.schedules.length === 0) {
@@ -396,7 +400,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     // 1. 낙관적 UI 업데이트
     set((state) => {
       const updatedGeneratedSchedules = state.generatedSchedules.map((s) =>
-        s.id === schedule.id ? { ...s, savedId: newSavedSchedule.id } : s
+        s.id === schedule.id ? { ...s, savedId: newSavedSchedule.id } : s,
       );
 
       return {
@@ -412,7 +416,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       // API 에러 시 "준비 중" 메시지 표시 (낙관적 UI는 유지)
       console.warn(
         "[saveSchedule] API not ready, keeping optimistic UI:",
-        error
+        error,
       );
       useToastStore
         .getState()
@@ -424,7 +428,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     // 1. 낙관적 UI 업데이트
     set((state) => {
       const updatedGeneratedSchedules = state.generatedSchedules.map((s) =>
-        s.savedId === id ? { ...s, savedId: undefined } : s
+        s.savedId === id ? { ...s, savedId: undefined } : s,
       );
 
       return {
@@ -440,7 +444,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       // API 에러 시 "준비 중" 메시지 표시 (낙관적 UI는 유지)
       console.warn(
         "[deleteSavedSchedule] API not ready, keeping optimistic UI:",
-        error
+        error,
       );
       useToastStore
         .getState()
@@ -496,6 +500,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     set({
       isScheduleMode: false,
       status: "idle",
+      relatedSessionId: null,
       userInput: "",
       parsedCourses: [],
       ambiguousCourses: [],
