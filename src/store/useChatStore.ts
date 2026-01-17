@@ -476,7 +476,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           },
           onDone: () => {
             // 1. 항상 캐시 업데이트 (백그라운드 완료 지원)
-            const { messageCache, currentSessionId, sendingSessionId } = get();
+            const { messageCache, currentSessionId } = get();
 
             let finalMessage: MessageItem;
 
