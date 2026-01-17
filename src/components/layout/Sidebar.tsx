@@ -409,7 +409,7 @@ export const Sidebar = () => {
                   onClick={() => setIsSavedSchedulesOpen(!isSavedSchedulesOpen)}
                   className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 whitespace-nowrap flex-shrink-0"
                 >
-                  보관함
+                  {t("schedule.viewSaved")}
                   <ChevronDown
                     size={16}
                     className={`text-gray-500 transition-transform ${
