@@ -101,3 +101,12 @@ export interface GenerateSchedulesResponse {
     suggestions: string[];
   };
 }
+
+export interface BackendSavedSchedule {
+  created_at: string;
+  id: string;
+  schedule_data: Schedule | { schedules: Schedule[] };
+  title: string;
+  updated_at: string;
+  user_id: number;
+}

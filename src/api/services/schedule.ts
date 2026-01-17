@@ -7,6 +7,9 @@ import type {
   ParseCoursesResponse,
   GenerateSchedulesResponse,
   ScheduleFilters,
+  SavedSchedule,
+  BackendSavedSchedule,
+  Schedule,
 } from "@/types";
 import {
   mockParseCoursesFromMessage,
@@ -17,7 +20,7 @@ import { apiClient } from "../apiClient";
 
 export const parseCourses = async (
   sessionId: string,
-  message: string
+  message: string,
 ): Promise<ParseCoursesResponse> => {
   try {
     // 실제 API 호출 시도
@@ -26,14 +29,14 @@ export const parseCourses = async (
       {
         session_id: sessionId,
         message,
-      }
+      },
     );
     return response.data;
   } catch (error) {
     // 실패 시 Mock 데이터 사용 (개발 중 백엔드 미구현 상황 대응)
     console.warn(
       "[ScheduleService] Falling back to mock data for parseCourses:",
-      error
+      error,
     );
     return mockParseCoursesFromMessage(message);
   }
@@ -45,7 +48,7 @@ export const parseCourses = async (
 export const generateSchedules = async (
   sessionId: string,
   courseIds: string[],
-  filters?: ScheduleFilters
+  filters?: ScheduleFilters,
 ): Promise<GenerateSchedulesResponse> => {
   try {
     // 실제 API 호출 시도
@@ -55,14 +58,14 @@ export const generateSchedules = async (
         session_id: sessionId,
         course_ids: courseIds,
         filters,
-      }
+      },
     );
     return response.data;
   } catch (error) {
     // 실패 시 Mock 데이터 사용
     console.warn(
       "[ScheduleService] Falling back to mock data for generateSchedules:",
-      error
+      error,
     );
     return mockGenerateSchedules(courseIds);
   }
@@ -73,7 +76,7 @@ export const generateSchedules = async (
  */
 export const generateSchedulesFromText = async (
   sessionId: string,
-  message: string
+  message: string,
 ): Promise<GenerateSchedulesResponse> => {
   try {
     // 실제 API 호출 시도
@@ -82,14 +85,14 @@ export const generateSchedulesFromText = async (
       {
         session_id: sessionId,
         message,
-      }
+      },
     );
     return response.data;
   } catch (error) {
     // 실패 시 Mock 데이터 사용
     console.warn(
       "[ScheduleService] Falling back to mock data for generateSchedulesFromText:",
-      error
+      error,
     );
     return mockGenerateSchedulesFromText(message);
   }
@@ -101,19 +104,34 @@ const SAVED_SCHEDULES_KEY = "kangnaeng-saved-schedules";
  * 저장된 시간표 목록 조회
  */
 export const getSavedSchedules = async (
-  _sessionId?: string
+  _sessionId?: string,
 ): Promise<import("@/types").SavedSchedule[]> => {
   try {
     // 실제 API 호출 시도
-    const response = await apiClient.get<{
-      schedules: import("@/types").SavedSchedule[];
-    }>(`/schedules/saved`);
-    return response.data.schedules;
+    // 실제 API 호출 시도
+    const response = await apiClient.get<BackendSavedSchedule[]>(`/schedules/`);
+
+    return response.data.map((item) => {
+      // schedule_data가 래핑되어 있을 경우 처리 (예방적 차원)
+      const scheduleData =
+        item.schedule_data && "schedules" in item.schedule_data
+          ? (item.schedule_data as any).schedules[0]
+          : item.schedule_data;
+
+      return {
+        ...(scheduleData as Schedule),
+        id: item.id, // 저장된 ID 사용
+        savedAt: item.created_at,
+        name: item.title,
+        isFavorite: false, // API 미지원
+        savedId: item.id,
+      };
+    });
   } catch (error) {
     // 실패 시 LocalStorage 사용
     console.warn(
       "[ScheduleService] Falling back to LocalStorage for getSavedSchedules:",
-      error
+      error,
     );
     try {
       const stored = localStorage.getItem(SAVED_SCHEDULES_KEY);
@@ -128,29 +146,36 @@ export const getSavedSchedules = async (
  * 시간표 저장
  */
 export const saveSchedule = async (
-  schedule: import("@/types").SavedSchedule
+  schedule: SavedSchedule,
 ): Promise<boolean> => {
   try {
     // 실제 API 호출 시도
-    await apiClient.post(`/schedules/saved`, schedule);
+    // SavedSchedule 메타데이터 제외하고 순수 Schedule 데이터만 추출하여 전송 가능
+    // 여기서는 전체를 보내되 필요한 필드 덮어쓰기
+    const payload = {
+      title: schedule.name,
+      schedule_data: schedule, // 전체 객체 저장 (필요시 필터링)
+    };
+
+    await apiClient.post(`/schedules/`, payload);
     return true;
   } catch (error) {
     // 실패 시 LocalStorage 사용
     console.warn(
       "[ScheduleService] Falling back to LocalStorage for saveSchedule:",
-      error
+      error,
     );
     try {
       const stored = localStorage.getItem(SAVED_SCHEDULES_KEY);
       const existing = stored ? JSON.parse(stored) : [];
       // 중복 체크 (선택 사항)
       const isDuplicate = existing.some(
-        (s: import("@/types").SavedSchedule) => s.id === schedule.id
+        (s: import("@/types").SavedSchedule) => s.id === schedule.id,
       );
       if (!isDuplicate) {
         localStorage.setItem(
           SAVED_SCHEDULES_KEY,
-          JSON.stringify([schedule, ...existing])
+          JSON.stringify([schedule, ...existing]),
         );
       }
       return true;
@@ -164,24 +189,25 @@ export const saveSchedule = async (
  * 저장된 시간표 삭제
  */
 export const deleteSavedSchedule = async (
-  scheduleId: string
+  scheduleId: string,
 ): Promise<boolean> => {
   try {
     // 실제 API 호출 시도
-    await apiClient.delete(`/schedules/saved/${scheduleId}`);
+    // 실제 API 호출 시도
+    await apiClient.delete(`/schedules/${scheduleId}`);
     return true;
   } catch (error) {
     // 실패 시 LocalStorage 사용
     console.warn(
       "[ScheduleService] Falling back to LocalStorage for deleteSavedSchedule:",
-      error
+      error,
     );
     try {
       const stored = localStorage.getItem(SAVED_SCHEDULES_KEY);
       if (stored) {
         const existing = JSON.parse(stored);
         const filtered = existing.filter(
-          (s: import("@/types").SavedSchedule) => s.id !== scheduleId
+          (s: import("@/types").SavedSchedule) => s.id !== scheduleId,
         );
         localStorage.setItem(SAVED_SCHEDULES_KEY, JSON.stringify(filtered));
       }
