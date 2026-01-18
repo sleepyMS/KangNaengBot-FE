@@ -52,7 +52,8 @@ interface ScheduleState {
 
   // 저장 기능
   savedSchedules: SavedSchedule[];
-  loadedSchedule: SavedSchedule | null; // 불러온 시간표 별도 저장
+  activeSavedIndex: number; // 저장된 시간표 캐러셀 인덱스
+  loadedSchedule: SavedSchedule | null; // 불러온 시간표 별도 저장 (deprecated, kept for compatibility)
 
   // 에러 상태
   error: ScheduleError | null;
@@ -75,6 +76,7 @@ interface ScheduleState {
   loadSavedSchedules: () => Promise<void>;
   saveSchedule: (name?: string) => Promise<void>;
   loadSchedule: (schedule: SavedSchedule) => void;
+  setActiveSavedIndex: (index: number) => void; // 저장된 시간표 캐러셀 인덱스 변경
   deleteSavedSchedule: (id: string) => Promise<void>;
   clearError: () => void;
   reset: () => void;
@@ -163,6 +165,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   isCanvasOpen: false,
   isSavedListOpen: false,
   savedSchedules: [],
+  activeSavedIndex: 0,
   loadedSchedule: null,
   error: null,
 
@@ -497,12 +500,26 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   },
 
   loadSchedule: (schedule) => {
+    const { savedSchedules } = get();
+    // 선택된 시간표의 인덱스 찾기
+    const index = savedSchedules.findIndex((s) => s.id === schedule.id);
     set({
       // generatedSchedules, status, aiMessage 등은 건드리지 않음 (Backpreservation)
-      loadedSchedule: schedule,
+      loadedSchedule: schedule, // 호환성을 위해 유지
+      activeSavedIndex: index >= 0 ? index : 0,
       isCanvasOpen: true,
       viewMode: "saved",
     });
+  },
+
+  setActiveSavedIndex: (index) => {
+    const { savedSchedules } = get();
+    if (index >= 0 && index < savedSchedules.length) {
+      set({
+        activeSavedIndex: index,
+        loadedSchedule: savedSchedules[index] || null, // 호환성을 위해 동기화
+      });
+    }
   },
 
   switchToGeneratedView: () => {

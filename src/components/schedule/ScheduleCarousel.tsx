@@ -21,6 +21,7 @@ interface ScheduleCarouselProps {
   onScheduleClick?: (schedule: Schedule) => void;
   onCourseClick?: (course: Course) => void;
   gridRef?: RefObject<HTMLDivElement | null>;
+  disableCircular?: boolean; // true: 처음/마지막에서 버튼 비활성화 (saved mode)
 }
 
 export const ScheduleCarousel = ({
@@ -30,6 +31,7 @@ export const ScheduleCarousel = ({
   onScheduleClick,
   onCourseClick,
   gridRef,
+  disableCircular = false,
 }: ScheduleCarouselProps) => {
   const { t } = useTranslation();
 
@@ -37,11 +39,18 @@ export const ScheduleCarousel = ({
 
   const currentSchedule = schedules[activeIndex];
 
+  // 버튼 비활성화 상태
+  const isPrevDisabled = disableCircular && activeIndex === 0;
+  const isNextDisabled =
+    disableCircular && activeIndex === schedules.length - 1;
+
   const goPrev = () => {
+    if (isPrevDisabled) return;
     onIndexChange(activeIndex > 0 ? activeIndex - 1 : schedules.length - 1);
   };
 
   const goNext = () => {
+    if (isNextDisabled) return;
     onIndexChange(activeIndex < schedules.length - 1 ? activeIndex + 1 : 0);
   };
 
@@ -51,10 +60,15 @@ export const ScheduleCarousel = ({
       <div className="flex items-center justify-between mb-3">
         <button
           onClick={goPrev}
-          className="p-2 rounded-lg bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+          disabled={isPrevDisabled}
+          className={`p-2 rounded-lg transition-colors ${
+            isPrevDisabled
+              ? "bg-gray-50 dark:bg-slate-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
+              : "bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-600 dark:text-gray-300"
+          }`}
           aria-label={t("schedule.canvas.prev")}
         >
-          <ChevronLeft size={20} className="text-gray-600 dark:text-gray-300" />
+          <ChevronLeft size={20} />
         </button>
 
         {/* 인디케이터 */}
@@ -80,13 +94,15 @@ export const ScheduleCarousel = ({
 
         <button
           onClick={goNext}
-          className="p-2 rounded-lg bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+          disabled={isNextDisabled}
+          className={`p-2 rounded-lg transition-colors ${
+            isNextDisabled
+              ? "bg-gray-50 dark:bg-slate-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
+              : "bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-600 dark:text-gray-300"
+          }`}
           aria-label={t("schedule.canvas.next")}
         >
-          <ChevronRight
-            size={20}
-            className="text-gray-600 dark:text-gray-300"
-          />
+          <ChevronRight size={20} />
         </button>
       </div>
 

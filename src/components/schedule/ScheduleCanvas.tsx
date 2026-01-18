@@ -37,6 +37,9 @@ export const ScheduleCanvas = () => {
     viewMode,
     loadedSchedule,
     switchToGeneratedView,
+    savedSchedules,
+    activeSavedIndex,
+    setActiveSavedIndex,
   } = useScheduleStore();
 
   const handleResetFilters = () => {
@@ -147,7 +150,8 @@ export const ScheduleCanvas = () => {
             )}
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
               {viewMode === "saved"
-                ? loadedSchedule?.name || t("schedule.saved.title")
+                ? savedSchedules[activeSavedIndex]?.name ||
+                  t("schedule.saved.title")
                 : t("schedule.generated.title")}
             </h2>
           </div>
@@ -165,14 +169,15 @@ export const ScheduleCanvas = () => {
 
         {/* 컨텐츠 */}
         <div className="flex-1 overflow-y-auto p-4">
-          {viewMode === "saved" && loadedSchedule ? (
-            // [Saved Mode] 불러온 시간표 표시
+          {viewMode === "saved" && savedSchedules.length > 0 ? (
+            // [Saved Mode] 보관된 시간표들 캐러셀 표시
             <ScheduleCarousel
-              schedules={[loadedSchedule]}
-              activeIndex={0}
-              onIndexChange={() => {}} // 단일 항목이므로 변경 없음
+              schedules={savedSchedules}
+              activeIndex={activeSavedIndex}
+              onIndexChange={setActiveSavedIndex}
               gridRef={gridRef}
               onCourseClick={(course: Course) => setSelectedCourse(course)}
+              disableCircular={true}
             />
           ) : generatedSchedules.length > 0 ? (
             // [Generated Mode] 생성된 시간표 목록 표시
@@ -189,8 +194,8 @@ export const ScheduleCanvas = () => {
                 {status === "complete"
                   ? t("schedule.status.noResults")
                   : status === "generating"
-                  ? t("schedule.status.generating")
-                  : t("schedule.status.noResults")}
+                    ? t("schedule.status.generating")
+                    : t("schedule.status.noResults")}
               </div>
               {status === "complete" && (
                 <button
