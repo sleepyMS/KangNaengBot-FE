@@ -83,7 +83,8 @@ export const SavedScheduleList = () => {
                 <span className="text-xs text-gray-400 truncate">
                   {schedule.totalCredits}
                   {t("schedule.canvas.credits")} •{" "}
-                  {t("schedule.filter.emptyDay")} {schedule.emptyDays.length}
+                  {t("schedule.filter.emptyDay")}{" "}
+                  {schedule.emptyDays?.length || 0}
                 </span>
               </div>
             </div>

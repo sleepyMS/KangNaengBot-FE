@@ -106,11 +106,11 @@ export const ScheduleCarousel = ({
       <div className="mt-3 flex items-center justify-between text-sm">
         <div className="flex items-center gap-3">
           <span className="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded">
-            {currentSchedule.totalCredits} {t("schedule.canvas.credits")}
+            {currentSchedule?.totalCredits} {t("schedule.canvas.credits")}
           </span>
-          {currentSchedule.emptyDays.length > 0 && (
+          {currentSchedule?.emptyDays?.length > 0 && (
             <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded">
-              {sortDays(currentSchedule.emptyDays)
+              {sortDays(currentSchedule.emptyDays || [])
                 .map((d) => t(`schedule.days.${d}`))
                 .join(", ")}{" "}
               {t("schedule.canvas.emptyDay")}
@@ -123,21 +123,24 @@ export const ScheduleCarousel = ({
       </div>
 
       {/* 경고 메시지 */}
-      {currentSchedule.warnings.length > 0 && (
+      {currentSchedule?.warnings?.length > 0 && (
         <div className="mt-2 p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
           {currentSchedule.warnings.map((warning, idx) => (
             <div
               key={idx}
               className="text-xs text-amber-700 dark:text-amber-300"
             >
-              ⚠️ {typeof warning === "string" ? warning : warning.message}
+              ⚠️{" "}
+              {typeof warning === "string"
+                ? warning
+                : (warning as any)?.message}
             </div>
           ))}
         </div>
       )}
 
       {/* 추천 메시지 */}
-      {currentSchedule.recommendations.length > 0 && (
+      {currentSchedule?.recommendations?.length > 0 && (
         <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           💡 {currentSchedule.recommendations[0]}
         </div>

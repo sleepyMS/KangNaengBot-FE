@@ -378,9 +378,17 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     set((state) => ({ isSavedListOpen: !state.isSavedListOpen })),
 
   loadSavedSchedules: async () => {
-    // 초기 로딩
-    const saved = await scheduleService.getSavedSchedules();
-    set({ savedSchedules: saved });
+    try {
+      // 초기 로딩
+      const saved = await scheduleService.getSavedSchedules();
+      set({ savedSchedules: Array.isArray(saved) ? saved : [] });
+    } catch (error) {
+      console.error(
+        "[useScheduleStore] Failed to load saved schedules:",
+        error,
+      );
+      set({ savedSchedules: [] });
+    }
   },
 
   saveSchedule: async (name) => {
