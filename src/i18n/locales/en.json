@@ -866,13 +866,15 @@
       "overwrite": "A schedule with the same name already exists. Overwrite?",
       "success_image_download": "Timetable image downloaded successfully.",
       "failed_image_download": "Failed to download timetable image.",
-      "comingSoon": "Schedule save feature is coming soon! Stay tuned 🚀"
+      "comingSoon": "Schedule save feature is coming soon! Stay tuned 🚀",
+      "guestMode": "Log in to save to cloud! For now, it's saved locally 📱"
     },
     "delete": {
       "title": "Delete this schedule?",
       "message": "Deleted schedules cannot be recovered.",
       "success": "Deleted successfully.",
-      "comingSoon": "Schedule delete feature is coming soon! Stay tuned 🚀"
+      "comingSoon": "Schedule delete feature is coming soon! Stay tuned 🚀",
+      "guestMode": "In guest mode, it's only deleted from this device"
     },
     "generated": {
       "title": "Generated Schedules",

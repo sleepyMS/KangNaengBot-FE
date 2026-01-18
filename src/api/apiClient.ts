@@ -61,7 +61,7 @@ apiClient.interceptors.request.use(
   },
   (error: AxiosError) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // 응답 인터셉터: 에러 핸들링 및 토큰 자동 갱신
@@ -81,6 +81,17 @@ apiClient.interceptors.response.use(
       !originalRequest.url?.includes("/auth/refresh") &&
       !originalRequest.url?.includes("/auth/logout")
     ) {
+      // 게스트 모드 체크: 인증되지 않은 사용자는 토큰 갱신을 시도하지 않음
+      const authStorage = localStorage.getItem("auth-storage");
+      const wasAuthenticated = authStorage
+        ? JSON.parse(authStorage)?.state?.isAuthenticated
+        : false;
+
+      if (!wasAuthenticated) {
+        // 게스트 모드 - refresh 시도 없이 에러 전파
+        // 서비스 레벨의 fallback(mock/localStorage)이 처리함
+        return Promise.reject(error);
+      }
       // 이미 갱신 중이면 대기열에 추가
       if (isRefreshing) {
         return new Promise((resolve) => {
@@ -148,7 +159,7 @@ apiClient.interceptors.response.use(
     }
 
     return Promise.reject(apiError);
-  }
+  },
 );
 
 export default apiClient;

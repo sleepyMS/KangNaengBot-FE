@@ -410,17 +410,35 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     });
 
     // 2. 비동기 저장 (API or LocalStorage)
+    // 게스트 모드 확인
+    const authStorage = localStorage.getItem("auth-storage");
+    const isAuthenticated = authStorage
+      ? JSON.parse(authStorage)?.state?.isAuthenticated
+      : false;
+
     try {
       await scheduleService.saveSchedule(newSavedSchedule);
+      // 게스트 모드일 경우 로그인 유도 메시지 표시
+      if (!isAuthenticated) {
+        useToastStore
+          .getState()
+          .addToast("info", i18n.t("schedule.save.guestMode"));
+      }
     } catch (error) {
-      // API 에러 시 "준비 중" 메시지 표시 (낙관적 UI는 유지)
+      // API 에러 시 게스트 모드에 따라 다른 메시지 표시 (낙관적 UI는 유지)
       console.warn(
         "[saveSchedule] API not ready, keeping optimistic UI:",
         error,
       );
-      useToastStore
-        .getState()
-        .addToast("info", i18n.t("schedule.save.comingSoon"));
+      if (!isAuthenticated) {
+        useToastStore
+          .getState()
+          .addToast("info", i18n.t("schedule.save.guestMode"));
+      } else {
+        useToastStore
+          .getState()
+          .addToast("info", i18n.t("schedule.save.comingSoon"));
+      }
     }
   },
 
@@ -438,17 +456,35 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     });
 
     // 2. 비동기 삭제 (API or LocalStorage)
+    // 게스트 모드 확인
+    const authStorage = localStorage.getItem("auth-storage");
+    const isAuthenticated = authStorage
+      ? JSON.parse(authStorage)?.state?.isAuthenticated
+      : false;
+
     try {
       await scheduleService.deleteSavedSchedule(id);
+      // 게스트 모드일 경우 안내 메시지
+      if (!isAuthenticated) {
+        useToastStore
+          .getState()
+          .addToast("info", i18n.t("schedule.delete.guestMode"));
+      }
     } catch (error) {
-      // API 에러 시 "준비 중" 메시지 표시 (낙관적 UI는 유지)
+      // API 에러 시 게스트 모드에 따라 다른 메시지 표시 (낙관적 UI는 유지)
       console.warn(
         "[deleteSavedSchedule] API not ready, keeping optimistic UI:",
         error,
       );
-      useToastStore
-        .getState()
-        .addToast("info", i18n.t("schedule.delete.comingSoon"));
+      if (!isAuthenticated) {
+        useToastStore
+          .getState()
+          .addToast("info", i18n.t("schedule.delete.guestMode"));
+      } else {
+        useToastStore
+          .getState()
+          .addToast("info", i18n.t("schedule.delete.comingSoon"));
+      }
     }
   },
 

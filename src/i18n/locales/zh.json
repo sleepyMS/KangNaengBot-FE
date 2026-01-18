@@ -958,13 +958,15 @@
       "overwrite": "已有同名课程表。要覆盖吗？",
       "success_image_download": "课程表图片下载成功。",
       "failed_image_download": "课程表图片下载失败。",
-      "comingSoon": "课程表保存功能正在准备中！即将上线 🚀"
+      "comingSoon": "课程表保存功能正在准备中！即将上线 🚀",
+      "guestMode": "登录后可保存到云端！现在仅保存在本地 📱"
     },
     "delete": {
       "title": "确定要删除此课程表吗？",
       "message": "已删除的课程表无法恢复。",
       "success": "已删除。",
-      "comingSoon": "课程表删除功能正在准备中！即将上线 🚀"
+      "comingSoon": "课程表删除功能正在准备中！即将上线 🚀",
+      "guestMode": "访客模式下仅从本地删除"
     },
     "generated": {
       "title": "生成的课程表",
