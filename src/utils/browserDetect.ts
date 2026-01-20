@@ -118,12 +118,13 @@ export const openInExternalBrowser = (
   const info = browserInfo || detectInAppBrowser();
 
   if (isAndroid()) {
-    // Android: Intent 스킴을 사용하여 Chrome에서 열기
-    // S.browser_fallback_url 추가로 Chrome이 없으면 기본 브라우저로 fallback
+    // Android: Intent 스킴을 사용하여 기본 브라우저에서 열기
+    // package 미지정 → 시스템 기본 브라우저 사용 (Chrome 비활성화 시에도 동작)
+    // S.browser_fallback_url 추가로 Intent 처리 실패 시 URL로 fallback
     const intentUrl = `intent://${targetUrl.replace(
       /^https?:\/\//,
       "",
-    )}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(
+    )}#Intent;scheme=https;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(
       targetUrl,
     )};end`;
     window.location.href = intentUrl;
