@@ -347,7 +347,7 @@ export const LoginPage = () => {
 
   // Mobile login UI
   const renderMobileLoginUI = () => (
-    <div className="w-full px-4 pb-16 flex flex-col items-center">
+    <div className="w-full px-4 pb-24 flex flex-col items-center">
       <button
         onClick={handleGoogleLogin}
         className={`flex items-center justify-center gap-3 w-full rounded-full shadow-lg px-6 py-4 font-medium hover:shadow-xl transition-shadow duration-200 ${
@@ -403,7 +403,7 @@ export const LoginPage = () => {
             className="h-20 md:h-24 mx-auto"
           />
           <p
-            className={`text-lg md:text-xl font-medium ${
+            className={`text-lg md:text-xl font-medium whitespace-pre-line ${
               isDark ? "text-gray-100" : "text-gray-800"
             }`}
           >

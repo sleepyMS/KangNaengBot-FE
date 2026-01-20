@@ -973,7 +973,7 @@
 
   "welcome": {
     "title": "Welcome to KangNaengBot!",
-    "subtitle": "I'm the Kangnam University AI chatbot. Ask me anything!",
+    "subtitle": "I'm the Kangnam University AI chatbot.\nAsk me anything!",
     "loginSubtitle": "Kangnam University Chatbot, KangNaengBot",
     "messages": [
       "Hi, I'm KangNaengBot, the Kangnam Univ AI!",

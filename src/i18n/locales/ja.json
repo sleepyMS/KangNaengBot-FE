@@ -834,7 +834,7 @@
 
   "welcome": {
     "title": "KangNaengBotへようこそ！",
-    "subtitle": "江南大学校のAIチャットボットです。何でも聞いてください！",
+    "subtitle": "江南大学校のAIチャットボットです。\n何でも聞いてください！",
     "loginSubtitle": "江南大学校チャットボット、KangNaengBot",
     "messages": [
       "こんにちは、江南大学校AI KangNaengBotです！",

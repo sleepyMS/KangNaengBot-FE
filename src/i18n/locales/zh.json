@@ -834,7 +834,7 @@
 
   "welcome": {
     "title": "欢迎使用KangNaengBot！",
-    "subtitle": "我是江南大学AI聊天机器人。有什么问题都可以问我！",
+    "subtitle": "我是江南大学AI聊天机器人。\n有什么问题都可以问我！",
     "loginSubtitle": "江南大学聊天机器人，KangNaengBot",
     "messages": [
       "你好，我是江南大学AI KangNaengBot！",
