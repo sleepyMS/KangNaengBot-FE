@@ -248,10 +248,10 @@ export const openInExternalBrowser = (
   const targetUrl = url || window.location.href;
   const info = browserInfo || detectInAppBrowser();
 
-  // Android: Intent 스킴 사용
+  // Android: Intent 스킴 사용 (시스템 기본 브라우저)
   if (isAndroid()) {
     const intentUrl = `intent://${targetUrl.replace(/^https?:\/\//, '')}` +
-      `#Intent;scheme=https;package=com.android.chrome;` +
+      `#Intent;scheme=https;action=android.intent.action.VIEW;` +
       `S.browser_fallback_url=${encodeURIComponent(targetUrl)};end`;
     window.location.href = intentUrl;
     return true;
@@ -281,16 +281,21 @@ export const openInExternalBrowser = (
   return true;
 };</code></pre>
   <hr data-ke-style="style1" />
-  <h3 data-ke-size="size23">해결책 2: Android Intent Fallback URL</h3>
+  <h3 data-ke-size="size23">해결책 2: Android 시스템 기본 브라우저 활용</h3>
   <p data-ke-size="size16">
-    Android에서 Chrome이 설치되지 않은 경우를 대비하여,
-    <code>S.browser_fallback_url</code> 파라미터를 추가했습니다.
+    처음에는 Chrome을 명시적으로 지정했으나,
+    <b>Chrome이 "사용 중지"된 경우 Intent가 조용히 실패</b>하는 문제를
+    발견했습니다. 패키지를 지정하지 않고
+    <code>action=android.intent.action.VIEW</code>를 사용하면 시스템 기본
+    브라우저로 열립니다.
   </p>
-  <pre class="typescript"><code>// Chrome이 없어도 기본 브라우저로 열림
+  <pre
+    class="typescript"
+  ><code>// 시스템 기본 브라우저로 열기 (Chrome 비활성화 시에도 동작)
 const intentUrl = `intent://example.com#Intent;` +
   `scheme=https;` +
-  `package=com.android.chrome;` +
-  `S.browser_fallback_url=${encodeURIComponent(targetUrl)};` +  // 핵심!
+  `action=android.intent.action.VIEW;` +  // Chrome 대신 시스템 기본 브라우저
+  `S.browser_fallback_url=${encodeURIComponent(targetUrl)};` +
   `end`;</code></pre>
   <hr data-ke-style="style1" />
   <h3 data-ke-size="size23">해결책 3: 인앱 브라우저 감지 시 대체 UI</h3>
