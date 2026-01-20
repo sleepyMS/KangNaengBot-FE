@@ -1,0 +1,788 @@
+<!-- Tistory Blog Post Content --><!-- Copy content below into Tistory HTML Editor -->
+<div class="kangnaeng-tech-blog">
+  <div style="display: flex; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap">
+    <a
+      class="link-btn link-btn-github"
+      href="https://github.com/sleepyMS/KangNaengBot-FE"
+      target="_blank"
+      rel="noopener noreferrer"
+      >📂 GitHub 저장소</a
+    ><a
+      class="link-btn link-btn-demo"
+      href="https://kang-naeng-bot-fe.vercel.app/"
+      target="_blank"
+      rel="noopener noreferrer"
+      >🌐 라이브 데모</a
+    ><a
+      class="link-btn link-btn-portfolio"
+      href="https://ms-mind.vercel.app/"
+      target="_blank"
+      rel="noopener noreferrer"
+      >💼 포트폴리오</a
+    >
+  </div>
+  <blockquote data-ke-style="style2">
+    <p data-ke-size="size16">
+      카카오톡, 에브리타임 등
+      <b>인앱 브라우저에서 Google OAuth 로그인이 차단되는 문제</b>를 분석하고,
+      앱별 URL 스킴을 활용한 외부 브라우저 리다이렉트 솔루션을 구현한 과정을
+      공유합니다.
+    </p>
+  </blockquote>
+  <div style="padding: 1rem">&nbsp;</div>
+  <!-- 목차 태그 네비게이션 -->
+  <p
+    style="
+      margin: 2rem 0 0.5rem 0.25rem;
+      font-weight: bold;
+      color: #475569;
+      font-size: 1.1rem;
+    "
+    data-ke-size="size16"
+  >
+    📑 바로가기
+  </p>
+  <div class="toc-container">
+    <a
+      class="toc-tag"
+      style="background: #fee2e2; color: #dc2626"
+      href="#section-problem"
+      >🎯 문제 정의</a
+    ><a
+      class="toc-tag"
+      style="background: #e0e7ff; color: #4338ca"
+      href="#section-analysis"
+      >🔍 원인 분석</a
+    ><a
+      class="toc-tag"
+      style="background: #fef3c7; color: #d97706"
+      href="#section-challenges"
+      >🔥 도전과제</a
+    ><a
+      class="toc-tag"
+      style="background: #dcfce7; color: #16a34a"
+      href="#section-solutions"
+      >💡 해결 과정</a
+    ><a
+      class="toc-tag"
+      style="background: #dbeafe; color: #2563eb"
+      href="#section-results"
+      >📈 결과</a
+    ><a
+      class="toc-tag"
+      style="background: #f3e8ff; color: #7c3aed"
+      href="#section-techstack"
+      >🛠 기술 스택</a
+    >
+  </div>
+  <hr data-ke-style="style1" />
+  <h2 id="section-problem" data-ke-size="size26">
+    🎯 문제 정의: 왜 카카오톡에서 구글 로그인이 안 될까?
+  </h2>
+  <p data-ke-size="size16">
+    대학 커뮤니티 에브리타임이나 카카오톡에서 공유된 링크를 클릭하면, 해당 앱
+    내부의 <b>인앱 브라우저(In-App Browser)</b>에서 웹페이지가 열립니다. 문제는
+    이 환경에서 <b>Google OAuth 로그인이 완전히 차단</b>된다는 것입니다.
+  </p>
+  <p data-ke-size="size16">
+    사용자가 "Google로 계속하기" 버튼을 누르면, 다음과 같은 에러 메시지가
+    표시됩니다:
+  </p>
+  <blockquote data-ke-style="style2">
+    <p data-ke-size="size16">
+      <b>"403 disallowed_useragent"</b><br />이 브라우저 또는 앱이 안전하지 않을
+      수 있습니다.
+    </p>
+  </blockquote>
+  <p data-ke-size="size16">
+    강냉봇 서비스에서 이 문제는 심각했습니다. 대학생들은 주로 에브리타임이나
+    카카오톡을 통해 서비스 링크를 공유하는데, 해당 경로로 접근한 사용자들이
+    로그인 자체를 할 수 없었기 때문입니다.
+  </p>
+  <!-- 문제 흐름 다이어그램 -->
+  <hr data-ke-style="style1" />
+  <h2 id="section-analysis" data-ke-size="size26">
+    🔍 원인 분석: Google의 보안 정책
+  </h2>
+  <h3 data-ke-size="size23">2021년, Google의 결정</h3>
+  <p data-ke-size="size16">
+    Google은 2021년 9월부터
+    <b>임베디드 웹뷰(WebView)에서의 OAuth 로그인을 전면 차단</b>했습니다. 이는
+    보안상의 이유 때문입니다.
+  </p>
+  <div class="highlight-box">
+    <h4 data-ke-size="size20">🔒 WebView가 위험한 이유</h4>
+    <ul style="margin-top: 1rem; margin-bottom: 0" data-ke-list-type="disc">
+      <li>
+        <b>키로깅 위험</b>: 호스트 앱이 JavaScript를 주입하여 사용자
+        입력(비밀번호 등)을 가로챌 수 있음
+      </li>
+      <li>
+        <b>중간자 공격</b>: 앱이 Google과 사용자 사이의 통신을 변조할 수 있음
+      </li>
+      <li>
+        <b>세션 탈취</b>: 인증 후 발급된 토큰을 악의적인 앱이 가로챌 수 있음
+      </li>
+      <li>
+        <b>SSO 불가</b>: 시스템 브라우저의 기존 로그인 세션을 활용할 수 없음
+      </li>
+    </ul>
+  </div>
+  <h3 data-ke-size="size23">인앱 브라우저 감지 방법</h3>
+  <p data-ke-size="size16">
+    각 앱의 인앱 브라우저는 고유한 <code>User-Agent</code> 문자열을 가지고
+    있습니다. 이를 분석하여 어떤 앱에서 접근했는지 식별할 수 있습니다.
+  </p>
+  [##_Image|kage@cD24Zw/dJMcacBSXgK/AAAAAAAAAAAAAAAAAAAAAD8TbMIlR-RsgJebV4bVtBUggGw9JEdjMZygxT883dHg/img.jpg?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=wVaOgRA51uJpqQl9eAv6OBhRdLI%3D|CDM|1.3|{"originWidth":1440,"originHeight":2954,"style":"alignCenter","width":332,"height":681,"alt":"로그인
+  화면 예시","caption":"로그인 화면 예시","filename":"로그인 화면 예시.jpg"}_##]
+  <pre
+    class="typescript"
+  ><code>// browserDetect.ts - User-Agent 기반 인앱 브라우저 감지
+const inAppBrowserPatterns = [
+  { pattern: /KAKAOTALK/i, name: 'KakaoTalk' },
+  { pattern: /everytime/i, name: 'Everytime' },
+  { pattern: /NAVER\(inapp|NAVER\//i, name: 'Naver' },
+  { pattern: /Instagram/i, name: 'Instagram' },
+  { pattern: /FBAN|FBAV|FB_IAB/i, name: 'Facebook' },
+  { pattern: /Line\//i, name: 'LINE' },
+  { pattern: /Twitter|X-Twitter/i, name: 'X (Twitter)' },
+  { pattern: /; wv\)/i, name: 'Android WebView' },
+];
+
+export const detectInAppBrowser = () =&gt; {
+  const ua = navigator.userAgent;
+  
+  for (const { pattern, name } of inAppBrowserPatterns) {
+    if (pattern.test(ua)) {
+      return { isInAppBrowser: true, browserName: name };
+    }
+  }
+  
+  // iOS WebView: Safari 식별자가 없는 경우
+  if (/iPhone|iPad/.test(ua) &amp;&amp; !/Safari\//.test(ua)) {
+    return { isInAppBrowser: true, browserName: 'iOS WebView' };
+  }
+  
+  return { isInAppBrowser: false, browserName: null };
+};</code></pre>
+  <hr data-ke-style="style1" />
+  <h2 id="section-challenges" data-ke-size="size26">🔥 기술적 도전과제</h2>
+  <h3 data-ke-size="size23">1. 플랫폼별 외부 브라우저 열기 방법의 차이</h3>
+  <p data-ke-size="size16">
+    가장 큰 난관은 <b>Android와 iOS의 동작 방식이 완전히 다르다</b>는
+    점이었습니다. 더 나아가, 같은 iOS라도 앱마다 지원하는 URL 스킴이 달랐습니다.
+  </p>
+  <table data-ke-align="alignLeft">
+    <thead>
+      <tr>
+        <th>&nbsp;플랫폼</th>
+        <th>&nbsp;방법</th>
+        <th>&nbsp;문제점</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>&nbsp;Android</td>
+        <td>&nbsp;Intent 스킴</td>
+        <td>&nbsp;Chrome 미설치 시 실패</td>
+      </tr>
+      <tr>
+        <td>&nbsp;iOS Safari</td>
+        <td>&nbsp;window.open()</td>
+        <td>&nbsp;인앱 브라우저에서 무시됨</td>
+      </tr>
+      <tr>
+        <td>&nbsp;iOS 카카오톡</td>
+        <td>&nbsp;전용 URL 스킴</td>
+        <td>&nbsp;문서화되지 않음</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 data-ke-size="size23">2. iOS의 근본적 제한</h3>
+  <p data-ke-size="size16">
+    iOS에서는 JavaScript로 <b>Safari를 강제로 실행하는 것이 불가능</b>합니다.
+    Android처럼 Intent 스킴으로 외부 앱을 호출할 수 있는 표준화된 방법이 없기
+    때문입니다.
+  </p>
+  <blockquote data-ke-style="style2">
+    <p data-ke-size="size16">
+      <code>window.open(url, '_blank')</code>는 iOS 인앱 브라우저에서<br /><b
+        >같은 WebView 내에서 열리거나 완전히 무시</b
+      >됩니다.
+    </p>
+  </blockquote>
+  <h3 data-ke-size="size23">3. 사용자 경험 고려</h3>
+  <p data-ke-size="size16">
+    기술적으로 불가능한 경우에도 사용자가 당황하지 않도록, 명확한 안내와
+    대안(링크 복사, 게스트 모드 등)을 제공해야 했습니다.
+  </p>
+  <hr data-ke-style="style1" />
+  <h2 id="section-solutions" data-ke-size="size26">💡 해결 과정</h2>
+  <h3 data-ke-size="size23">해결책 1: 앱별 URL 스킴 활용</h3>
+  <p data-ke-size="size16">
+    조사 결과, 일부 앱들은 <b>외부 브라우저로 열기 위한 자체 URL 스킴</b>을
+    제공하고 있었습니다. 특히 카카오톡의 경우 공식 스킴이 존재했습니다.
+  </p>
+  <div class="highlight-box">
+    <h4 data-ke-size="size20">🔗 발견한 앱별 URL 스킴</h4>
+    <ul style="margin-top: 1rem; margin-bottom: 0" data-ke-list-type="disc">
+      <li>
+        <b>카카오톡</b>:
+        <code>kakaotalk://web/openExternal?url={encodedUrl}</code>
+      </li>
+      <li><b>라인</b>: <code>line://nv/article?url={encodedUrl}</code></li>
+      <li>
+        <b>네이버</b>: <code>naversearchapp://open?url={encodedUrl}</code>
+      </li>
+    </ul>
+  </div>
+  [##_Image|kage@bunXEb/dJMcafZEXtI/AAAAAAAAAAAAAAAAAAAAAJtLykJ6abv9vabv_TiVZWSM7BygvTLX983wFMXfyHTb/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=AC0FblMKErInhxTPBr%2FFL6qR%2FiU%3D|CDM|1.3|{"originWidth":5779,"originHeight":4081,"style":"alignCenter","alt":"플랫폼별
+  분기 처리 흐름도","caption":"플랫폼별 분기 처리 흐름도","filename":"플랫폼별
+  분기 처리 흐름도.png"}_##]<!-- 플랫폼별 분기 흐름도 -->
+  <h4 data-ke-size="size20">💻 플랫폼별 분기 처리 구현</h4>
+  <pre class="typescript"><code>// browserDetect.ts - 외부 브라우저 열기 로직
+export const openInExternalBrowser = (
+  url?: string,
+  browserInfo?: InAppBrowserInfo
+): boolean =&gt; {
+  const targetUrl = url || window.location.href;
+  const info = browserInfo || detectInAppBrowser();
+
+  // Android: Intent 스킴 사용
+  if (isAndroid()) {
+    const intentUrl = `intent://${targetUrl.replace(/^https?:\/\//, '')}` +
+      `#Intent;scheme=https;package=com.android.chrome;` +
+      `S.browser_fallback_url=${encodeURIComponent(targetUrl)};end`;
+    window.location.href = intentUrl;
+    return true;
+  }
+
+  // iOS: 앱별 URL 스킴 분기
+  if (isIOS()) {
+    const encodedUrl = encodeURIComponent(targetUrl);
+
+    switch (info.browserName) {
+      case 'KakaoTalk':
+        window.location.href = `kakaotalk://web/openExternal?url=${encodedUrl}`;
+        return true;
+      case 'LINE':
+        window.location.href = `line://nv/article?url=${encodedUrl}`;
+        return true;
+      case 'Naver':
+        window.location.href = `naversearchapp://open?url=${encodedUrl}`;
+        return true;
+      default:
+        // 지원되지 않는 앱 - 수동 안내 필요
+        return false;
+    }
+  }
+
+  window.open(targetUrl, '_blank');
+  return true;
+};</code></pre>
+  <hr data-ke-style="style1" />
+  <h3 data-ke-size="size23">해결책 2: Android Intent Fallback URL</h3>
+  <p data-ke-size="size16">
+    Android에서 Chrome이 설치되지 않은 경우를 대비하여,
+    <code>S.browser_fallback_url</code> 파라미터를 추가했습니다.
+  </p>
+  <pre class="typescript"><code>// Chrome이 없어도 기본 브라우저로 열림
+const intentUrl = `intent://example.com#Intent;` +
+  `scheme=https;` +
+  `package=com.android.chrome;` +
+  `S.browser_fallback_url=${encodeURIComponent(targetUrl)};` +  // 핵심!
+  `end`;</code></pre>
+  <hr data-ke-style="style1" />
+  <h3 data-ke-size="size23">해결책 3: 인앱 브라우저 감지 시 대체 UI</h3>
+  <p data-ke-size="size16">
+    인앱 브라우저가 감지되면, 기존 로그인 버튼 대신
+    <b>경고 메시지와 함께 외부 브라우저로 유도하는 UI</b>를 표시합니다.
+  </p>
+  [##_Image|kage@cBHrJl/dJMcac2UMwP/AAAAAAAAAAAAAAAAAAAAAG5Fah35_ZUTdznz36us2vbYZ_kmwuO3kguI6LaqfYLT/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=f2TJmd8KvZy77LJcuP0sed217yA%3D|CDM|1.3|{"originWidth":2496,"originHeight":4821,"style":"alignCenter","width":376,"height":726,"alt":"조건부
+  렌더링 흐름도","caption":"조건부 렌더링 흐름도","filename":"조건부 렌더링
+  흐름도.png"}_##]<!-- 조건부 렌더링 흐름도 -->
+  <h4 data-ke-size="size20">💻 핵심 구현 코드</h4>
+  <pre class="typescript"><code>// LoginPage.tsx
+const [inAppBrowserInfo] = useState(() =&gt; detectInAppBrowser());
+
+return inAppBrowserInfo.isInAppBrowser ? (
+  // 인앱 브라우저 경고 UI
+  &lt;InAppBrowserWarning
+    browserName={inAppBrowserInfo.browserName}
+    onOpenExternal={handleOpenExternal}
+    onCopyLink={handleCopyLink}
+    onGuestMode={handleGuestMode}
+  /&gt;
+) : (
+  // 일반 Google 로그인 버튼
+  &lt;GoogleLoginButton onClick={handleGoogleLogin} /&gt;
+);</code></pre>
+  <hr data-ke-style="style1" />
+  <h3 data-ke-size="size23">해결책 4: 다국어 지원</h3>
+  <p data-ke-size="size16">
+    강냉봇은 4개 국어를 지원하기 때문에, 인앱 브라우저 관련 메시지도 모든 언어로
+    번역했습니다.
+  </p>
+  <pre class="json"><code>// ko.json
+"inAppBrowser": {
+  "title": "외부 브라우저에서 열어주세요",
+  "description": "{{browserName}}에서는 보안 정책으로 인해 Google 로그인이 제한됩니다.",
+  "openExternal": "외부 브라우저에서 열기",
+  "copyLink": "링크 복사",
+  "copied": "링크가 복사되었습니다!",
+  "manualGuide": "이 앱에서는 자동 열기가 지원되지 않습니다. 우측 상단 메뉴에서 'Safari로 열기'를 선택해주세요."
+}</code></pre>
+  <p data-ke-size="size16">&nbsp;</p>
+  <hr data-ke-style="style1" />
+  <h2 id="section-results" data-ke-size="size26">📈 개선 결과</h2>
+  <table data-ke-align="alignLeft">
+    <thead>
+      <tr>
+        <th>&nbsp;시나리오</th>
+        <th>&nbsp;기존</th>
+        <th>&nbsp;개선 후</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>&nbsp;카카오톡 &rarr; 로그인</td>
+        <td>&nbsp;❌ 403 에러</td>
+        <td><b>&nbsp;✅ Safari 자동 연결</b></td>
+      </tr>
+      <tr>
+        <td>&nbsp;Android 인앱 브라우저</td>
+        <td>&nbsp;❌ 403 에러</td>
+        <td><b>&nbsp;✅ Chrome 자동 연결</b></td>
+      </tr>
+      <tr>
+        <td>&nbsp;인스타그램/에타 (iOS)</td>
+        <td>&nbsp;❌ 403 에러</td>
+        <td><b>&nbsp;⚠️ 수동 안내 + 복사 기능</b></td>
+      </tr>
+      <tr>
+        <td>&nbsp;사용자 이탈률</td>
+        <td>&nbsp;높음</td>
+        <td><b>&nbsp;대폭 감소</b></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 data-ke-size="size23">배운 점</h3>
+  <ol style="list-style-type: decimal" data-ke-list-type="decimal">
+    <li>
+      <b>플랫폼 제약의 이해</b>: Google의 WebView 차단 정책은 우회할 수
+      없습니다. 이를 받아들이고 대안을 찾는 것이 중요합니다.
+    </li>
+    <li>
+      <b>앱별 URL 스킴 활용</b>: 공식 문서에 없더라도, 커뮤니티 조사를 통해 앱별
+      숨겨진 기능을 발견할 수 있습니다.
+    </li>
+    <li>
+      <b>Graceful Degradation</b>: 기술적으로 완벽한 해결이 불가능할 때,
+      사용자에게 명확한 안내와 대안을 제공하는 것이 핵심입니다.
+    </li>
+    <li>
+      <b>접근성 고려</b>: 경고 UI에 <code>role="alert"</code>, 아이콘에
+      <code>aria-hidden</code>을 적용하여 스크린 리더 호환성을 높였습니다.
+    </li>
+  </ol>
+  <h3 data-ke-size="size23">🚀 향후 계획: 근본적인 해결책</h3>
+  <p data-ke-size="size16">
+    현재 구현은 웹 환경의 제약 내에서 최선의 우회 방법을 적용한 것입니다. 하지만
+    인앱 브라우저 문제를 <b>근본적으로 해결</b>하기 위해서는 네이티브 앱 개발이
+    필요합니다.
+  </p>
+  <div
+    class="highlight-box"
+    style="
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-color: #bbf7d0;
+    "
+  >
+    <h4 style="color: #16a34a" data-ke-size="size20">
+      📱 React Native 도입 계획
+    </h4>
+    <ul style="margin-top: 1rem; margin-bottom: 0" data-ke-list-type="disc">
+      <li>
+        <b>네이티브 OAuth 연동</b>: Chrome Custom Tabs (Android) /
+        SFSafariViewController (iOS)를 통해 Google이 권장하는 방식으로 안전한
+        로그인 구현
+      </li>
+      <li>
+        <b>인앱 브라우저 우회 불필요</b>: 앱 자체에서 시스템 브라우저를
+        호출하므로 WebView 제한에서 완전히 자유로움
+      </li>
+      <li>
+        <b>일관된 사용자 경험</b>: 카카오톡, 에브리타임 등 어떤 경로로 접근해도
+        동일한 네이티브 로그인 플로우 제공
+      </li>
+    </ul>
+  </div>
+  <p data-ke-size="size16">
+    React Native를 통해 기존 React 코드를 최대한 재사용하면서, 네이티브 수준의
+    인증 경험을 제공할 예정입니다.
+  </p>
+  <hr data-ke-style="style1" />
+  <h2 id="section-techstack" data-ke-size="size26">🛠 기술 스택 요약</h2>
+  <table data-ke-align="alignLeft">
+    <thead>
+      <tr>
+        <th>&nbsp;영역</th>
+        <th>&nbsp;기술</th>
+        <th>&nbsp;활용 내용</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>&nbsp;브라우저 감지</td>
+        <td>&nbsp;User-Agent 분석</td>
+        <td>&nbsp;15개+ 인앱 브라우저 패턴 감지</td>
+      </tr>
+      <tr>
+        <td>&nbsp;외부 브라우저</td>
+        <td>&nbsp;URL Scheme</td>
+        <td>&nbsp;카카오톡, 라인, 네이버 등 앱별 분기</td>
+      </tr>
+      <tr>
+        <td>&nbsp;Android</td>
+        <td>&nbsp;Intent 스킴</td>
+        <td>&nbsp;Chrome + Fallback URL</td>
+      </tr>
+      <tr>
+        <td>&nbsp;다국어</td>
+        <td>&nbsp;i18next</td>
+        <td>&nbsp;4개 국어(한/영/중/일) 완벽 지원</td>
+      </tr>
+      <tr>
+        <td>&nbsp;접근성</td>
+        <td>&nbsp;ARIA 속성</td>
+        <td>&nbsp;role="alert", aria-hidden 적용</td>
+      </tr>
+    </tbody>
+  </table>
+  <hr data-ke-style="style1" />
+  <p data-ke-size="size16">
+    <i
+      >인앱 브라우저의 벽을 넘어, 모든 사용자에게 원활한 로그인 경험을 제공하기
+      위한 여정.</i
+    >
+  </p>
+  <p style="color: #333333; text-align: start" data-ke-size="size16">
+    <b>📂 프로젝트 저장소</b>:<span>
+      <a
+        style="color: #2563eb"
+        title="https://github.com/sleepyMS/KangNaengBot-FE"
+        href="https://github.com/sleepyMS/KangNaengBot-FE"
+        >KangNaengBot-FE</a
+      ></span
+    >
+  </p>
+  <p style="color: #333333; text-align: start" data-ke-size="size16">
+    <b>🌐 배포 URL</b>:
+    <a
+      title="https://kang-naeng-bot-fe.vercel.app/"
+      href="https://kang-naeng-bot-fe.vercel.app/"
+      target="_blank"
+      rel="noopener noreferrer"
+      >KangNaengBot</a
+    >
+  </p>
+</div>
+<div>
+  <style>
+    .kangnaeng-tech-blog {
+      font-family:
+        "Pretendard",
+        -apple-system,
+        BlinkMacSystemFont,
+        system-ui,
+        Roboto,
+        "Helvetica Neue",
+        "Segoe UI",
+        "Apple SD Gothic Neo",
+        "Malgun Gothic",
+        sans-serif;
+      line-height: 1.75;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    .kangnaeng-tech-blog h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      color: #1a1a1a;
+      letter-spacing: -0.02em;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 1rem;
+    }
+
+    .kangnaeng-tech-blog h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: #2563eb;
+    }
+
+    .kangnaeng-tech-blog h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: #1f2937;
+    }
+
+    .kangnaeng-tech-blog h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+
+    .kangnaeng-tech-blog p {
+      margin-bottom: 1.25rem;
+      font-size: 1.1rem;
+      word-break: keep-all;
+    }
+
+    .kangnaeng-tech-blog blockquote {
+      background-color: #f3f4f6;
+      border-left: 5px solid #2563eb;
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .kangnaeng-tech-blog blockquote p {
+      margin: 0;
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .kangnaeng-tech-blog strong {
+      color: #2563eb;
+      background: linear-gradient(
+        120deg,
+        rgba(37, 99, 235, 0.1) 0%,
+        rgba(37, 99, 235, 0.1) 100%
+      );
+      padding: 0 4px;
+      border-radius: 3px;
+    }
+
+    .kangnaeng-tech-blog pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      font-family: "Fira Code", Consolas, Monaco, monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .kangnaeng-tech-blog code {
+      font-family: "Fira Code", Consolas, Monaco, monospace;
+    }
+
+    .kangnaeng-tech-blog p code,
+    .kangnaeng-tech-blog li code {
+      background-color: #eff6ff;
+      color: #2563eb;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      border: 1px solid #dbeafe;
+    }
+
+    .kangnaeng-tech-blog ul,
+    .kangnaeng-tech-blog ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+
+    .kangnaeng-tech-blog li {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .kangnaeng-tech-blog table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 1rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .kangnaeng-tech-blog th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: #1e293b;
+      text-align: left;
+      padding: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .kangnaeng-tech-blog td {
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    .kangnaeng-tech-blog hr {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+      margin: 3rem 0;
+    }
+
+    .kangnaeng-tech-blog .diagram-container {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+      background: #fafafa;
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .kangnaeng-tech-blog .diagram-container img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .kangnaeng-tech-blog a {
+      color: #2563eb;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .kangnaeng-tech-blog a:hover {
+      border-bottom-color: #2563eb;
+    }
+
+    .kangnaeng-tech-blog .highlight-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .kangnaeng-tech-blog .highlight-box h4 {
+      margin-top: 0;
+      color: #1d4ed8;
+    }
+
+    .kangnaeng-tech-blog .highlight-box p {
+      margin-bottom: 0;
+    }
+  </style>
+</div>
+<hr
+  contenteditable="false"
+  data-ke-style="style5"
+  data-ke-type="horizontalRule"
+/>
+<p data-ke-size="size16"><b>◆ 함께 보면 좋은 글</b></p>
+<ul style="list-style-type: disc" data-ke-list-type="disc">
+  <li>
+    <span style="background-color: #e6f5ff; color: #006dd7"
+      ><b
+        ><a
+          href="https://me-in-journey.com/entry/React-AI-%EC%B1%97%EB%B4%87%EC%9D%98-%EC%B2%B4%EA%B0%90-%EC%86%8D%EB%8F%84%EB%A5%BC-%EB%86%92%EC%9D%B8-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%97%AC%EC%A0%95"
+          >[React] AI 챗봇의 체감 속도를 높인 프론트엔드 최적화 여정</a
+        ></b
+      ></span
+    >
+  </li>
+  <li>
+    <span style="background-color: #e6f5ff; color: #006dd7"
+      ><span style="background-color: #e6f5ff; color: #006dd7"
+        ><b
+          ><a
+            href="https://me-in-journey.tistory.com/entry/React-%EC%9E%90%EC%97%B0%EC%96%B4-%EA%B8%B0%EB%B0%98-%EC%8B%9C%EA%B0%84%ED%91%9C-%EC%9E%90%EB%8F%99-%EC%83%9D%EC%84%B1%EC%9D%84-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%97%AC%EC%A0%95"
+            >[React]
+            자연어&nbsp;기반&nbsp;시간표&nbsp;자동&nbsp;생성을&nbsp;위한&nbsp;프론트엔드&nbsp;최적화&nbsp;여정</a
+          ></b
+        ></span
+      ></span
+    ><span style="background-color: #e6f5ff; color: #006dd7"><b></b></span>
+  </li>
+</ul>
+<div>
+  <style>
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s ease;
+      transform: translateY(0);
+    }
+    .link-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.25);
+      filter: brightness(1.1);
+    }
+    .link-btn-github {
+      background: #1f2937;
+      color: white !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+    .link-btn-demo {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white !important;
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+    }
+    .link-btn-portfolio {
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      color: white !important;
+      box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+    }
+    .toc-tag {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .toc-tag:hover {
+      transform: scale(1.05);
+      filter: brightness(0.95);
+    }
+    .toc-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      align-items: center;
+      position: sticky;
+      top: 20px;
+      z-index: 100;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    h2[id^="section-"] {
+      scroll-margin-top: 100px;
+    }
+  </style>
+</div>
