@@ -11,7 +11,9 @@
     "privacy": "Privacy Policy",
     "delete": "Delete",
     "user": "User",
-    "or": "or"
+    "or": "or",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "onboarding": {
     "title": "Welcome to KangNaengBot! 🎉",

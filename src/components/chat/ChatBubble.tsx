@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import type { MessageItem } from "@/types";
-import { Calendar, ExternalLink } from "lucide-react";
+import { Calendar, ExternalLink, Copy, Check } from "lucide-react";
 import { useScheduleStore } from "@/store";
 import { useTranslation } from "react-i18next";
 
@@ -130,6 +130,61 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
                     className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline decoration-blue-300 dark:decoration-blue-500 hover:decoration-blue-800 dark:hover:decoration-blue-300 transition-colors break-all"
                   />
                 ),
+                pre: ({ children }) => (
+                  <div className="code-block-wrapper">{children}</div>
+                ),
+                code: ({ node, className, children, ...props }) => {
+                  const isInline = !className;
+                  const [copied, setCopied] = useState(false);
+                  const codeContent = String(children).replace(/\n$/, "");
+
+                  const handleCopy = async () => {
+                    await navigator.clipboard.writeText(codeContent);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  };
+
+                  if (isInline) {
+                    return (
+                      <code className="inline-code" {...props}>
+                        {children}
+                      </code>
+                    );
+                  }
+
+                  // 언어 추출 (className이 "language-json" 형태)
+                  const language = className?.replace("language-", "") || "";
+
+                  return (
+                    <div className="code-block">
+                      <div className="code-block-header">
+                        <span className="code-block-language">
+                          {language || "code"}
+                        </span>
+                        <button
+                          onClick={handleCopy}
+                          className="code-block-copy"
+                          title={t("common.copy")}
+                        >
+                          {copied ? (
+                            <>
+                              <Check size={14} /> {t("common.copied")}
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={14} /> {t("common.copy")}
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <pre className="code-block-content">
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      </pre>
+                    </div>
+                  );
+                },
               }}
             >
               {convertHtmlToMarkdown(message.content)}

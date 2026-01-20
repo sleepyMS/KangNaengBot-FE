@@ -11,7 +11,9 @@
     "privacy": "プライバシーポリシー",
     "delete": "削除",
     "user": "ユーザー",
-    "or": "または"
+    "or": "または",
+    "copy": "コピー",
+    "copied": "コピー完了"
   },
   "onboarding": {
     "title": "KangNaengBotへようこそ！🎉",
