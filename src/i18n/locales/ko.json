@@ -10,7 +10,8 @@
     "terms": "이용약관",
     "privacy": "개인정보처리방침",
     "delete": "삭제",
-    "user": "사용자"
+    "user": "사용자",
+    "or": "또는"
   },
   "onboarding": {
     "title": "강냉봇에 오신 것을 환영합니다! 🎉",
@@ -955,8 +956,20 @@
     "googleLogin": "Google 계정으로 계속하기",
     "guestLogin": "게스트로 계속하기",
     "loginSuccess": "로그인되었습니다.",
-    "logoutSuccess": "로그아웃되었습니다."
+    "logoutSuccess": "로그아웃되었습니다.",
+    "inAppBrowser": {
+      "title": "외부 브라우저에서 열어주세요",
+      "description": "{{browserName}}에서는 보안 정책으로 인해 Google 로그인이 제한됩니다.",
+      "descriptionGeneric": "현재 앱에서는 보안 정책으로 인해 Google 로그인이 제한됩니다.",
+      "openExternal": "외부 브라우저에서 열기",
+      "copyLink": "링크 복사",
+      "copied": "링크가 복사되었습니다!",
+      "copyFailed": "복사에 실패했습니다. 주소창을 직접 복사해주세요.",
+      "instructions": "또는 브라우저 주소창을 복사하여 Chrome이나 Safari에서 직접 열어주세요.",
+      "continueAsGuest": "게스트로 계속하기"
+    }
   },
+
   "welcome": {
     "title": "강냉봇에 오신 것을 환영해요!",
     "subtitle": "강남대학교 AI 챗봇 강냉봇입니다. 무엇이든 물어보세요!",

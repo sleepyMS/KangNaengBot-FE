@@ -10,7 +10,8 @@
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "delete": "Delete",
-    "user": "User"
+    "user": "User",
+    "or": "or"
   },
   "onboarding": {
     "title": "Welcome to KangNaengBot! 🎉",
@@ -955,8 +956,20 @@
     "googleLogin": "Continue with Google",
     "guestLogin": "Continue as Guest",
     "loginSuccess": "Logged in successfully.",
-    "logoutSuccess": "Logged out successfully."
+    "logoutSuccess": "Logged out successfully.",
+    "inAppBrowser": {
+      "title": "Please open in an external browser",
+      "description": "Google login is restricted in {{browserName}} due to security policies.",
+      "descriptionGeneric": "Google login is restricted in this app due to security policies.",
+      "openExternal": "Open in External Browser",
+      "copyLink": "Copy Link",
+      "copied": "Link copied!",
+      "copyFailed": "Copy failed. Please copy the address bar manually.",
+      "instructions": "Or copy the browser address bar and open directly in Chrome or Safari.",
+      "continueAsGuest": "Continue as Guest"
+    }
   },
+
   "welcome": {
     "title": "Welcome to KangNaengBot!",
     "subtitle": "I'm the Kangnam University AI chatbot. Ask me anything!",

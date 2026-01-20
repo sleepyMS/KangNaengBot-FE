@@ -10,7 +10,8 @@
     "terms": "服务条款",
     "privacy": "隐私政策",
     "delete": "删除",
-    "user": "用户"
+    "user": "用户",
+    "or": "或"
   },
   "onboarding": {
     "title": "欢迎使用KangNaengBot！🎉",
@@ -816,8 +817,20 @@
     "googleLogin": "通过 Google 继续",
     "guestLogin": "以访客身份继续",
     "loginSuccess": "登录成功。",
-    "logoutSuccess": "注销成功。"
+    "logoutSuccess": "注销成功。",
+    "inAppBrowser": {
+      "title": "请在外部浏览器中打开",
+      "description": "由于安全政策，{{browserName}}中无法使用Google登录。",
+      "descriptionGeneric": "由于安全政策，此应用中无法使用Google登录。",
+      "openExternal": "在外部浏览器中打开",
+      "copyLink": "复制链接",
+      "copied": "链接已复制！",
+      "copyFailed": "复制失败。请手动复制地址栏。",
+      "instructions": "或者复制浏览器地址栏，在Chrome或Safari中直接打开。",
+      "continueAsGuest": "以访客身份继续"
+    }
   },
+
   "welcome": {
     "title": "欢迎使用KangNaengBot！",
     "subtitle": "我是江南大学AI聊天机器人。有什么问题都可以问我！",

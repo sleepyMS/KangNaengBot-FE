@@ -10,7 +10,8 @@
     "terms": "利用規約",
     "privacy": "プライバシーポリシー",
     "delete": "削除",
-    "user": "ユーザー"
+    "user": "ユーザー",
+    "or": "または"
   },
   "onboarding": {
     "title": "KangNaengBotへようこそ！🎉",
@@ -816,8 +817,20 @@
     "googleLogin": "Googleで続ける",
     "guestLogin": "ゲストとして続ける",
     "loginSuccess": "ログインしました。",
-    "logoutSuccess": "ログアウトしました。"
+    "logoutSuccess": "ログアウトしました。",
+    "inAppBrowser": {
+      "title": "外部ブラウザで開いてください",
+      "description": "{{browserName}}ではセキュリティポリシーによりGoogleログインが制限されています。",
+      "descriptionGeneric": "このアプリではセキュリティポリシーによりGoogleログインが制限されています。",
+      "openExternal": "外部ブラウザで開く",
+      "copyLink": "リンクをコピー",
+      "copied": "リンクがコピーされました！",
+      "copyFailed": "コピーに失敗しました。アドレスバーを直接コピーしてください。",
+      "instructions": "または、ブラウザのアドレスバーをコピーして、ChromeまたはSafariで直接開いてください。",
+      "continueAsGuest": "ゲストとして続ける"
+    }
   },
+
   "welcome": {
     "title": "KangNaengBotへようこそ！",
     "subtitle": "江南大学校のAIチャットボットです。何でも聞いてください！",
