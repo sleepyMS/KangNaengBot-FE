@@ -826,6 +826,7 @@
       "copyLink": "复制链接",
       "copied": "链接已复制！",
       "copyFailed": "复制失败。请手动复制地址栏。",
+      "manualGuide": "此应用不支持自动打开。请从菜单中选择'在Safari中打开'。",
       "instructions": "或者复制浏览器地址栏，在Chrome或Safari中直接打开。",
       "continueAsGuest": "以访客身份继续"
     }

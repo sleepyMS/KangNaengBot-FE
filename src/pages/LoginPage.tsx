@@ -75,7 +75,11 @@ export const LoginPage = () => {
   };
 
   const handleOpenExternal = () => {
-    openInExternalBrowser();
+    const success = openInExternalBrowser(undefined, inAppBrowserInfo);
+    if (!success) {
+      // 자동 열기 실패 시 수동 안내 토스트 표시
+      addToast("info", t("auth.inAppBrowser.manualGuide"));
+    }
   };
 
   // Ref for setTimeout cleanup

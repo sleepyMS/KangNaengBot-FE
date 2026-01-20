@@ -965,6 +965,7 @@
       "copyLink": "링크 복사",
       "copied": "링크가 복사되었습니다!",
       "copyFailed": "복사에 실패했습니다. 주소창을 직접 복사해주세요.",
+      "manualGuide": "이 앱에서는 자동 열기가 지원되지 않습니다. 우측 상단 메뉴에서 'Safari로 열기'를 선택해주세요.",
       "instructions": "또는 브라우저 주소창을 복사하여 Chrome이나 Safari에서 직접 열어주세요.",
       "continueAsGuest": "게스트로 계속하기"
     }

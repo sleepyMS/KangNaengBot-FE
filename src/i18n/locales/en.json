@@ -965,6 +965,7 @@
       "copyLink": "Copy Link",
       "copied": "Link copied!",
       "copyFailed": "Copy failed. Please copy the address bar manually.",
+      "manualGuide": "Auto-open is not supported in this app. Please select 'Open in Safari' from the menu.",
       "instructions": "Or copy the browser address bar and open directly in Chrome or Safari.",
       "continueAsGuest": "Continue as Guest"
     }

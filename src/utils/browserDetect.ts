@@ -104,10 +104,18 @@ export const isAndroid = (): boolean => {
  * 외부 브라우저로 현재 페이지를 엽니다.
  *
  * Android: Chrome Intent 스킴 사용 (Chrome 없으면 기본 브라우저로 fallback)
- * iOS: Safari로 리다이렉트 (window.open 사용)
+ * iOS 카카오톡: kakaotalk://web/openExternal 스킴 사용
+ * iOS 라인: line://nv/article 스킴 사용
+ * iOS 기타: window.open 시도 (대부분 작동하지 않음)
+ *
+ * @returns boolean - 외부 브라우저 열기 시도 성공 여부 (false면 수동 안내 필요)
  */
-export const openInExternalBrowser = (url?: string): void => {
+export const openInExternalBrowser = (
+  url?: string,
+  browserInfo?: InAppBrowserInfo,
+): boolean => {
   const targetUrl = url || window.location.href;
+  const info = browserInfo || detectInAppBrowser();
 
   if (isAndroid()) {
     // Android: Intent 스킴을 사용하여 Chrome에서 열기
@@ -119,14 +127,70 @@ export const openInExternalBrowser = (url?: string): void => {
       targetUrl,
     )};end`;
     window.location.href = intentUrl;
-  } else if (isIOS()) {
-    // iOS: Safari에서 열기 위해 새 창으로 열기 시도
-    // 인앱 브라우저에서는 보통 Safari로 리다이렉트됨
-    window.open(targetUrl, "_blank");
-  } else {
-    // 기타 환경: 새 창으로 열기
-    window.open(targetUrl, "_blank");
+    return true;
   }
+
+  if (isIOS()) {
+    // iOS: 앱별 URL 스킴 사용
+    const encodedUrl = encodeURIComponent(targetUrl);
+
+    switch (info.browserName) {
+      case "KakaoTalk":
+        // 카카오톡 공식 외부 브라우저 열기 스킴
+        window.location.href = `kakaotalk://web/openExternal?url=${encodedUrl}`;
+        return true;
+
+      case "LINE":
+        // 라인 외부 브라우저 열기 시도
+        window.location.href = `line://nv/article?url=${encodedUrl}`;
+        return true;
+
+      case "Naver":
+        // 네이버 앱 외부 브라우저 열기 시도
+        window.location.href = `naversearchapp://open?url=${encodedUrl}`;
+        return true;
+
+      case "Facebook":
+      case "Instagram":
+        // 페이스북/인스타그램은 공식 스킴 없음 - 수동 안내 필요
+        return false;
+
+      default:
+        // 기타 인앱 브라우저: window.open 시도 (대부분 작동 안함)
+        window.open(targetUrl, "_blank");
+        return false;
+    }
+  }
+
+  // 기타 환경: 새 창으로 열기
+  window.open(targetUrl, "_blank");
+  return true;
+};
+
+/**
+ * 현재 인앱 브라우저에서 외부 브라우저 자동 열기가 지원되는지 확인합니다.
+ */
+export const canAutoOpenExternalBrowser = (
+  info?: InAppBrowserInfo,
+): boolean => {
+  const browserInfo = info || detectInAppBrowser();
+
+  if (!browserInfo.isInAppBrowser) return false;
+
+  if (isAndroid()) {
+    // Android는 Intent 스킴으로 항상 가능
+    return true;
+  }
+
+  if (isIOS()) {
+    // iOS에서 지원되는 앱들
+    const supportedApps = ["KakaoTalk", "LINE", "Naver"];
+    return browserInfo.browserName
+      ? supportedApps.includes(browserInfo.browserName)
+      : false;
+  }
+
+  return false;
 };
 
 /**
