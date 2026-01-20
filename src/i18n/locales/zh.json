@@ -13,7 +13,8 @@
     "user": "用户",
     "or": "或",
     "copy": "复制",
-    "copied": "已复制"
+    "copied": "已复制",
+    "codeCopied": "代码已复制到剪贴板。"
   },
   "onboarding": {
     "title": "欢迎使用KangNaengBot！🎉",

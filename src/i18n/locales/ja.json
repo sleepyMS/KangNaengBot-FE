@@ -13,7 +13,8 @@
     "user": "ユーザー",
     "or": "または",
     "copy": "コピー",
-    "copied": "コピー完了"
+    "copied": "コピー完了",
+    "codeCopied": "コードがクリップボードにコピーされました。"
   },
   "onboarding": {
     "title": "KangNaengBotへようこそ！🎉",

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import type { MessageItem } from "@/types";
 import { Calendar, ExternalLink, Copy, Check } from "lucide-react";
-import { useScheduleStore } from "@/store";
+import { useScheduleStore, useToastStore } from "@/store";
 import { useTranslation } from "react-i18next";
 
 interface ChatBubbleProps {
@@ -137,10 +137,12 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
                   const isInline = !className;
                   const [copied, setCopied] = useState(false);
                   const codeContent = String(children).replace(/\n$/, "");
+                  const { addToast } = useToastStore();
 
                   const handleCopy = async () => {
                     await navigator.clipboard.writeText(codeContent);
                     setCopied(true);
+                    addToast("success", t("common.codeCopied"));
                     setTimeout(() => setCopied(false), 2000);
                   };
 

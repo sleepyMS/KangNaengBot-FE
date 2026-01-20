@@ -13,7 +13,8 @@
     "user": "사용자",
     "or": "또는",
     "copy": "복사",
-    "copied": "복사됨"
+    "copied": "복사됨",
+    "codeCopied": "코드가 클립보드에 복사되었습니다."
   },
   "onboarding": {
     "title": "강냉봇에 오신 것을 환영합니다! 🎉",
