@@ -75,6 +75,9 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    // IME 조합 중이면 Enter 키 무시 (macOS 한글/일본어/중국어 입력 문제 해결)
+    if (e.nativeEvent.isComposing) return;
+
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
