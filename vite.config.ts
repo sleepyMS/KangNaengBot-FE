@@ -10,4 +10,17 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      "/auth/google/callback": {
+        target: "https://agent-backend-api-88199591627.us-east4.run.app",
+        changeOrigin: true,
+      },
+      "/api": {
+        target: "https://agent-backend-api-88199591627.us-east4.run.app",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });
