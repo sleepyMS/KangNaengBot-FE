@@ -41,14 +41,6 @@ export const sendMessageStream = async (
 ): Promise<void> => {
   const token = localStorage.getItem("access_token");
 
-  // 네이티브 앱(WebView) 환경 감지
-  // ReactNativeWebView는 react-native-webview가 자동으로 주입함
-  const isNativeApp =
-    typeof window !== "undefined" &&
-    (!!(window as unknown as { ReactNativeWebView?: object })
-      .ReactNativeWebView ||
-      !!(window as unknown as { IS_NATIVE_APP?: boolean }).IS_NATIVE_APP);
-
   const response = await fetch(`${API_BASE_URL}/chat/message`, {
     method: "POST",
     headers: {
@@ -57,8 +49,7 @@ export const sendMessageStream = async (
     },
     body: JSON.stringify(request),
     signal: abortSignal,
-    // 네이티브 앱에서는 쿠키 전송 비활성화 (CORS 문제 방지)
-    ...(isNativeApp ? {} : { credentials: "include" as const }),
+    credentials: "include", // HttpOnly 쿠키 전송
   });
 
   if (!response.ok) {
