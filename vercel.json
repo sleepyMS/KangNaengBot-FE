@@ -5,8 +5,8 @@
       "destination": "https://agent-backend-api-88199591627.us-east4.run.app/auth/google/callback"
     },
     {
-      "source": "/api/:path*",
-      "destination": "https://agent-backend-api-88199591627.us-east4.run.app/:path*"
+      "source": "/api/(.*)",
+      "destination": "https://agent-backend-api-88199591627.us-east4.run.app/$1"
     },
     {
       "source": "/(.*)",
