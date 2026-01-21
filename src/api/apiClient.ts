@@ -10,14 +10,24 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   "https://agent-backend-api-88199591627.us-east4.run.app";
 
-// Axios 인스턴스 생성
+// 네이티브 앱(WebView) 환경 감지 헬퍼
+const isNativeApp = (): boolean => {
+  if (typeof window === "undefined") return false;
+  // ReactNativeWebView는 react-native-webview가 자동으로 주입함
+  return (
+    !!(window as unknown as { ReactNativeWebView?: object })
+      .ReactNativeWebView ||
+    !!(window as unknown as { IS_NATIVE_APP?: boolean }).IS_NATIVE_APP
+  );
+};
+
+// Axios 인스턴스 생성 (withCredentials는 요청 시점에 동적으로 설정)
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 60000, // 60초 (AI 응답 대기 고려)
-  withCredentials: true, // HttpOnly 쿠키(Refresh Token) 자동 전송
 });
 
 // 토큰 가져오기 (localStorage에서)
@@ -50,13 +60,16 @@ const addRefreshSubscriber = (callback: (token: string) => void) => {
   refreshSubscribers.push(callback);
 };
 
-// 요청 인터셉터: Authorization 헤더 자동 추가
+// 요청 인터셉터: Authorization 헤더 자동 추가 및 네이티브 앱 CORS 처리
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // 네이티브 앱에서는 쿠키 전송 비활성화 (CORS 문제 방지)
+    // 요청 시점에 체크해야 window.ReactNativeWebView가 주입된 후임
+    config.withCredentials = !isNativeApp();
     return config;
   },
   (error: AxiosError) => {

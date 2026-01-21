@@ -19,11 +19,11 @@ const API_BASE_URL =
  * @deprecated SSE 스트리밍 방식인 sendMessageStream 사용 권장
  */
 export const sendMessage = async (
-  request: MessageRequest
+  request: MessageRequest,
 ): Promise<MessageResponse> => {
   const response = await apiClient.post<MessageResponse>(
     "/chat/message",
-    request
+    request,
   );
   return response.data;
 };
@@ -37,9 +37,17 @@ export const sendMessage = async (
 export const sendMessageStream = async (
   request: MessageRequest,
   callbacks: SSECallbacks,
-  abortSignal?: AbortSignal
+  abortSignal?: AbortSignal,
 ): Promise<void> => {
   const token = localStorage.getItem("access_token");
+
+  // 네이티브 앱(WebView) 환경 감지
+  // ReactNativeWebView는 react-native-webview가 자동으로 주입함
+  const isNativeApp =
+    typeof window !== "undefined" &&
+    (!!(window as unknown as { ReactNativeWebView?: object })
+      .ReactNativeWebView ||
+      !!(window as unknown as { IS_NATIVE_APP?: boolean }).IS_NATIVE_APP);
 
   const response = await fetch(`${API_BASE_URL}/chat/message`, {
     method: "POST",
@@ -49,7 +57,8 @@ export const sendMessageStream = async (
     },
     body: JSON.stringify(request),
     signal: abortSignal,
-    credentials: "include", // HttpOnly 쿠키 전송
+    // 네이티브 앱에서는 쿠키 전송 비활성화 (CORS 문제 방지)
+    ...(isNativeApp ? {} : { credentials: "include" as const }),
   });
 
   if (!response.ok) {
