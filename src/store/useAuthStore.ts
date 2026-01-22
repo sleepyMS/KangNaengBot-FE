@@ -128,6 +128,9 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: false,
             isLoading: false,
           });
+
+          // 네이티브 앱 화면 전환 요청
+          authService.requestNativeLogout();
         } catch (error) {
           set({
             isLoading: false,
