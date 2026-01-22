@@ -31,7 +31,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       // Initial State
       user: null,
       profile: null,
@@ -88,9 +88,20 @@ export const useAuthStore = create<AuthState>()(
         try {
           const profile = await profilesService.getProfile();
           set({ profile, isLoading: false });
-        } catch (error) {
-          // 프로필 로드 실패해도 로그인 상태는 유지
+        } catch (error: any) {
           console.error("[Auth] Profile fetch failed:", error);
+
+          // 404 에러(유저 없음)인 경우 탈퇴된 회원이므로 강제 로그아웃
+          if (
+            error?.response?.status === 404 ||
+            error?.message?.includes("404")
+          ) {
+            console.log("[Auth] User not found (404), forcing logout");
+            get().logout();
+            return;
+          }
+
+          // 그 외 에러는 프로필 로드 실패로 처리 (로그인 상태 유지)
           set({ isLoading: false });
         }
       },
