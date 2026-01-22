@@ -75,7 +75,7 @@ export const ChatPage = () => {
             <WelcomeScreen />
             <SuggestedQuestions />
           </div>
-          <div className="fixed bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-white via-white to-transparent pt-4">
+          <div className="fixed bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-white dark:from-slate-900 via-white dark:via-slate-900 to-transparent pt-4">
             <ChatInput />
           </div>
         </div>
