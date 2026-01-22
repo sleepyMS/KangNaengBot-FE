@@ -46,6 +46,23 @@ export const requestNativeLogin = (): boolean => {
 };
 
 /**
+ * 네이티브 앱에 로그아웃 요청
+ * 앱의 인증 상태를 초기화하고 로그인 화면으로 전환
+ */
+export const requestNativeLogout = (): void => {
+  if (isNativeApp()) {
+    const type = "LOGOUT";
+    const payload = {};
+
+    if (window.sendToNative) {
+      window.sendToNative(type, payload);
+    } else if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({ type, payload }));
+    }
+  }
+};
+
+/**
  * Google OAuth 로그인 URL로 리다이렉트
  * 네이티브 앱에서는 브릿지를 통해 네이티브 로그인 요청
  * @param redirectUri 로그인 후 돌아갈 프론트엔드 URL

@@ -34,4 +34,14 @@ declare global {
       postMessage: (message: string) => void;
     };
   }
+
+  interface NativeTokenRefreshedEvent extends CustomEvent {
+    detail: {
+      token: string;
+    };
+  }
+
+  interface WindowEventMap {
+    nativeTokenRefreshed: NativeTokenRefreshedEvent;
+  }
 }

@@ -86,6 +86,9 @@ export const useAuthStore = create<AuthState>()(
         } catch {
           // 로그아웃 API 실패해도 클라이언트는 이미 정리됨
         }
+
+        // 3. 네이티브 앱 로그아웃 요청 (화면 전환)
+        authService.requestNativeLogout();
       },
 
       deleteAccount: async () => {
@@ -154,6 +157,6 @@ export const useAuthStore = create<AuthState>()(
         profile: state.profile,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );

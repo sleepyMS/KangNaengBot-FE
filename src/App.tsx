@@ -8,15 +8,47 @@ import {
   OnboardingPage,
 } from "@/pages";
 import { ToastContainer } from "@/components/common";
-import { useSettingsStore } from "@/store";
+import { useSettingsStore, useAuthStore } from "@/store";
 
 function App() {
   const { initializeTheme } = useSettingsStore();
+  const login = useAuthStore((state) => state.login);
 
   // 앱 전체에서 테마 초기화 (모든 라우트에 적용)
   useEffect(() => {
     initializeTheme();
   }, [initializeTheme]);
+
+  // 네이티브 앱에서 토큰 갱신 알림 수신 (로그인 처리 및 프로필 정보 갱신)
+  useEffect(() => {
+    const handleNativeTokenRefreshed = (
+      event: CustomEvent<{ token: string }>,
+    ) => {
+      console.log("[App] Native token refreshed, syncing auth state...");
+      const token = event.detail.token;
+      if (token) {
+        // 토큰으로 로그인 처리 (API에서 User/Profile 정보 가져옴)
+        login(token).catch((err) => {
+          console.error(
+            "[App] Failed to sync auth state from native token:",
+            err,
+          );
+        });
+      }
+    };
+
+    window.addEventListener(
+      "nativeTokenRefreshed",
+      handleNativeTokenRefreshed as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "nativeTokenRefreshed",
+        handleNativeTokenRefreshed as EventListener,
+      );
+    };
+  }, [login]);
 
   return (
     <BrowserRouter>
