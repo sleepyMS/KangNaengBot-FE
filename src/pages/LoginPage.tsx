@@ -117,7 +117,9 @@ export const LoginPage = () => {
   // RN이 네이티브 로그인 화면으로 전환할 때까지 대기
   if (typeof window !== "undefined" && window.IS_NATIVE_APP) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: "#0f172a" }} />
+      <div
+        className={`min-h-screen ${isDark ? "bg-[#0f172a]" : "bg-[#E8F4FC]"}`}
+      />
     );
   }
 
