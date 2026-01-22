@@ -31,8 +31,9 @@ interface UIState {
 }
 
 export const useUIStore = create<UIState>((set) => ({
-  // Initial State
-  isSidebarOpen: true,
+  // Initial State - 모바일이면 사이드바 처음부터 접힌 상태로 시작
+  isSidebarOpen:
+    typeof window !== "undefined" ? window.innerWidth >= 768 : true,
   isSettingsModalOpen: false,
   isProfileModalOpen: false, // Legacy alias
   isMobile: typeof window !== "undefined" ? window.innerWidth < 768 : false,
@@ -58,7 +59,8 @@ export const useUIStore = create<UIState>((set) => ({
       activeSettingsTab: "profile",
     }),
 
-  setIsMobile: (isMobile) => set({ isMobile, isSidebarOpen: !isMobile }),
+  // isMobile 상태만 업데이트 (초기 상태에서 이미 적절한 값으로 설정됨)
+  setIsMobile: (isMobile) => set({ isMobile }),
 
   setActiveSettingsTab: (tab) => set({ activeSettingsTab: tab }),
 
