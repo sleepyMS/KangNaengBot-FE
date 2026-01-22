@@ -56,11 +56,21 @@ export const useSettingsStore = create<SettingsState>()(
         const resolvedTheme = theme === "system" ? getSystemTheme() : theme;
         applyTheme(resolvedTheme);
         set({ theme, resolvedTheme });
+
+        // 네이티브 앱에 테마 변경 알림
+        if (window.sendToNative) {
+          window.sendToNative("THEME_CHANGED", { theme });
+        }
       },
 
       setLanguage: (language) => {
         set({ language });
         // i18n 언어 변경은 LanguageTab에서 처리
+
+        // 네이티브 앱에 언어 변경 알림
+        if (window.sendToNative) {
+          window.sendToNative("LOCALE_CHANGED", { locale: language });
+        }
       },
 
       initializeTheme: () => {
