@@ -18,6 +18,10 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setProfile: (profile: ProfileResponse | null) => void;
   login: (accessToken: string) => Promise<void>;
+  loginWithNativeUser: (
+    accessToken: string,
+    user: User | null,
+  ) => Promise<void>;
   logout: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   fetchProfile: () => Promise<void>;
@@ -69,6 +73,27 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
+      // 네이티브 앱에서 유저 정보와 함께 로그인 (Optimistic UI)
+      loginWithNativeUser: async (accessToken: string, user: User | null) => {
+        // 1. 즉시 UI 업데이트 (Optimistic)
+        setAccessToken(accessToken);
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: true, // 프로필 로딩 중
+          error: null,
+        });
+
+        // 2. 백그라운드에서 프로필 정보 가져오기
+        try {
+          const profile = await profilesService.getProfile();
+          set({ profile, isLoading: false });
+        } catch (error) {
+          // 프로필 로드 실패해도 로그인 상태는 유지
+          console.error("[Auth] Profile fetch failed:", error);
+          set({ isLoading: false });
+        }
+      },
       logout: async () => {
         // 1. 먼저 클라이언트 상태 정리 (중복 API 호출 방지)
         removeAccessToken();

@@ -38,6 +38,12 @@ declare global {
   interface NativeTokenRefreshedEvent extends CustomEvent {
     detail: {
       token: string;
+      userInfo?: {
+        id: string;
+        email: string;
+        name: string;
+        picture?: string;
+      } | null;
     };
   }
 

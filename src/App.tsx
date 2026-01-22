@@ -9,10 +9,14 @@ import {
 } from "@/pages";
 import { ToastContainer } from "@/components/common";
 import { useSettingsStore, useAuthStore } from "@/store";
+import type { User } from "@/types";
 
 function App() {
   const { initializeTheme } = useSettingsStore();
   const login = useAuthStore((state) => state.login);
+  const loginWithNativeUser = useAuthStore(
+    (state) => state.loginWithNativeUser,
+  );
 
   // 앱 전체에서 테마 초기화 (모든 라우트에 적용)
   useEffect(() => {
@@ -22,18 +26,30 @@ function App() {
   // 네이티브 앱에서 토큰 갱신 알림 수신 (로그인 처리 및 프로필 정보 갱신)
   useEffect(() => {
     const handleNativeTokenRefreshed = (
-      event: CustomEvent<{ token: string }>,
+      event: CustomEvent<{ token: string; userInfo?: User | null }>,
     ) => {
       console.log("[App] Native token refreshed, syncing auth state...");
-      const token = event.detail.token;
+      const { token, userInfo } = event.detail;
+
       if (token) {
-        // 토큰으로 로그인 처리 (API에서 User/Profile 정보 가져옴)
-        login(token).catch((err) => {
-          console.error(
-            "[App] Failed to sync auth state from native token:",
-            err,
+        if (userInfo) {
+          // 네이티브에서 유저 정보 전달됨 → 즉시 UI 업데이트 (Optimistic)
+          console.log(
+            "[App] Using native user info for optimistic UI:",
+            userInfo.email,
           );
-        });
+          loginWithNativeUser(token, userInfo).catch((err) => {
+            console.error("[App] Failed to sync auth state:", err);
+          });
+        } else {
+          // 유저 정보 없음 → 기존 방식 (API로 fetch)
+          login(token).catch((err) => {
+            console.error(
+              "[App] Failed to sync auth state from native token:",
+              err,
+            );
+          });
+        }
       }
     };
 
@@ -48,7 +64,7 @@ function App() {
         handleNativeTokenRefreshed as EventListener,
       );
     };
-  }, [login]);
+  }, [login, loginWithNativeUser]);
 
   return (
     <BrowserRouter>
