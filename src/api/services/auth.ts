@@ -11,13 +11,28 @@ const API_BASE_URL =
  * @param redirectUri 로그인 후 돌아갈 프론트엔드 URL
  */
 export const googleLogin = (redirectUri?: string): void => {
-  // 네이티브 앱에서는 브릿지를 통해 네이티브 로그인 요청
-  if (
-    typeof window !== "undefined" &&
-    window.IS_NATIVE_APP &&
-    window.sendToNative
-  ) {
-    window.sendToNative("REQUEST_LOGIN", { redirectUri });
+  // 1. 전역 변수 체크 (JS 주입)
+  const isNativeVar = typeof window !== "undefined" && window.IS_NATIVE_APP;
+
+  // 2. User Agent 체크 (HTTP 헤더 기반)
+  const isNativeUA =
+    typeof navigator !== "undefined" &&
+    navigator.userAgent &&
+    navigator.userAgent.includes("KangNaengBotApp");
+
+  // 네이티브 앱 감지 시
+  if (isNativeVar || isNativeUA) {
+    const payload = { redirectUri };
+    const type = "REQUEST_LOGIN";
+
+    if (window.sendToNative) {
+      window.sendToNative(type, payload);
+    } else if (window.ReactNativeWebView) {
+      // 헬퍼 함수가 없을 경우 직접 전송
+      window.ReactNativeWebView.postMessage(JSON.stringify({ type, payload }));
+    } else {
+      console.error("[Auth] Native bridge interface missing");
+    }
     return;
   }
 
