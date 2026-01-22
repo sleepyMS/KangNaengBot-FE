@@ -113,6 +113,14 @@ export const LoginPage = () => {
   const isDark = resolvedTheme === "dark";
   const token = searchParams.get("token");
 
+  // 네이티브 앱에서는 빈 화면 표시 (로그아웃 시 웹 로그인 페이지 깜빡임 방지)
+  // RN이 네이티브 로그인 화면으로 전환할 때까지 대기
+  if (typeof window !== "undefined" && window.IS_NATIVE_APP) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: "#0f172a" }} />
+    );
+  }
+
   // 토큰이 있거나(로그인 진입), 로딩 중이거나, 이미 로그인된 경우(리다이렉트 대기) 로딩 표시
   // 단, 에러가 있으면 로그인 페이지 표시
   const shouldShowLoading = isLoading || (!!token && !error) || isAuthenticated;
