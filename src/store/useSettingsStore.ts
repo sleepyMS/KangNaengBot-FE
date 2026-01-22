@@ -18,9 +18,16 @@ interface SettingsState {
   initializeTheme: () => void;
 }
 
-// 시스템 테마 감지
+// 시스템 테마 감지 (네이티브 앱에서는 NATIVE_THEME 우선)
 const getSystemTheme = (): "light" | "dark" => {
   if (typeof window === "undefined") return "light";
+
+  // 네이티브 앱에서는 주입된 테마 사용
+  if (window.NATIVE_THEME) {
+    return window.NATIVE_THEME;
+  }
+
+  // 웹에서는 브라우저 미디어 쿼리 사용
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
@@ -80,6 +87,6 @@ export const useSettingsStore = create<SettingsState>()(
         theme: state.theme,
         language: state.language,
       }),
-    }
-  )
+    },
+  ),
 );

@@ -16,6 +16,12 @@ declare global {
     /** 게스트 모드 여부 */
     IS_GUEST?: boolean;
 
+    /** 네이티브 시스템 테마 (dark | light) */
+    NATIVE_THEME?: "dark" | "light";
+
+    /** 네이티브 시스템 언어 (예: ko-KR, en-US) */
+    NATIVE_LOCALE?: string;
+
     /**
      * 네이티브 앱에 메시지 전송
      * @param type 메시지 타입
