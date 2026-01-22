@@ -7,9 +7,21 @@ const API_BASE_URL =
 
 /**
  * Google OAuth 로그인 URL로 리다이렉트
+ * 네이티브 앱에서는 브릿지를 통해 네이티브 로그인 요청
  * @param redirectUri 로그인 후 돌아갈 프론트엔드 URL
  */
 export const googleLogin = (redirectUri?: string): void => {
+  // 네이티브 앱에서는 브릿지를 통해 네이티브 로그인 요청
+  if (
+    typeof window !== "undefined" &&
+    window.IS_NATIVE_APP &&
+    window.sendToNative
+  ) {
+    window.sendToNative("REQUEST_LOGIN", { redirectUri });
+    return;
+  }
+
+  // 웹에서는 기존 OAuth 리다이렉트
   const params = new URLSearchParams();
   if (redirectUri) {
     params.append("redirect_uri", redirectUri);
@@ -33,7 +45,7 @@ export const getMe = async (): Promise<User> => {
  * 테스트용 토큰 생성 (개발용)
  */
 export const generateTestToken = async (
-  userId: string
+  userId: string,
 ): Promise<{
   access_token: string;
   token_type: string;
