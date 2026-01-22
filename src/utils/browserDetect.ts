@@ -27,6 +27,16 @@ export const detectInAppBrowser = (): InAppBrowserInfo => {
 
   const ua = navigator.userAgent || navigator.vendor || "";
 
+  // 네이티브 앱(KangNaengBotApp)에서는 인앱 브라우저로 감지하지 않음
+  // 네이티브 앱은 자체 Google Sign-In SDK를 사용하여 로그인 처리
+  if (ua.includes("KangNaengBotApp")) {
+    return {
+      isInAppBrowser: false,
+      browserName: null,
+      canOpenExternalBrowser: false,
+    };
+  }
+
   // 각 인앱 브라우저별 User-Agent 패턴
   const inAppBrowserPatterns: { pattern: RegExp; name: string }[] = [
     // 한국 주요 앱
