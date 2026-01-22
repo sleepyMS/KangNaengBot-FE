@@ -15,6 +15,7 @@ import {
   MessageSquarePlus,
 } from "lucide-react";
 import { useUIStore, useChatStore, useAuthStore, useToastStore } from "@/store";
+import { authService } from "@/api";
 import { AlertModal, Spinner } from "@/components/common";
 import { SavedScheduleList } from "@/components/schedule/SavedScheduleList";
 import { UNIVERSITY_TRANS_KEYS } from "@/constants/universityTranslation";
@@ -177,8 +178,8 @@ export const Sidebar = () => {
                 ? "w-[clamp(240px,80%,320px)] translate-x-0"
                 : "w-[clamp(240px,80%,320px)] -translate-x-full"
               : isSidebarOpen
-              ? "w-[clamp(240px,20vw,320px)]"
-              : "w-16"
+                ? "w-[clamp(240px,20vw,320px)]"
+                : "w-16"
           }
         `}
       >
@@ -297,7 +298,12 @@ export const Sidebar = () => {
                         </span>
                       </div>
                       <button
-                        onClick={() => navigate("/login")}
+                        onClick={() => {
+                          // 네이티브 앱이면 바로 네이티브 로그인, 아니면 /login 페이지로
+                          if (!authService.requestNativeLogin()) {
+                            navigate("/login");
+                          }
+                        }}
                         className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all hover:scale-105 active:scale-95"
                         style={{
                           background:
@@ -604,7 +610,10 @@ export const Sidebar = () => {
                   onClick={async () => {
                     setIsPopoverOpen(false);
                     if (!isAuthenticated) {
-                      navigate("/login");
+                      // 네이티브 앱이면 바로 네이티브 로그인, 아니면 /login 페이지로
+                      if (!authService.requestNativeLogin()) {
+                        navigate("/login");
+                      }
                       return;
                     }
                     await logout();

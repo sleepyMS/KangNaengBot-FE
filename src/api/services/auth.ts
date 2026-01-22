@@ -6,33 +6,53 @@ const API_BASE_URL =
   "https://agent-backend-api-88199591627.us-east4.run.app";
 
 /**
- * Google OAuth 로그인 URL로 리다이렉트
- * 네이티브 앱에서는 브릿지를 통해 네이티브 로그인 요청
- * @param redirectUri 로그인 후 돌아갈 프론트엔드 URL
+ * 네이티브 앱 환경인지 확인
  */
-export const googleLogin = (redirectUri?: string): void => {
-  // 1. 전역 변수 체크 (JS 주입)
+export const isNativeApp = (): boolean => {
+  // 전역 변수 체크 (JS 주입)
   const isNativeVar = typeof window !== "undefined" && window.IS_NATIVE_APP;
 
-  // 2. User Agent 체크 (HTTP 헤더 기반)
+  // User Agent 체크 (HTTP 헤더 기반)
   const isNativeUA =
     typeof navigator !== "undefined" &&
     navigator.userAgent &&
     navigator.userAgent.includes("KangNaengBotApp");
 
-  // 네이티브 앱 감지 시
-  if (isNativeVar || isNativeUA) {
-    const payload = { redirectUri };
-    const type = "REQUEST_LOGIN";
+  return !!(isNativeVar || isNativeUA);
+};
 
-    if (window.sendToNative) {
-      window.sendToNative(type, payload);
-    } else if (window.ReactNativeWebView) {
-      // 헬퍼 함수가 없을 경우 직접 전송
-      window.ReactNativeWebView.postMessage(JSON.stringify({ type, payload }));
-    } else {
-      console.error("[Auth] Native bridge interface missing");
-    }
+/**
+ * 네이티브 앱에 로그인 요청
+ * 사이드바 등에서 /login 페이지 거치지 않고 직접 네이티브 로그인 트리거
+ * @returns 네이티브 앱에서 실행되었으면 true, 웹이면 false
+ */
+export const requestNativeLogin = (): boolean => {
+  if (!isNativeApp()) {
+    return false;
+  }
+
+  const type = "REQUEST_LOGIN";
+  const payload = {};
+
+  if (window.sendToNative) {
+    window.sendToNative(type, payload);
+  } else if (window.ReactNativeWebView) {
+    window.ReactNativeWebView.postMessage(JSON.stringify({ type, payload }));
+  } else {
+    console.error("[Auth] Native bridge interface missing");
+    return false;
+  }
+  return true;
+};
+
+/**
+ * Google OAuth 로그인 URL로 리다이렉트
+ * 네이티브 앱에서는 브릿지를 통해 네이티브 로그인 요청
+ * @param redirectUri 로그인 후 돌아갈 프론트엔드 URL
+ */
+export const googleLogin = (redirectUri?: string): void => {
+  // 네이티브 앱에서는 브릿지 사용
+  if (requestNativeLogin()) {
     return;
   }
 
