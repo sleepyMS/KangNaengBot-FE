@@ -114,10 +114,22 @@ apiClient.interceptors.response.use(
         onRefreshed(newToken);
         isRefreshing = false;
 
+        // [Native Sync] 갱신된 토큰을 네이티브 앱에도 전달
+        if (window.sendToNative) {
+          window.sendToNative("TOKEN_UPDATED", {
+            token: newToken,
+          });
+        }
+
         // 원래 요청 재시도
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return apiClient(originalRequest);
-      } catch (refreshError) {
+      } catch (refreshError: any) {
+        // [Native Sync] 갱신 실패 시 네이티브 세션도 만료 처리
+        if (window.sendToNative) {
+          window.sendToNative("SESSION_EXPIRED", {});
+        }
+
         // 갱신 실패 시 로그아웃 처리
         isRefreshing = false;
         refreshSubscribers = [];
