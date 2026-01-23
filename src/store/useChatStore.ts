@@ -42,8 +42,10 @@ interface ChatState {
   ) => Promise<void>;
   addMessage: (message: MessageItem) => void;
   clearCurrentSession: () => void;
+  setError: (error: string) => void;
   clearError: () => void;
   reset: () => void;
+  setGuestUserId: (id: number | null) => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -588,24 +590,39 @@ export const useChatStore = create<ChatState>((set, get) => ({
               ),
             }));
           },
-          onError: (errorMessage) => {
-            set({ streamingMessage: null, abortController: null });
-            throw new Error(errorMessage);
-          },
         },
         abortController.signal,
       );
     } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : i18n.t("store.error.sendMessage");
+
+      // 게스트 쿼터 초과 에러 처리
+      if (
+        errorMessage.includes("GUEST_QUOTA_EXCEEDED") ||
+        errorMessage.includes("HTTP 403") ||
+        errorMessage.includes("403")
+      ) {
+        set({
+          error: "GUEST_QUOTA_EXCEEDED",
+          isSending: false,
+          sendingSessionId: null,
+          streamingMessage: null,
+          abortController: null,
+          // 메시지 롤백하지 않음 (사용자가 작성한 메시지 유지)
+        });
+        return;
+      }
+
       // schedule 모드였으면 status 초기화 (에러 상태로)
       if (mode === "schedule") {
         useScheduleStore.setState({
           status: "error",
           error: {
             type: "generation_failed",
-            message:
-              error instanceof Error
-                ? error.message
-                : i18n.t("store.error.sendMessage"),
+            message: errorMessage,
             retryable: true,
           },
         });
@@ -618,10 +635,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         sendingSessionId: null, // Reset sending session
         streamingMessage: null,
         abortController: null,
-        error:
-          error instanceof Error
-            ? error.message
-            : i18n.t("store.error.sendMessage"),
+        error: errorMessage,
       }));
     }
   },
@@ -635,6 +649,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
   clearCurrentSession: () => {
     set({ currentSessionId: null, messages: [] });
   },
+
+  setError: (error: string) => set({ error }),
 
   clearError: () => set({ error: null }),
 
@@ -652,4 +668,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
       error: null,
     });
   },
+
+  setGuestUserId: (id: number | null) => set({ guestUserId: id }),
 }));

@@ -56,7 +56,18 @@ export const LoginPage = () => {
         if (!isMobile) {
           addToast("success", t("auth.loginSuccess"));
         }
-        navigate("/", { replace: true });
+
+        // 리다이렉트 URL 확인 (Query Param 또는 LocalStorage)
+        const redirectUrl =
+          searchParams.get("redirect") ||
+          localStorage.getItem("login_redirect_url");
+
+        if (redirectUrl) {
+          localStorage.removeItem("login_redirect_url"); // 사용 후 삭제
+          navigate(redirectUrl, { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
       } else {
         navigate("/onboarding", { replace: true });
       }

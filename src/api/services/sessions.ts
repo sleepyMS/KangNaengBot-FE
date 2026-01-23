@@ -19,7 +19,7 @@ export const createSession = async (): Promise<CreateSessionResponse> => {
  * @param includeInactive 비활성 세션 포함 여부
  */
 export const listSessions = async (
-  includeInactive = false
+  includeInactive = false,
 ): Promise<ListSessionsResponse> => {
   const response = await apiClient.get<ListSessionsResponse>("/sessions/", {
     params: { include_inactive: includeInactive },
@@ -34,11 +34,11 @@ export const listSessions = async (
  */
 export const getSessionMessages = async (
   sessionId: string,
-  limit?: number
+  limit?: number,
 ): Promise<GetMessagesResponse> => {
   const response = await apiClient.get<GetMessagesResponse>(
     `/sessions/${sessionId}/messages`,
-    { params: limit ? { limit } : undefined }
+    { params: limit ? { limit } : undefined },
   );
   return response.data;
 };
@@ -48,10 +48,24 @@ export const getSessionMessages = async (
  * @param sessionId 세션 UUID
  */
 export const deleteSession = async (
-  sessionId: string
+  sessionId: string,
 ): Promise<DeleteSessionResponse> => {
   const response = await apiClient.delete<DeleteSessionResponse>(
-    `/sessions/${sessionId}`
+    `/sessions/${sessionId}`,
   );
+  return response.data;
+};
+
+/**
+ * 게스트 세션을 유저로 병합
+ * @param sessionId 병합할 세션 ID
+ */
+export const mergeSession = async (
+  sessionId: string,
+): Promise<{ message: string; session_id: string }> => {
+  const response = await apiClient.post<{
+    message: string;
+    session_id: string;
+  }>(`/sessions/sessions/${sessionId}/merge`);
   return response.data;
 };

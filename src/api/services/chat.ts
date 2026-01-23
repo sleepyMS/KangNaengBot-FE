@@ -81,12 +81,12 @@ export const sendMessageStream = async (
       for (const line of lines) {
         const trimmedLine = line.trim();
 
-        // 빈 줄 또는 주석 무시
         if (!trimmedLine || trimmedLine.startsWith(":")) {
           continue;
         }
 
         // "data: " 접두사 제거
+
         if (trimmedLine.startsWith("data: ")) {
           const jsonStr = trimmedLine.slice(6);
 

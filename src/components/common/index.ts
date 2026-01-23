@@ -12,3 +12,4 @@ export { Spinner } from "./Spinner";
 export { LanguageSwitcher } from "./LanguageSwitcher";
 export { ProtectedRoute } from "./ProtectedRoute";
 export { CustomCheckbox } from "./CustomCheckbox";
+export { QuotaExceededModal } from "./QuotaExceededModal";

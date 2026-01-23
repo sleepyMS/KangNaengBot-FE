@@ -67,6 +67,19 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
     const trimmedMessage = message.trim();
     setMessage("");
 
+    // 게스트 쿼터 체크 (클라이언트 사이드)
+    // 메시지가 3개(왕복 아님) 이상이면 차단
+    if (!isAuthenticated) {
+      const currentMessages = useChatStore.getState().messages;
+      const userMessageCount = currentMessages.filter(
+        (m) => m.role === "user",
+      ).length;
+      if (userMessageCount >= 3) {
+        useChatStore.getState().setError("GUEST_QUOTA_EXCEEDED");
+        return;
+      }
+    }
+
     // 통합된 sendMessage 호출 - 모드에 따라 mode 파라미터만 다름
     await sendMessage(trimmedMessage, {
       createSessionIfNeeded: !currentSessionId,

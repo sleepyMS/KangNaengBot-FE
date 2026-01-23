@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { User, ProfileResponse } from "@/types";
 import { setAccessToken, removeAccessToken } from "@/api";
-import { authService, profilesService } from "@/api";
+import { authService, profilesService, sessionsService } from "@/api";
 import i18n from "@/i18n";
 import { useChatStore } from "./useChatStore";
 
@@ -51,6 +51,30 @@ export const useAuthStore = create<AuthState>()(
           // User와 Profile을 모두 가져온 후에 상태 업데이트 (Race Condition 방지)
           const user = await authService.getMe();
           const profile = await profilesService.getProfile();
+
+          // 게스트 세션 병합 처리
+          const pendingSessionId = localStorage.getItem(
+            "pending_merge_session_id",
+          );
+          if (pendingSessionId) {
+            // Race condition 방지: 즉시 삭제하여 중복 호출 막음
+            localStorage.removeItem("pending_merge_session_id");
+            try {
+              console.log("[Auth] Merging guest session:", pendingSessionId);
+              // Circular dependency 방지를 위해 직접 import 하지 않고 services에서 호출
+              // (이미 상단에 import 되어 있음)
+              await sessionsService.mergeSession(pendingSessionId);
+
+              // 병합 후 세션 목록 갱신은 ChatPage 진입 시 이루어짐 (낙관적 처리 불필요)
+            } catch (mergeError) {
+              console.error("[Auth] Session merge failed:", mergeError);
+              // 실패 시 재시도를 위해 복구할지 결정해야 하지만,
+              // 이미 병합되었는데 에러가 난 경우(500 등) 무한 루프 위험이 있으므로 복구하지 않음
+            }
+          }
+
+          // 로그인 성공 시 게스트 ID 초기화 (인증된 사용자로 전환)
+          useChatStore.getState().setGuestUserId(null);
 
           set({
             user,
