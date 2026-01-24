@@ -198,7 +198,9 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
                       ? t("schedule.inputPlaceholderShort")
                       : t("schedule.inputPlaceholder")
                     : isEmailMode
-                      ? t("email.inputPlaceholder")
+                      ? isMobile
+                        ? t("email.inputPlaceholderShort")
+                        : t("email.inputPlaceholder")
                       : t("chat.placeholder")
                 }
                 rows={1}

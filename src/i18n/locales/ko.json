@@ -810,6 +810,7 @@
   },
   "email": {
     "inputPlaceholder": "어떤 내용의 이메일을 쓸까요?",
+    "inputPlaceholderShort": "내용을 입력하세요",
     "exitMode": "이메일 모드 종료",
     "exitModeDesc": "일반 대화로 돌아가기",
     "modeActive": "이메일 모드"

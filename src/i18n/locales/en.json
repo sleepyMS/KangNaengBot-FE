@@ -810,6 +810,7 @@
   },
   "email": {
     "inputPlaceholder": "What kind of email should I write?",
+    "inputPlaceholderShort": "Enter email content",
     "exitMode": "Exit Email Mode",
     "exitModeDesc": "Return to normal chat",
     "modeActive": "Email Mode"

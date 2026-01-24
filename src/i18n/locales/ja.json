@@ -810,6 +810,7 @@
   },
   "email": {
     "inputPlaceholder": "どのような内容のメールを作成しますか？",
+    "inputPlaceholderShort": "メールの内容を入力",
     "exitMode": "メールモード終了",
     "exitModeDesc": "通常の会話に戻る",
     "modeActive": "メールモード"

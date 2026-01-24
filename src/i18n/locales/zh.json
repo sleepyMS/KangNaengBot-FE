@@ -810,6 +810,7 @@
   },
   "email": {
     "inputPlaceholder": "您想写什么样的邮件？",
+    "inputPlaceholderShort": "输入邮件内容",
     "exitMode": "退出邮件模式",
     "exitModeDesc": "返回普通对话",
     "modeActive": "邮件模式"
