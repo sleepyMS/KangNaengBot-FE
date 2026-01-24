@@ -7,6 +7,7 @@ interface FeatureCardProps {
   onClick?: () => void;
   disabled?: boolean;
   isComingSoon?: boolean;
+  isActive?: boolean;
 }
 
 export const FeatureCard = ({
@@ -16,6 +17,7 @@ export const FeatureCard = ({
   onClick,
   disabled = false,
   isComingSoon = false,
+  isActive = false,
 }: FeatureCardProps) => {
   return (
     <button
@@ -25,18 +27,20 @@ export const FeatureCard = ({
         relative overflow-hidden group w-full text-left p-5
         flex flex-col justify-start items-start gap-3
         rounded-3xl transition-all duration-300 ease-out
-        border border-white/60 dark:border-slate-700/50
+        border
         
         ${
           disabled || isComingSoon
-            ? "cursor-default opacity-80"
-            : "hover:scale-[1.02] hover:border-primary-200 dark:hover:border-primary-800 cursor-pointer"
+            ? "cursor-default opacity-80 border-white/60 dark:border-slate-700/50"
+            : isActive
+              ? "border-blue-400 dark:border-blue-500 bg-blue-50/50 dark:bg-blue-900/20 cursor-pointer scale-[1.02]"
+              : "border-white/60 dark:border-slate-700/50 hover:scale-[1.02] hover:border-primary-200 dark:hover:border-primary-800 cursor-pointer bg-white/40 dark:bg-slate-800/40"
         }
-        
-        bg-white/40 dark:bg-slate-800/40
       `}
       style={{
-        boxShadow: "0px 0px 40px 0px rgba(105, 162, 255, 0.24)", // Light mode shadow
+        boxShadow: isActive
+          ? "0px 0px 40px 0px rgba(59, 130, 246, 0.3)" // Blue shadow for active
+          : "0px 0px 40px 0px rgba(105, 162, 255, 0.24)", // Default shadow
         backdropFilter: "blur(28px)",
         WebkitBackdropFilter: "blur(28px)",
       }}

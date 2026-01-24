@@ -68,6 +68,7 @@ export const FeatureSection = () => {
               icon={feature.icon}
               onClick={feature.onClick}
               isComingSoon={feature.isComingSoon}
+              isActive={feature.id === "schedule" && isScheduleMode}
             />
           ))}
         </div>
@@ -82,6 +83,7 @@ export const FeatureSection = () => {
               icon={feature.icon}
               onClick={feature.onClick}
               isComingSoon={feature.isComingSoon}
+              isActive={feature.id === "schedule" && isScheduleMode}
             />
           ))}
         </div>
