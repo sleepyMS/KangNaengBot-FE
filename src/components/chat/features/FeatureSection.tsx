@@ -54,22 +54,22 @@ export const FeatureSection = () => {
   return (
     <div className="w-full max-w-4xl md:w-[60%] md:max-w-[33.6rem] mx-auto px-1 mt-6 mb-8">
       {isMobile ? (
-        // Mobile Layout: Stack or Horizontal Scroll (using Stack for now per plan)
-        // If we want horizontal scroll, we can change to overflow-x-auto
-        <div className="flex flex-col gap-3">
+        // Mobile Layout: Horizontal Scroll (Carousel)
+        <div className="flex flex-row gap-3 overflow-x-auto py-4 px-4 -mx-4 scrollbar-hide snap-x snap-mandatory">
           {features.map((feature) => (
-            // On Mobile, we might want to hide coming soon items if space is low?
-            // For now, render all or just render active.
-            // Rendering all to match user request "Complete Implementation"
-            <FeatureCard
+            <div
               key={feature.id}
-              title={feature.title}
-              description={feature.description}
-              icon={feature.icon}
-              onClick={feature.onClick}
-              isComingSoon={feature.isComingSoon}
-              isActive={feature.id === "schedule" && isScheduleMode}
-            />
+              className="snap-start shrink-0 first:pl-1 last:pr-1"
+            >
+              <FeatureCard
+                title={feature.title}
+                description={feature.description}
+                icon={feature.icon}
+                onClick={feature.onClick}
+                isComingSoon={feature.isComingSoon}
+                isActive={feature.id === "schedule" && isScheduleMode}
+              />
+            </div>
           ))}
         </div>
       ) : (

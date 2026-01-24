@@ -24,32 +24,28 @@ export const FeatureCard = ({
       onClick={onClick}
       disabled={disabled || isComingSoon}
       className={`
-        relative overflow-hidden group w-full text-left p-5
+        relative overflow-hidden group w-full text-left 
+        p-4 md:p-5 
+        min-w-[160px] md:min-w-0
         flex flex-col justify-start items-start gap-3
-        rounded-3xl transition-all duration-300 ease-out
+        rounded-2xl md:rounded-3xl transition-all duration-300 ease-out
         border
         
         ${
           disabled || isComingSoon
             ? "cursor-default opacity-80 border-white/60 dark:border-slate-700/50"
             : isActive
-              ? "border-blue-400 dark:border-blue-500 bg-blue-50/50 dark:bg-blue-900/20 cursor-pointer scale-[1.02]"
-              : "border-white/60 dark:border-slate-700/50 hover:scale-[1.02] hover:border-primary-200 dark:hover:border-primary-800 cursor-pointer bg-white/40 dark:bg-slate-800/40"
+              ? "border-blue-400 dark:border-blue-500 bg-blue-50/50 dark:bg-blue-900/20 cursor-pointer scale-[1.02] shadow-[0_0_15px_0_rgba(59,130,246,0.3)] md:shadow-[0_0_40px_0_rgba(59,130,246,0.3)]"
+              : "border-white/60 dark:border-slate-700/50 hover:scale-[1.02] hover:border-primary-200 dark:hover:border-primary-800 cursor-pointer bg-white/40 dark:bg-slate-800/40 shadow-[0_0_15px_0_rgba(105,162,255,0.24)] md:shadow-[0_0_40px_0_rgba(105,162,255,0.24)]"
         }
+        backdrop-blur-[28px]
       `}
-      style={{
-        boxShadow: isActive
-          ? "0px 0px 40px 0px rgba(59, 130, 246, 0.3)" // Blue shadow for active
-          : "0px 0px 40px 0px rgba(105, 162, 255, 0.24)", // Default shadow
-        backdropFilter: "blur(28px)",
-        WebkitBackdropFilter: "blur(28px)",
-      }}
       aria-label={title}
     >
       {/* Icon Circle */}
       <div
         className={`
-        w-10 h-10 rounded-2xl flex items-center justify-center shrink-0
+        w-9 h-9 md:w-10 md:h-10 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0
         transition-colors duration-300
         ${
           isComingSoon
@@ -58,14 +54,14 @@ export const FeatureCard = ({
         }
       `}
       >
-        <Icon size={20} />
+        <Icon size={18} className="md:w-5 md:h-5" />
       </div>
 
       {/* Content */}
-      <div className="flex flex-col gap-1 w-full">
+      <div className="flex flex-col gap-0.5 md:gap-1 w-full">
         <h3
           className={`
-          font-bold text-lg leading-tight
+          font-bold text-base md:text-lg leading-tight
           ${
             isComingSoon
               ? "text-gray-400 dark:text-gray-500"
@@ -77,7 +73,7 @@ export const FeatureCard = ({
         </h3>
         <p
           className={`
-          text-sm leading-snug
+          text-xs md:text-sm leading-snug line-clamp-2 md:line-clamp-none
           ${
             isComingSoon
               ? "text-gray-400 dark:text-gray-500"
