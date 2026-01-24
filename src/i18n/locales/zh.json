@@ -781,6 +781,10 @@
   },
   "chat": {
     "placeholder": "有什么可以帮您的吗？",
+    "feature": {
+      "new": "新功能",
+      "newDesc": "即将添加新功能"
+    },
     "newChat": "新对话",
     "send": "发送",
     "loginRequired": "需要登录",

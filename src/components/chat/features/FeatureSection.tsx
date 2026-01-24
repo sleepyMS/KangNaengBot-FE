@@ -32,20 +32,14 @@ export const FeatureSection = () => {
     {
       id: "coming-soon-1",
       title: t("chat.feature.new", "새로운 기능"),
-      description: t(
-        "chat.feature.comingSoon",
-        "새로운 기능이 추가될 예정이에요",
-      ),
+      description: t("chat.feature.newDesc", "새로운 기능이 추가될 예정이에요"),
       icon: Sparkles, // Or Lock
       isComingSoon: true,
     },
     {
       id: "coming-soon-2",
       title: t("chat.feature.new", "새로운 기능"),
-      description: t(
-        "chat.feature.comingSoon",
-        "새로운 기능이 추가될 예정이에요",
-      ),
+      description: t("chat.feature.newDesc", "새로운 기능이 추가될 예정이에요"),
       icon: Lock,
       isComingSoon: true,
     },

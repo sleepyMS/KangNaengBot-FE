@@ -781,6 +781,10 @@
   },
   "chat": {
     "placeholder": "무엇이든 물어보세요.",
+    "feature": {
+      "new": "새로운 기능",
+      "newDesc": "새로운 기능이 추가될 예정이에요"
+    },
     "newChat": "새 대화 시작하기",
     "send": "전송",
     "loginRequired": "로그인이 필요해요",
@@ -815,7 +819,7 @@
     "viewSaved": "보관함",
     "retry": "다시 시도",
     "createSchedule": "시간표 만들기",
-    "createScheduleDesc": "AI가 최적의 시간표를 만들어드려요",
+    "createScheduleDesc": "AI가 최적의 시간표를 만들어 줄게요",
     "exitMode": "시간표 모드 종료",
     "exitModeDesc": "일반 대화로 돌아가기",
     "modeActive": "시간표 모드",

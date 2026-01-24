@@ -781,6 +781,10 @@
   },
   "chat": {
     "placeholder": "何でも聞いてください。",
+    "feature": {
+      "new": "新機能",
+      "newDesc": "新機能が追加される予定です"
+    },
     "newChat": "新しいチャット",
     "send": "送信",
     "loginRequired": "ログインが必要です",
