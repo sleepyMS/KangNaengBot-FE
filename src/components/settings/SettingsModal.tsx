@@ -96,7 +96,9 @@ export const SettingsModal = () => {
     if (!isDragging) return;
     const delta = clientY - dragStartY.current;
     // 아래로만 드래그 가능 (delta > 0)
-    setDragY(Math.max(0, delta));
+    // 저항감 추가 (Rubber band effect) - 실제 이동거리보다 적게 움직이게
+    const dampening = 1; // 1:1 이동
+    setDragY(Math.max(0, delta * dampening));
   };
 
   // 드래그 끝
@@ -124,7 +126,7 @@ export const SettingsModal = () => {
     handleDragEnd();
   };
 
-  // 마우스 이벤트 핸д러
+  // 마우스 이벤트 핸들러
   const handleMouseDown = (e: React.MouseEvent) => {
     handleDragStart(e.clientY);
   };
@@ -143,7 +145,8 @@ export const SettingsModal = () => {
     }
   };
 
-  if (!isSettingsModalOpen) return null;
+  // 부모 컴포넌트에서 항상 렌더링(mount) 하므로, CSS로 visibility와 transition을 제어합니다.
+  // if (!isSettingsModalOpen) return null; <- 삭제됨
 
   const renderTabContent = () => {
     switch (activeSettingsTab) {
@@ -165,23 +168,44 @@ export const SettingsModal = () => {
   // 모바일 레이아웃
   if (isMobile) {
     return (
-      <div className="fixed inset-0 z-50 flex items-end justify-center">
+      <div
+        className={`fixed inset-0 z-50 flex items-end justify-center transition-all duration-300 ${
+          isSettingsModalOpen ? "visible" : "invisible delay-300"
+        }`}
+      >
         {/* Backdrop */}
         <div
-          className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+          className={`absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300 ${
+            isSettingsModalOpen ? "opacity-100" : "opacity-0"
+          }`}
           onClick={closeSettingsModal}
-          style={{ opacity: Math.max(0.3, 1 - dragY / 300) }}
+          style={{
+            opacity: isSettingsModalOpen ? 1 - Math.min(dragY / 300, 1) : 0,
+          }}
         />
 
         {/* Bottom Sheet */}
         <div
           ref={sheetRef}
-          className={`relative w-full max-h-[95vh] bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl overflow-hidden ${
+          className={`relative w-full max-h-[95vh] bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl overflow-hidden 
+          ${
+            isSettingsModalOpen && !isDragging
+              ? "translate-y-0"
+              : isSettingsModalOpen && isDragging
+                ? "" // 드래그 중에는 transform 스타일이 제어함
+                : "translate-y-full pointer-events-none" // 닫힘
+          }
+          ${
             isDragging
-              ? ""
-              : "animate-slide-up transition-transform duration-200"
+              ? "transition-none" // 드래그 중에는 즉각 반응
+              : "transition-transform duration-300 cubic-bezier(0.2, 0.8, 0.2, 1)" // 놓거나 닫을 때는 스무스
           }`}
-          style={{ transform: `translateY(${dragY}px)` }}
+          style={{
+            transform:
+              isSettingsModalOpen && isDragging
+                ? `translateY(${dragY}px)`
+                : undefined,
+          }}
           onClick={(e) => e.stopPropagation()}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -232,13 +256,26 @@ export const SettingsModal = () => {
 
   // 데스크탑 레이아웃
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-200 ${
+        isSettingsModalOpen ? "visible" : "invisible delay-200"
+      }`}
+    >
       {/* Backdrop - 클릭하여 닫기 */}
-      <div className="absolute inset-0" onClick={closeSettingsModal} />
+      <div
+        className={`absolute inset-0 transition-opacity duration-200 ${
+          isSettingsModalOpen ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={closeSettingsModal}
+      />
 
       {/* Modal */}
       <div
-        className="relative w-[95%] md:w-[90%] lg:w-[80%] max-w-3xl rounded-2xl overflow-hidden glass-modal"
+        className={`relative w-[95%] md:w-[90%] lg:w-[80%] max-w-3xl rounded-2xl overflow-hidden glass-modal transition-all duration-300 cubic-bezier(0.2, 0.8, 0.2, 1) ${
+          isSettingsModalOpen
+            ? "opacity-100 scale-100 translate-y-0"
+            : "opacity-0 scale-95 translate-y-4 pointer-events-none"
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
