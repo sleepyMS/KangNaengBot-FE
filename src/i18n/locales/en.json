@@ -946,6 +946,7 @@
     "noHistory": "No conversations with KangNaengBot yet",
     "deleteConfirm": "Delete this conversation?",
     "refresh": "Refresh",
+    "newChat": "Start New Conversation",
     "deleteWarning": "Deleted conversations cannot be recovered.",
     "deleteSuccess": "Conversation deleted.",
     "guestGuideLine1": "Login Required",

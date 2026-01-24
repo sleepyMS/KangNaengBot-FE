@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useNavigate, Link } from "react-router-dom";
 import {
@@ -12,6 +13,7 @@ import {
   Settings,
   LogOut,
   LogIn,
+  Plus,
   MessageSquarePlus,
 } from "lucide-react";
 import { useUIStore, useChatStore, useAuthStore, useToastStore } from "@/store";
@@ -46,10 +48,18 @@ export const Sidebar = () => {
   const [isSavedSchedulesOpen, setIsSavedSchedulesOpen] = useState(true);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isHistoryMenuOpen, setIsHistoryMenuOpen] = useState(false);
+  const [isNewChatMenuOpen, setIsNewChatMenuOpen] = useState(false);
+  const [newChatMenuPos, setNewChatMenuPos] = useState({
+    top: 0,
+    left: 0,
+    right: 0,
+  });
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const historyMenuRef = useRef<HTMLDivElement>(null);
+  const newChatMenuRef = useRef<HTMLDivElement>(null);
+  const newChatBtnRef = useRef<HTMLButtonElement>(null);
   const prefetchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 팝오버 외부 클릭 감지
@@ -67,12 +77,30 @@ export const Sidebar = () => {
       ) {
         setIsHistoryMenuOpen(false);
       }
+      if (
+        newChatMenuRef.current &&
+        !newChatMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsNewChatMenuOpen(false);
+      }
     };
-    if (isPopoverOpen || isHistoryMenuOpen) {
+    if (isPopoverOpen || isHistoryMenuOpen || isNewChatMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isPopoverOpen, isHistoryMenuOpen]);
+  }, [isPopoverOpen, isHistoryMenuOpen, isNewChatMenuOpen]);
+
+  const toggleNewChatMenu = () => {
+    if (!isNewChatMenuOpen && newChatBtnRef.current) {
+      const rect = newChatBtnRef.current.getBoundingClientRect();
+      setNewChatMenuPos({
+        top: rect.bottom + 8, // 버튼 아래에 약간의 여백
+        left: 0, // left는 사용하지 않음 (right 정렬)
+        right: window.innerWidth - rect.right, // 오른쪽 기준 정렬
+      });
+    }
+    setIsNewChatMenuOpen(!isNewChatMenuOpen);
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -250,6 +278,46 @@ export const Sidebar = () => {
                   />
                 </button>
                 <div className="flex items-center gap-1 flex-shrink-0 relative">
+                  {/* New Chat Button */}
+                  <div className="relative">
+                    <button
+                      ref={newChatBtnRef}
+                      onClick={toggleNewChatMenu}
+                      className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                    >
+                      <Plus size={16} />
+                    </button>
+                    {isNewChatMenuOpen &&
+                      createPortal(
+                        <div
+                          ref={newChatMenuRef}
+                          style={{
+                            top: `${newChatMenuPos.top}px`,
+                            right: `${newChatMenuPos.right}px`,
+                          }}
+                          className="fixed glass-modal rounded-xl py-2 min-w-[150px] z-[9999] animate-fade-in"
+                        >
+                          <button
+                            onClick={() => {
+                              navigate("/");
+                              setIsNewChatMenuOpen(false);
+                              if (isMobile) setSidebarOpen(false);
+                            }}
+                            className="w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors group"
+                          >
+                            <MessageSquarePlus
+                              size={16}
+                              className="text-gray-500 dark:text-gray-400 group-hover:text-primary-500 dark:group-hover:text-primary-400"
+                            />
+                            <span className="text-sm">
+                              {t("sidebar.newChat")}
+                            </span>
+                          </button>
+                        </div>,
+                        document.body,
+                      )}
+                  </div>
+
                   <button
                     onClick={handleRefresh}
                     className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"

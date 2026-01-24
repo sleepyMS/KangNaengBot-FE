@@ -807,6 +807,7 @@
     "noHistory": "KangNaengBotとの会話がまだありません",
     "deleteConfirm": "この会話を削除しますか？",
     "refresh": "更新",
+    "newChat": "新しいチャット",
     "deleteWarning": "削除された会話は復元できません。",
     "deleteSuccess": "会話が削除されました。",
     "guestGuideLine1": "ログインが必要です",

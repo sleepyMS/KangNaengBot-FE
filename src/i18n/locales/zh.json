@@ -807,6 +807,7 @@
     "noHistory": "还没有与KangNaengBot的对话",
     "deleteConfirm": "确定要删除此对话吗？",
     "refresh": "刷新",
+    "newChat": "新对话",
     "deleteWarning": "已删除的对话将无法恢复。",
     "deleteSuccess": "对话已删除。",
     "guestGuideLine1": "需要登录",
