@@ -6,6 +6,7 @@ import {
   MessageList,
   WelcomeScreen,
   SuggestedQuestions,
+  FeatureSection,
 } from "@/components/chat";
 import { QuotaExceededModal } from "@/components/common";
 import { useChatStore, useUIStore, useAuthStore } from "@/store";
@@ -80,6 +81,7 @@ export const ChatPage = () => {
         <div className="flex-1 flex flex-col relative">
           <div className="flex-1 flex flex-col items-center justify-center px-4">
             <WelcomeScreen />
+            <FeatureSection />
             <SuggestedQuestions />
           </div>
           <div className="fixed bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-white dark:from-slate-900 via-white dark:via-slate-900 to-transparent pt-4">
@@ -90,6 +92,7 @@ export const ChatPage = () => {
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <WelcomeScreen />
           <ChatInput />
+          <FeatureSection />
           <SuggestedQuestions />
         </div>
       )}
