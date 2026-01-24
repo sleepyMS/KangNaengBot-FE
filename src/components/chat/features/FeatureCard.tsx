@@ -61,7 +61,7 @@ export const FeatureCard = ({
       <div className="flex flex-col gap-0.5 md:gap-1 w-full">
         <h3
           className={`
-          font-bold text-base md:text-lg leading-tight
+          font-bold text-base leading-tight
           ${
             isComingSoon
               ? "text-gray-400 dark:text-gray-500"
