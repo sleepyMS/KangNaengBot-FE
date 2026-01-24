@@ -7,6 +7,7 @@ import {
   useAuthStore,
   useScheduleStore,
   useUIStore,
+  useEmailStore,
 } from "@/store";
 import { AlertModal } from "@/components/common";
 import { ToolDropdown } from "./ToolDropdown";
@@ -32,6 +33,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
   const { isAuthenticated } = useAuthStore();
   const { isMobile } = useUIStore();
   const { isScheduleMode, exitScheduleMode, status } = useScheduleStore();
+  const { isEmailMode, exitEmailMode } = useEmailStore();
 
   // 시간표 모드 로딩 상태
   const isScheduleLoading = status === "parsing" || status === "generating";
@@ -83,7 +85,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
     // 통합된 sendMessage 호출 - 모드에 따라 mode 파라미터만 다름
     await sendMessage(trimmedMessage, {
       createSessionIfNeeded: !currentSessionId,
-      mode: isScheduleMode ? "schedule" : "chat",
+      mode: isScheduleMode ? "schedule" : isEmailMode ? "email" : "chat",
     });
   };
 
@@ -167,6 +169,23 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
                 </div>
               )}
 
+              {/* Email Mode Chip */}
+              {isEmailMode && (
+                <div className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 ml-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full text-sm font-medium flex-shrink-0">
+                  <span className="hidden md:inline">
+                    {t("email.modeActive")}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={exitEmailMode}
+                    className="ml-0.5 p-0.5 rounded-full hover:bg-purple-200 dark:hover:bg-purple-800/50 transition-colors"
+                    aria-label={t("email.exitMode")}
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              )}
+
               <textarea
                 ref={textareaRef}
                 value={message}
@@ -177,7 +196,9 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
                     ? isMobile
                       ? t("schedule.inputPlaceholderShort")
                       : t("schedule.inputPlaceholder")
-                    : t("chat.placeholder")
+                    : isEmailMode
+                      ? t("email.inputPlaceholder")
+                      : t("chat.placeholder")
                 }
                 rows={1}
                 className="flex-1 px-3 py-4 resize-none outline-none text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 overflow-y-auto bg-transparent"

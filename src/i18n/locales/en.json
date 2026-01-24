@@ -783,7 +783,9 @@
     "placeholder": "Ask me anything.",
     "feature": {
       "new": "New Feature",
-      "newDesc": "New features are coming soon"
+      "newDesc": "New features are coming soon",
+      "email": "Write Email",
+      "emailDesc": "How to write a polite email to a professor"
     },
     "newChat": "Start New Chat",
     "send": "Send",
@@ -806,6 +808,12 @@
       "liberalCredits": "How many liberal arts credits do I need?"
     }
   },
+  "email": {
+    "inputPlaceholder": "What kind of email should I write?",
+    "exitMode": "Exit Email Mode",
+    "exitModeDesc": "Return to normal chat",
+    "modeActive": "Email Mode"
+  },
   "schedule": {
     "title": "Create Schedule",
     "desc": "Tell me the courses you want to take, and I'll create a schedule for you!",
@@ -820,6 +828,7 @@
     "retry": "Retry",
     "createSchedule": "Create Schedule",
     "createScheduleDesc": "AI will create the optimal schedule for you",
+
     "exitMode": "Exit Schedule Mode",
     "exitModeDesc": "Return to normal chat",
     "modeActive": "Schedule Mode",

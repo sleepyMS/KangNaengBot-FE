@@ -4,8 +4,8 @@
  */
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus, Calendar } from "lucide-react";
-import { useScheduleStore } from "@/store";
+import { Plus, Calendar, Sparkles } from "lucide-react";
+import { useScheduleStore, useEmailStore } from "@/store";
 
 interface ToolDropdownProps {
   disabled?: boolean;
@@ -17,6 +17,7 @@ export const ToolDropdown = ({ disabled = false }: ToolDropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isScheduleMode, enterScheduleMode, exitScheduleMode } =
     useScheduleStore();
+  const { isEmailMode, enterEmailMode, exitEmailMode } = useEmailStore();
 
   // 외부 클릭 시 닫기
   useEffect(() => {
@@ -42,6 +43,17 @@ export const ToolDropdown = ({ disabled = false }: ToolDropdownProps) => {
       exitScheduleMode();
     } else {
       enterScheduleMode();
+      if (isEmailMode) exitEmailMode();
+    }
+    setIsOpen(false);
+  };
+
+  const handleEmailClick = () => {
+    if (isEmailMode) {
+      exitEmailMode();
+    } else {
+      enterEmailMode();
+      if (isScheduleMode) exitScheduleMode();
     }
     setIsOpen(false);
   };
@@ -110,6 +122,43 @@ export const ToolDropdown = ({ disabled = false }: ToolDropdownProps) => {
                   {isScheduleMode
                     ? t("schedule.exitModeDesc")
                     : t("schedule.createScheduleDesc")}
+                </div>
+              </div>
+            </button>
+
+            {/* 이메일 작성 / 종료 */}
+            <button
+              onClick={handleEmailClick}
+              className={`
+                w-full px-4 py-3 flex items-center gap-3 text-left
+                transition-colors
+                ${
+                  isEmailMode
+                    ? "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400"
+                    : "hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200"
+                }
+              `}
+            >
+              <div
+                className={`
+                w-8 h-8 rounded-lg flex items-center justify-center
+                ${
+                  isEmailMode
+                    ? "bg-purple-500 text-white"
+                    : "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
+                }
+              `}
+              >
+                <Sparkles size={18} />
+              </div>
+              <div className="flex-1">
+                <div className="font-medium text-sm">
+                  {isEmailMode ? t("email.exitMode") : t("chat.feature.email")}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {isEmailMode
+                    ? t("email.exitModeDesc")
+                    : t("chat.feature.emailDesc")}
                 </div>
               </div>
             </button>

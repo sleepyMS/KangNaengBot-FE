@@ -783,7 +783,9 @@
     "placeholder": "何でも聞いてください。",
     "feature": {
       "new": "新機能",
-      "newDesc": "新機能が追加される予定です"
+      "newDesc": "新機能が追加される予定です",
+      "email": "メール作成",
+      "emailDesc": "教授の気分を害さないメールの書き方"
     },
     "newChat": "新しいチャット",
     "send": "送信",
@@ -805,6 +807,12 @@
       "majorCredits": "専攻単位は何単位必要？",
       "liberalCredits": "均衡教養単位は何単位必要？"
     }
+  },
+  "email": {
+    "inputPlaceholder": "どのような内容のメールを作成しますか？",
+    "exitMode": "メールモード終了",
+    "exitModeDesc": "通常の会話に戻る",
+    "modeActive": "メールモード"
   },
   "sidebar": {
     "history": "会話履歴",

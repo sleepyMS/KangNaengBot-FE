@@ -76,7 +76,7 @@ export interface MessageItem {
 }
 
 /** Chat 모드 타입 */
-export type ChatMode = "chat" | "schedule";
+export type ChatMode = "chat" | "schedule" | "email";
 
 /** 메시지 전송 요청 (POST /chat/message) */
 export interface MessageRequest {

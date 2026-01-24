@@ -783,7 +783,9 @@
     "placeholder": "무엇이든 물어보세요.",
     "feature": {
       "new": "새로운 기능",
-      "newDesc": "새로운 기능이 추가될 예정이에요"
+      "newDesc": "새로운 기능이 추가될 예정이에요",
+      "email": "이메일 작성",
+      "emailDesc": "교수님 기분 상하지 않게 메일 쓰는 법"
     },
     "newChat": "새 대화 시작하기",
     "send": "전송",
@@ -806,6 +808,12 @@
       "liberalCredits": "교양학점 얼마나 채워야 해?"
     }
   },
+  "email": {
+    "inputPlaceholder": "어떤 내용의 이메일을 쓸까요?",
+    "exitMode": "이메일 모드 종료",
+    "exitModeDesc": "일반 대화로 돌아가기",
+    "modeActive": "이메일 모드"
+  },
   "schedule": {
     "title": "시간표 생성",
     "desc": "듣고 싶은 과목을 말하면 AI가 시간표를 만들어드려요!",
@@ -820,6 +828,7 @@
     "retry": "다시 시도",
     "createSchedule": "시간표 만들기",
     "createScheduleDesc": "AI가 최적의 시간표를 만들어 줄게요",
+
     "exitMode": "시간표 모드 종료",
     "exitModeDesc": "일반 대화로 돌아가기",
     "modeActive": "시간표 모드",

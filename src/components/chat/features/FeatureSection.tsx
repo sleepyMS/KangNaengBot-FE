@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Calendar, Lock, Sparkles } from "lucide-react";
-import { useScheduleStore, useUIStore } from "@/store";
+import { useScheduleStore, useUIStore, useEmailStore } from "@/store";
 import { FeatureCard } from "./FeatureCard";
 
 export const FeatureSection = () => {
@@ -9,11 +9,25 @@ export const FeatureSection = () => {
     useScheduleStore();
   const { isMobile } = useUIStore();
 
+  const { enterEmailMode, isEmailMode, exitEmailMode } = useEmailStore();
+
   const handleCreateSchedule = () => {
     if (isScheduleMode) {
       exitScheduleMode();
     } else {
       enterScheduleMode();
+      // 이메일 모드가 켜져있다면 끄기
+      if (isEmailMode) exitEmailMode();
+    }
+  };
+
+  const handleCreateEmail = () => {
+    if (isEmailMode) {
+      exitEmailMode();
+    } else {
+      enterEmailMode();
+      // 시간표 모드가 켜져있다면 끄기
+      if (isScheduleMode) exitScheduleMode();
     }
   };
 
@@ -30,14 +44,18 @@ export const FeatureSection = () => {
       isComingSoon: false,
     },
     {
-      id: "coming-soon-1",
-      title: t("chat.feature.new", "새로운 기능"),
-      description: t("chat.feature.newDesc", "새로운 기능이 추가될 예정이에요"),
-      icon: Sparkles, // Or Lock
-      isComingSoon: true,
+      id: "email",
+      title: t("chat.feature.email", "이메일 작성"),
+      description: t(
+        "chat.feature.emailDesc",
+        "교수님 기분 상하지 않게 메일 쓰는 법",
+      ),
+      icon: Sparkles,
+      onClick: handleCreateEmail,
+      isComingSoon: false,
     },
     {
-      id: "coming-soon-2",
+      id: "coming-soon-1",
       title: t("chat.feature.new", "새로운 기능"),
       description: t("chat.feature.newDesc", "새로운 기능이 추가될 예정이에요"),
       icon: Lock,
@@ -61,7 +79,10 @@ export const FeatureSection = () => {
                 icon={feature.icon}
                 onClick={feature.onClick}
                 isComingSoon={feature.isComingSoon}
-                isActive={feature.id === "schedule" && isScheduleMode}
+                isActive={
+                  (feature.id === "schedule" && isScheduleMode) ||
+                  (feature.id === "email" && isEmailMode)
+                }
               />
             </div>
           ))}
@@ -77,7 +98,10 @@ export const FeatureSection = () => {
               icon={feature.icon}
               onClick={feature.onClick}
               isComingSoon={feature.isComingSoon}
-              isActive={feature.id === "schedule" && isScheduleMode}
+              isActive={
+                (feature.id === "schedule" && isScheduleMode) ||
+                (feature.id === "email" && isEmailMode)
+              }
             />
           ))}
         </div>

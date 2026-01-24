@@ -783,7 +783,9 @@
     "placeholder": "有什么可以帮您的吗？",
     "feature": {
       "new": "新功能",
-      "newDesc": "即将添加新功能"
+      "newDesc": "即将添加新功能",
+      "email": "撰写邮件",
+      "emailDesc": "如何礼貌地给教授写信"
     },
     "newChat": "新对话",
     "send": "发送",
@@ -805,6 +807,12 @@
       "majorCredits": "需要多少专业学分？",
       "liberalCredits": "需要多少通识教育学分？"
     }
+  },
+  "email": {
+    "inputPlaceholder": "您想写什么样的邮件？",
+    "exitMode": "退出邮件模式",
+    "exitModeDesc": "返回普通对话",
+    "modeActive": "邮件模式"
   },
   "sidebar": {
     "history": "对话记录",
