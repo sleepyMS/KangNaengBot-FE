@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus, Calendar, X } from "lucide-react";
+import { Plus, Calendar, X, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
   useChatStore,
@@ -172,6 +172,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
               {/* Email Mode Chip */}
               {isEmailMode && (
                 <div className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 ml-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full text-sm font-medium flex-shrink-0">
+                  <Mail size={14} />
                   <span className="hidden md:inline">
                     {t("email.modeActive")}
                   </span>

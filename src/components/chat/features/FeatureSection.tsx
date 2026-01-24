@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Calendar, Lock, Sparkles } from "lucide-react";
+import { Calendar, Lock, Mail } from "lucide-react";
 import { useScheduleStore, useUIStore, useEmailStore } from "@/store";
 import { FeatureCard } from "./FeatureCard";
 
@@ -50,7 +50,7 @@ export const FeatureSection = () => {
         "chat.feature.emailDesc",
         "교수님 기분 상하지 않게 메일 쓰는 법",
       ),
-      icon: Sparkles,
+      icon: Mail,
       onClick: handleCreateEmail,
       isComingSoon: false,
     },

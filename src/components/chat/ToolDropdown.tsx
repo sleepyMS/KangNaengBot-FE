@@ -4,7 +4,7 @@
  */
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus, Calendar, Sparkles } from "lucide-react";
+import { Plus, Calendar, Mail } from "lucide-react";
 import { useScheduleStore, useEmailStore } from "@/store";
 
 interface ToolDropdownProps {
@@ -43,6 +43,7 @@ export const ToolDropdown = ({ disabled = false }: ToolDropdownProps) => {
       exitScheduleMode();
     } else {
       enterScheduleMode();
+      // 이메일 모드가 켜져있다면 끄기
       if (isEmailMode) exitEmailMode();
     }
     setIsOpen(false);
@@ -53,6 +54,7 @@ export const ToolDropdown = ({ disabled = false }: ToolDropdownProps) => {
       exitEmailMode();
     } else {
       enterEmailMode();
+      // 시간표 모드가 켜져있다면 끄기
       if (isScheduleMode) exitScheduleMode();
     }
     setIsOpen(false);
@@ -149,7 +151,7 @@ export const ToolDropdown = ({ disabled = false }: ToolDropdownProps) => {
                 }
               `}
               >
-                <Sparkles size={18} />
+                <Mail size={18} />
               </div>
               <div className="flex-1">
                 <div className="font-medium text-sm">
