@@ -89,11 +89,22 @@ export const ChatPage = () => {
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center px-4">
-          <WelcomeScreen />
-          <ChatInput />
-          <FeatureSection />
-          <SuggestedQuestions />
+        <div className="flex-1 flex flex-col items-center px-4 w-full h-full">
+          {/* Top Half - Greeting */}
+          <div className="flex-1 flex flex-col justify-end items-center w-full">
+            <WelcomeScreen />
+          </div>
+
+          {/* Center - Input */}
+          <div className="w-full flex justify-center z-10">
+            <ChatInput />
+          </div>
+
+          {/* Bottom Half - Features & suggestions */}
+          <div className="flex-1 flex flex-col justify-start items-center w-full">
+            <FeatureSection />
+            <SuggestedQuestions />
+          </div>
         </div>
       )}
 
