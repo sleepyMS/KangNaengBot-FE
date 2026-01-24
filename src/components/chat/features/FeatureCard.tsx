@@ -22,27 +22,30 @@ export const FeatureCard = ({
       onClick={onClick}
       disabled={disabled || isComingSoon}
       className={`
-        relative overflow-hidden group w-full text-left p-5 min-h-[140px]
-        flex flex-col justify-start gap-3
-        rounded-2xl transition-all duration-300 ease-out
+        relative overflow-hidden group w-full text-left p-5
+        flex flex-col justify-start items-start gap-3
+        rounded-3xl transition-all duration-300 ease-out
         border border-white/60 dark:border-slate-700/50
         
         ${
           disabled || isComingSoon
             ? "cursor-default opacity-80"
-            : "hover:scale-[1.02] hover:shadow-lg hover:border-primary-200 dark:hover:border-primary-800 cursor-pointer"
+            : "hover:scale-[1.02] hover:border-primary-200 dark:hover:border-primary-800 cursor-pointer"
         }
         
-        /* Glass Effect */
-        bg-white/40 dark:bg-slate-800/40 backdrop-blur-md
-        shadow-sm
+        bg-white/40 dark:bg-slate-800/40
       `}
+      style={{
+        boxShadow: "0px 0px 40px 0px rgba(105, 162, 255, 0.24)", // Light mode shadow
+        backdropFilter: "blur(28px)",
+        WebkitBackdropFilter: "blur(28px)",
+      }}
       aria-label={title}
     >
       {/* Icon Circle */}
       <div
         className={`
-        w-10 h-10 rounded-xl flex items-center justify-center
+        w-10 h-10 rounded-2xl flex items-center justify-center shrink-0
         transition-colors duration-300
         ${
           isComingSoon

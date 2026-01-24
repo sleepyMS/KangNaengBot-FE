@@ -52,7 +52,7 @@ export const FeatureSection = () => {
   ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-1 mt-6 mb-8">
+    <div className="w-full max-w-4xl md:max-w-[50%] mx-auto px-1 mt-6 mb-8">
       {isMobile ? (
         // Mobile Layout: Stack or Horizontal Scroll (using Stack for now per plan)
         // If we want horizontal scroll, we can change to overflow-x-auto
