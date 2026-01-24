@@ -719,7 +719,7 @@ select option:checked {
 /* 코드 블록 본문 */
 .code-block-content {
   margin: 0;
-  padding: 1rem;
+  padding: 1rem !important; /* prose 스타일 오버라이드 */
   overflow-x: auto;
   background: #1e293b;
   scrollbar-width: thin;
