@@ -831,6 +831,11 @@
     "deleteAllSuccess": "所有对话已删除。"
   },
   "auth": {
+    "quotaExceeded": {
+      "title": "对话次数超限",
+      "message": "访客模式下最多发送3条消息。\n请登录以继续对话。"
+    },
+    "loginToContinue": "登录",
     "googleLogin": "通过 Google 继续",
     "guestLogin": "以访客身份继续",
     "loginSuccess": "登录成功。",

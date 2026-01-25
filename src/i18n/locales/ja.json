@@ -831,6 +831,11 @@
     "deleteAllSuccess": "すべての会話が削除されました。"
   },
   "auth": {
+    "quotaExceeded": {
+      "title": "会話回数超過",
+      "message": "ゲストモードでは最大3件までメッセージを送信できます。\n会話を続けるにはログインしてください。"
+    },
+    "loginToContinue": "ログイン",
     "googleLogin": "Googleで続ける",
     "guestLogin": "ゲストとして続ける",
     "loginSuccess": "ログインしました。",

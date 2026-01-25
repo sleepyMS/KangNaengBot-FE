@@ -971,6 +971,11 @@
     "deleteAllSuccess": "All conversations deleted."
   },
   "auth": {
+    "quotaExceeded": {
+      "title": "Conversation Limit Exceeded",
+      "message": "Guest mode is limited to 3 messages.\nPlease log in to continue chatting."
+    },
+    "loginToContinue": "Log In",
     "googleLogin": "Continue with Google",
     "guestLogin": "Continue as Guest",
     "loginSuccess": "Logged in successfully.",

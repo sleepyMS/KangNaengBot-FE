@@ -971,6 +971,11 @@
     "deleteAllSuccess": "모든 대화가 삭제되었습니다."
   },
   "auth": {
+    "quotaExceeded": {
+      "title": "대화 횟수 초과",
+      "message": "게스트 모드에서는 최대 3개의 메시지만 보낼 수 있습니다.\n계속 대화하려면 로그인해주세요."
+    },
+    "loginToContinue": "로그인하기",
     "googleLogin": "Google 계정으로 계속하기",
     "guestLogin": "게스트로 계속하기",
     "loginSuccess": "로그인되었습니다.",
