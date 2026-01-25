@@ -169,13 +169,13 @@ export const SettingsModal = () => {
   if (isMobile) {
     return (
       <div
-        className={`fixed inset-0 z-50 flex items-end justify-center transition-all duration-300 ${
-          isSettingsModalOpen ? "visible" : "invisible delay-300"
+        className={`fixed inset-0 z-50 flex items-end justify-center transition-all duration-200 ${
+          isSettingsModalOpen ? "visible" : "invisible delay-200"
         }`}
       >
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300 ${
+          className={`absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-200 ${
             isSettingsModalOpen ? "opacity-100" : "opacity-0"
           }`}
           onClick={closeSettingsModal}
@@ -198,7 +198,9 @@ export const SettingsModal = () => {
           ${
             isDragging
               ? "transition-none" // 드래그 중에는 즉각 반응
-              : "transition-transform duration-300 cubic-bezier(0.2, 0.8, 0.2, 1)" // 놓거나 닫을 때는 스무스
+              : isSettingsModalOpen
+                ? "transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]" // 열릴 때: 스무스하게 착
+                : "transition-transform duration-200 ease-in" // 닫힐 때: 빠르게
           }`}
           style={{
             transform:
@@ -271,10 +273,10 @@ export const SettingsModal = () => {
 
       {/* Modal */}
       <div
-        className={`relative w-[95%] md:w-[90%] lg:w-[80%] max-w-3xl rounded-2xl overflow-hidden glass-modal transition-all duration-300 cubic-bezier(0.2, 0.8, 0.2, 1) ${
+        className={`relative w-[95%] md:w-[90%] lg:w-[80%] max-w-3xl rounded-2xl overflow-hidden glass-modal transition-all ${
           isSettingsModalOpen
-            ? "opacity-100 scale-100 translate-y-0"
-            : "opacity-0 scale-95 translate-y-4 pointer-events-none"
+            ? "duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-100 scale-100 translate-y-0"
+            : "duration-200 ease-in opacity-0 scale-95 translate-y-4 pointer-events-none"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
