@@ -109,8 +109,11 @@ export const SettingsModal = () => {
     // 100px 이상 드래그하면 닫기
     if (dragY > 100) {
       closeSettingsModal();
+      // 닫힐 때는 현재 위치보다 더 아래로 이동시켜 '던져지는' 느낌 구현
+      setDragY((prev) => prev + 200);
+    } else {
+      setDragY(0);
     }
-    setDragY(0);
   };
 
   // 터치 이벤트 핸들러
@@ -190,23 +193,20 @@ export const SettingsModal = () => {
           className={`relative w-full max-h-[95vh] bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl overflow-hidden 
           ${
             isSettingsModalOpen && !isDragging
-              ? "translate-y-0"
+              ? "" // transition 클래스에서 translate-y-0 제어
               : isSettingsModalOpen && isDragging
-                ? "" // 드래그 중에는 transform 스타일이 제어함
-                : "translate-y-full pointer-events-none" // 닫힘
+                ? "" // 드래그 중에는 style로 제어
+                : "pointer-events-none" // 닫힘 상태 (translate도 transition 클래스에서 제어)
           }
           ${
             isDragging
-              ? "transition-none" // 드래그 중에는 즉각 반응
+              ? "transition-none translate-y-0" // 드래그 중에는 즉각 반응
               : isSettingsModalOpen
-                ? "transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]" // 열릴 때: 스무스하게 착
-                : "transition-transform duration-200 ease-in" // 닫힐 때: 빠르게
+                ? "transition-all duration-300 ease-out opacity-100 translate-y-0" // 열릴 때: 메시지처럼 (300ms, ease-out, Short Slide)
+                : "transition-all duration-200 ease-in opacity-0 translate-y-12" // 닫힐 때: 살짝 아래로 사라짐 (Short Slide)
           }`}
           style={{
-            transform:
-              isSettingsModalOpen && isDragging
-                ? `translateY(${dragY}px)`
-                : undefined,
+            transform: dragY ? `translateY(${dragY}px)` : undefined,
           }}
           onClick={(e) => e.stopPropagation()}
           onMouseMove={handleMouseMove}

@@ -56,7 +56,8 @@ export const useUIStore = create<UIState>((set) => ({
     set({
       isSettingsModalOpen: false,
       isProfileModalOpen: false,
-      activeSettingsTab: "profile",
+      // 닫힐 때 탭을 리셋하면 애니메이션 중 높이가 변해 점프 현상이 발생하므로 제거
+      // 다음에 열 때 openSettingsModal에서 초기화됨
     }),
 
   // isMobile 상태만 업데이트 (초기 상태에서 이미 적절한 값으로 설정됨)
@@ -75,6 +76,6 @@ export const useUIStore = create<UIState>((set) => ({
     set({
       isSettingsModalOpen: false,
       isProfileModalOpen: false,
-      activeSettingsTab: "profile",
+      // 닫힐 때 탭 리셋 제거
     }),
 }));
