@@ -40,6 +40,7 @@ export const Sidebar = () => {
     deleteSession,
     deleteAllSessions,
     fetchSessions,
+    clearCurrentSession,
     isLoading: isSessionsLoading,
   } = useChatStore();
   const { user, profile, isAuthenticated, logout } = useAuthStore();
@@ -56,6 +57,7 @@ export const Sidebar = () => {
   });
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
+  const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const historyMenuRef = useRef<HTMLDivElement>(null);
   const newChatMenuRef = useRef<HTMLDivElement>(null);
@@ -299,9 +301,17 @@ export const Sidebar = () => {
                         >
                           <button
                             onClick={() => {
-                              navigate("/");
                               setIsNewChatMenuOpen(false);
                               if (isMobile) setSidebarOpen(false);
+
+                              // 게스트 모드면 로그인 유도
+                              if (!isAuthenticated) {
+                                setIsLoginAlertOpen(true);
+                                return;
+                              }
+
+                              clearCurrentSession();
+                              navigate("/");
                             }}
                             className="w-[calc(100%-8px)] mx-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors group"
                           >
@@ -739,6 +749,23 @@ export const Sidebar = () => {
         title={t("sidebar.deleteAllConfirm")}
         message={t("sidebar.deleteAllWarning")}
         confirmText={t("common.delete")}
+        cancelText={t("common.cancel")}
+      />
+
+      {/* 게스트 로그인 유도 모달 */}
+      <AlertModal
+        isOpen={isLoginAlertOpen}
+        onClose={() => setIsLoginAlertOpen(false)}
+        onConfirm={() => {
+          setIsLoginAlertOpen(false);
+          if (!authService.requestNativeLogin()) {
+            navigate("/login");
+          }
+        }}
+        type="info"
+        title={t("chat.loginRequired")}
+        message={t("chat.loginRequiredDesc")}
+        confirmText={t("chat.login")}
         cancelText={t("common.cancel")}
       />
     </>
