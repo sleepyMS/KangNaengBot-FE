@@ -147,6 +147,14 @@ const filterSchedules = (
   });
 };
 
+// 네이티브 위젯 싱크 헬퍼
+const syncToNativeWidget = (schedule: Schedule | SavedSchedule | null) => {
+  if (typeof window !== "undefined" && window.sendToNative && schedule) {
+    console.log("[useScheduleStore] Syncing schedule to widget:", schedule.id);
+    window.sendToNative("SCHEDULE_SAVED", schedule);
+  }
+};
+
 export const useScheduleStore = create<ScheduleState>((set, get) => ({
   // Initial State
   isScheduleMode: false,
@@ -385,6 +393,11 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       // 초기 로딩
       const saved = await scheduleService.getSavedSchedules();
       set({ savedSchedules: Array.isArray(saved) ? saved : [] });
+
+      // 저장된 시간표가 있으면 첫 번째 시간표를 위젯에 동기화
+      if (Array.isArray(saved) && saved.length > 0) {
+        syncToNativeWidget(saved[0]);
+      }
     } catch (error) {
       console.error(
         "[useScheduleStore] Failed to load saved schedules:",
@@ -435,6 +448,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
           .getState()
           .addToast("info", i18n.t("schedule.save.guestMode"));
       }
+      // 저장 성공 시 위젯 동기화
+      syncToNativeWidget(newSavedSchedule);
     } catch (error) {
       // API 에러 시 게스트 모드에 따라 다른 메시지 표시 (낙관적 UI는 유지)
       console.warn(
@@ -510,6 +525,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       isCanvasOpen: true,
       viewMode: "saved",
     });
+    // 선택된 시간표 위젯 동기화
+    syncToNativeWidget(schedule);
   },
 
   setActiveSavedIndex: (index) => {
@@ -519,6 +536,10 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
         activeSavedIndex: index,
         loadedSchedule: savedSchedules[index] || null, // 호환성을 위해 동기화
       });
+      // 인덱스 변경 시 위젯 동기화
+      if (savedSchedules[index]) {
+        syncToNativeWidget(savedSchedules[index]);
+      }
     }
   },
 
