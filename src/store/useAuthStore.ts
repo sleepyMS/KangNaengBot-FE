@@ -108,6 +108,26 @@ export const useAuthStore = create<AuthState>()(
           error: null,
         });
 
+        // 게스트 세션 병합 처리 (웹 login 액션과 동일 로직)
+        const pendingSessionId = localStorage.getItem(
+          "pending_merge_session_id",
+        );
+        if (pendingSessionId) {
+          localStorage.removeItem("pending_merge_session_id");
+          try {
+            console.log(
+              "[Auth] Merging guest session (Native):",
+              pendingSessionId,
+            );
+            await sessionsService.mergeSession(pendingSessionId);
+          } catch (mergeError) {
+            console.error("[Auth] Session merge failed (Native):", mergeError);
+          }
+        }
+
+        // 로그인 성공 시 게스트 ID 초기화
+        useChatStore.getState().setGuestUserId(null);
+
         // 2. 백그라운드에서 프로필 정보 가져오기
         try {
           const profile = await profilesService.getProfile();

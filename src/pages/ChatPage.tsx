@@ -114,6 +114,15 @@ export const ChatPage = () => {
         isOpen={error === "GUEST_QUOTA_EXCEEDED"}
         onClose={() => clearError()}
         onLogin={() => {
+          // 현재 세션 ID 저장 (로그인 후 병합용)
+          if (currentSessionId) {
+            localStorage.setItem("pending_merge_session_id", currentSessionId);
+            localStorage.setItem(
+              "login_redirect_url",
+              `/chat/${currentSessionId}`,
+            );
+          }
+
           // 네이티브 앱 로그인 요청
           if (authService.requestNativeLogin()) {
             clearError();
