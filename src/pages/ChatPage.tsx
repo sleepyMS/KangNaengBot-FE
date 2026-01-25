@@ -10,6 +10,7 @@ import {
 } from "@/components/chat";
 import { QuotaExceededModal } from "@/components/common";
 import { useChatStore, useUIStore, useAuthStore } from "@/store";
+import { authService } from "@/api";
 
 export const ChatPage = () => {
   const { sessionId } = useParams<{ sessionId?: string }>();
@@ -113,6 +114,12 @@ export const ChatPage = () => {
         isOpen={error === "GUEST_QUOTA_EXCEEDED"}
         onClose={() => clearError()}
         onLogin={() => {
+          // 네이티브 앱 로그인 요청
+          if (authService.requestNativeLogin()) {
+            clearError();
+            return;
+          }
+
           // 현재 세션 ID 저장 (로그인 후 병합용)
           if (currentSessionId) {
             localStorage.setItem("pending_merge_session_id", currentSessionId);

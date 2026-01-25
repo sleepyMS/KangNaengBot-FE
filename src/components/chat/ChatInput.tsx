@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus, Calendar, X, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { authService } from "@/api";
 import {
   useChatStore,
   useAuthStore,
@@ -112,7 +113,9 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
 
   const handleLoginConfirm = () => {
     setShowLoginAlert(false);
-    navigate("/login");
+    if (!authService.requestNativeLogin()) {
+      navigate("/login");
+    }
   };
 
   return (
