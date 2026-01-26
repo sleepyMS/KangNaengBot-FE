@@ -8,6 +8,11 @@ import {
   OnboardingPage,
 } from "@/pages";
 import { ToastContainer } from "@/components/common";
+import {
+  AuthGuard,
+  PublicGuard,
+  OnboardingGuard,
+} from "@/components/auth/RouteGuards";
 import { useSettingsStore, useAuthStore, useNotificationStore } from "@/store";
 import type { User } from "@/types";
 
@@ -100,14 +105,24 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* 공개 라우트 */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
 
-        {/* 게스트도 접근 가능한 채팅 라우트 (프로필 체크 없음) */}
-        <Route path="/" element={<ChatPage />} />
-        <Route path="/chat/:sessionId" element={<ChatPage />} />
+        {/* 비로그인 유저 전용 (로그인 시 접근 제한) */}
+        <Route element={<PublicGuard />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+
+        {/* 온보딩 특수 가드 (로그인 상태이나 프로필 미완료 시) */}
+        <Route element={<OnboardingGuard />}>
+          <Route path="/onboarding" element={<OnboardingPage />} />
+        </Route>
+
+        {/* 인증 필수 라우트 (프로필 완료 필수) */}
+        <Route element={<AuthGuard />}>
+          <Route path="/" element={<ChatPage />} />
+          <Route path="/chat/:sessionId" element={<ChatPage />} />
+        </Route>
       </Routes>
       <ToastContainer />
     </BrowserRouter>

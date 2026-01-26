@@ -8,8 +8,8 @@ import {
   SuggestedQuestions,
   FeatureSection,
 } from "@/components/chat";
-import { QuotaExceededModal, Spinner } from "@/components/common";
-import { useChatStore, useUIStore, useAuthStore } from "@/store";
+import { QuotaExceededModal } from "@/components/common";
+import { useChatStore, useUIStore } from "@/store";
 import { authService } from "@/api";
 
 export const ChatPage = () => {
@@ -24,25 +24,9 @@ export const ChatPage = () => {
     clearError,
   } = useChatStore();
   const { isMobile } = useUIStore();
-  const { isAuthenticated, profile, isLoading: isAuthLoading } = useAuthStore();
 
   // 스크롤 위치에 따른 New Chat 버튼 표시 상태
   const [isAtBottom, setIsAtBottom] = useState(true);
-
-  // Profile completeness check
-  const isProfileComplete =
-    Boolean(profile?.profile_name?.trim()) &&
-    Boolean(profile?.student_id?.trim()) &&
-    Boolean(profile?.college) &&
-    Boolean(profile?.department) &&
-    Boolean(profile?.major);
-
-  // Redirect authenticated users with incomplete profile to onboarding
-  useEffect(() => {
-    if (!isAuthLoading && isAuthenticated && !isProfileComplete) {
-      navigate("/onboarding", { replace: true });
-    }
-  }, [isAuthLoading, isAuthenticated, isProfileComplete, navigate]);
 
   // URL의 sessionId가 변경되면 해당 세션 로드
   useEffect(() => {
@@ -70,17 +54,6 @@ export const ChatPage = () => {
 
   const showMessageList =
     messages.length > 0 || (currentSessionId && isLoading);
-
-  // 프로필 체크 중이거나 인증 로딩 중일 때 로딩 표시 (플리커링 방지)
-  if (isAuthLoading || (isAuthenticated && !isProfileComplete)) {
-    return (
-      <MainLayout>
-        <div className="flex-1 flex items-center justify-center">
-          <Spinner size="lg" />
-        </div>
-      </MainLayout>
-    );
-  }
 
   return (
     <MainLayout>
