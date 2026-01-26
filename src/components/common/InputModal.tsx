@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+import { useModalHistory } from "@/hooks/useModalHistory";
 
 interface InputModalProps {
   isOpen: boolean;
@@ -25,6 +26,9 @@ export const InputModal = ({
 }: InputModalProps) => {
   const [value, setValue] = useState(initialValue);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // 뒤로가기 제어 훅 적용
+  useModalHistory(isOpen, onClose);
 
   useEffect(() => {
     if (isOpen) {
@@ -99,6 +103,6 @@ export const InputModal = ({
         </form>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

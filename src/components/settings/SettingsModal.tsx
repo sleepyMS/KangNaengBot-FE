@@ -9,6 +9,7 @@ import {
   Bell,
 } from "lucide-react";
 import { useUIStore, SettingsTabId } from "@/store";
+import { useModalHistory } from "@/hooks/useModalHistory";
 import { useTranslation } from "react-i18next";
 import { ProfileTab } from "./tabs/ProfileTab";
 import { AccountTab } from "./tabs/AccountTab";
@@ -90,6 +91,9 @@ export const SettingsModal = () => {
       document.body.style.overflow = "";
     };
   }, [isSettingsModalOpen, closeSettingsModal]);
+
+  // 뒤로가기 제어 훅 적용
+  useModalHistory(isSettingsModalOpen, closeSettingsModal);
 
   // 모달 열릴 때 드래그 상태 초기화
   useEffect(() => {

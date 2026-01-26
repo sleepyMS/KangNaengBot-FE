@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AlertTriangle, Info, CheckCircle, XCircle } from "lucide-react";
+import { useModalHistory } from "@/hooks/useModalHistory";
 
 type AlertType = "info" | "warning" | "success" | "danger";
 
@@ -32,6 +33,9 @@ export const AlertModal = ({
   cancelText = "취소",
   type = "info",
 }: AlertModalProps) => {
+  // 뒤로가기 제어 훅 적용
+  useModalHistory(isOpen, onClose);
+
   if (!isOpen) return null;
 
   return createPortal(
@@ -81,6 +85,6 @@ export const AlertModal = ({
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
