@@ -5,7 +5,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { X, Download, Share2, Bookmark, ChevronLeft } from "lucide-react";
+import { X, Download, Star, Bookmark, ChevronLeft } from "lucide-react";
 import { useScheduleStore, useUIStore, useToastStore } from "@/store";
 import { ScheduleCarousel } from "./ScheduleCarousel";
 
@@ -40,6 +40,8 @@ export const ScheduleCanvas = () => {
     savedSchedules,
     activeSavedIndex,
     setActiveSavedIndex,
+    representativeScheduleId,
+    setAsRepresentative,
   } = useScheduleStore();
 
   const handleResetFilters = () => {
@@ -91,22 +93,24 @@ export const ScheduleCanvas = () => {
     }
   };
 
-  // 공유
-  const handleShare = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: t("schedule.canvas.shareTitle"),
-          text: t("schedule.canvas.shareText"),
-          url: window.location.href,
-        });
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        alert(t("schedule.canvas.linkCopied"));
-      }
-    } catch (error) {
-      console.error("Share failed:", error);
+  // 대표 시간표 설정
+  const handleSetRepresentative = async () => {
+    const currentSchedule =
+      viewMode === "saved"
+        ? loadedSchedule
+        : generatedSchedules[activeScheduleIndex];
+
+    const scheduleId =
+      viewMode === "saved" ? currentSchedule?.id : currentSchedule?.savedId;
+
+    if (!scheduleId) {
+      useToastStore
+        .getState()
+        .addToast("info", t("schedule.representative.saveFirst"));
+      return;
     }
+
+    await setAsRepresentative(scheduleId);
   };
 
   if (!isCanvasOpen) return null;
@@ -223,13 +227,43 @@ export const ScheduleCanvas = () => {
               >
                 {isDownloading ? <Spinner size="sm" /> : <Download size={20} />}
               </button>
-              <button
-                onClick={handleShare}
-                className="p-3 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
-                title={t("schedule.canvas.share")}
-              >
-                <Share2 size={20} />
-              </button>
+              {/* Star (Representative) Button */}
+              {(() => {
+                const currentSchedule =
+                  viewMode === "saved"
+                    ? loadedSchedule
+                    : generatedSchedules[activeScheduleIndex];
+
+                const currentId =
+                  viewMode === "saved"
+                    ? currentSchedule?.id
+                    : currentSchedule?.savedId;
+
+                const canSet = !!currentId;
+                const isRepresentative = currentId === representativeScheduleId;
+
+                return (
+                  <button
+                    onClick={handleSetRepresentative}
+                    disabled={!canSet}
+                    className={`p-3 rounded-xl transition-colors ${
+                      isRepresentative
+                        ? "bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400"
+                        : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    title={
+                      isRepresentative
+                        ? t("schedule.representative.current")
+                        : t("schedule.representative.set")
+                    }
+                  >
+                    <Star
+                      size={20}
+                      className={isRepresentative ? "fill-current" : ""}
+                    />
+                  </button>
+                );
+              })()}
 
               {/* Bookmark Toggle Button */}
               {(() => {

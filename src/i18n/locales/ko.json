@@ -966,7 +966,15 @@
       "credits": "학점",
       "enrollment": "수강 인원"
     },
-    "inputPlaceholderShort": "과목을 입력하세요"
+    "inputPlaceholderShort": "과목을 입력하세요",
+    "representative": {
+      "set": "대표 시간표로 설정",
+      "current": "현재 대표 시간표",
+      "setSuccess": "대표 시간표로 설정되었습니다",
+      "failed": "대표 시간표 설정에 실패했습니다",
+      "saveFirst": "시간표를 먼저 저장해주세요",
+      "deleted": "대표 시간표가 삭제되었습니다"
+    }
   },
   "sidebar": {
     "history": "내 대화 모아보기",

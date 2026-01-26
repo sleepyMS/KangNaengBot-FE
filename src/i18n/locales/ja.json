@@ -1075,6 +1075,14 @@
       "credits": "単位",
       "enrollment": "受講定員"
     },
-    "inputPlaceholderShort": "科目名を入力"
+    "inputPlaceholderShort": "科目名を入力",
+    "representative": {
+      "set": "メインの時間割に設定",
+      "current": "メインの時間割",
+      "setSuccess": "メインの時間割として設定しました",
+      "failed": "メインの時間割設定に失敗しました",
+      "saveFirst": "まずは時間割を保存してください",
+      "deleted": "メインの時間割が削除されました"
+    }
   }
 }

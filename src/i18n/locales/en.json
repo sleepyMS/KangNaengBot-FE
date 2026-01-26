@@ -966,7 +966,15 @@
       "credits": "Credits",
       "enrollment": "Enrollment"
     },
-    "inputPlaceholderShort": "Enter courses"
+    "inputPlaceholderShort": "Enter courses",
+    "representative": {
+      "set": "Set as primary",
+      "current": "Primary schedule",
+      "setSuccess": "Set as primary schedule",
+      "failed": "Failed to set as primary",
+      "saveFirst": "Please save the schedule first",
+      "deleted": "Primary schedule deleted"
+    }
   },
   "sidebar": {
     "history": "My Conversations",

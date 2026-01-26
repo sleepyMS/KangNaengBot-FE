@@ -11,6 +11,7 @@ export const SavedScheduleList = () => {
     deleteSavedSchedule,
     loadSchedule,
     loadSavedSchedules,
+    representativeScheduleId,
   } = useScheduleStore();
 
   const { t } = useTranslation();
@@ -73,11 +74,13 @@ export const SavedScheduleList = () => {
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">
                     {schedule.name}
                   </span>
-                  {schedule.isFavorite && (
-                    <Star
-                      size={10}
-                      className="fill-yellow-400 text-yellow-400"
-                    />
+                  {schedule.id === representativeScheduleId && (
+                    <span title={t("schedule.representative.current")}>
+                      <Star
+                        size={12}
+                        className="flex-shrink-0 fill-yellow-400 text-yellow-400"
+                      />
+                    </span>
                   )}
                 </div>
                 <span className="text-xs text-gray-400 truncate">

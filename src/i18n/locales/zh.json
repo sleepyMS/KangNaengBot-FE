@@ -1075,6 +1075,14 @@
       "credits": "学分",
       "enrollment": "选课人数"
     },
-    "inputPlaceholderShort": "输入科目"
+    "inputPlaceholderShort": "输入科目",
+    "representative": {
+      "set": "设为主课程表",
+      "current": "主课程表",
+      "setSuccess": "已设为主课程表",
+      "failed": "主课程表设置失败",
+      "saveFirst": "请先保存课程表",
+      "deleted": "主课程表已删除"
+    }
   }
 }

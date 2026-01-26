@@ -54,6 +54,8 @@ interface ScheduleState {
   savedSchedules: SavedSchedule[];
   activeSavedIndex: number; // 저장된 시간표 캐러셀 인덱스
   loadedSchedule: SavedSchedule | null; // 불러온 시간표 별도 저장 (deprecated, kept for compatibility)
+  representativeScheduleId: string | null; // 대표 시간표 ID
+  isSettingRepresentative: boolean; // 대표 설정 로딩 상태
 
   // 에러 상태
   error: ScheduleError | null;
@@ -78,6 +80,7 @@ interface ScheduleState {
   loadSchedule: (schedule: SavedSchedule) => void;
   setActiveSavedIndex: (index: number) => void; // 저장된 시간표 캐러셀 인덱스 변경
   deleteSavedSchedule: (id: string) => Promise<void>;
+  setAsRepresentative: (id: string) => Promise<void>; // 대표 시간표 설정
   clearError: () => void;
   reset: () => void;
   switchToGeneratedView: () => void; // 생성된 결과 보기로 전환
@@ -175,6 +178,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   savedSchedules: [],
   activeSavedIndex: 0,
   loadedSchedule: null,
+  representativeScheduleId: null,
+  isSettingRepresentative: false,
   error: null,
 
   // Actions
@@ -392,11 +397,19 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     try {
       // 초기 로딩
       const saved = await scheduleService.getSavedSchedules();
-      set({ savedSchedules: Array.isArray(saved) ? saved : [] });
+      const schedules = Array.isArray(saved) ? saved : [];
 
-      // 저장된 시간표가 있으면 첫 번째 시간표를 위젯에 동기화
-      if (Array.isArray(saved) && saved.length > 0) {
-        syncToNativeWidget(saved[0]);
+      // 대표 시간표 감지
+      const representative = schedules.find((s) => s.isRepresentative);
+
+      set({
+        savedSchedules: schedules,
+        representativeScheduleId: representative?.id || null,
+      });
+
+      // 대표 시간표가 있으면 위젯 동기화
+      if (representative) {
+        syncToNativeWidget(representative);
       }
     } catch (error) {
       console.error(
@@ -441,15 +454,29 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       : false;
 
     try {
-      await scheduleService.saveSchedule(newSavedSchedule);
+      const result = await scheduleService.saveSchedule(newSavedSchedule);
+
+      // 서버에서 반환된 ID로 업데이트 (API 저장 성공 시)
+      if (result.success && result.serverId) {
+        const serverId = result.serverId;
+        set((state) => ({
+          // savedSchedules에서 클라이언트 ID를 서버 ID로 교체
+          savedSchedules: state.savedSchedules.map((s) =>
+            s.id === newSavedSchedule.id ? { ...s, id: serverId } : s,
+          ),
+          // generatedSchedules에서도 savedId를 서버 ID로 교체
+          generatedSchedules: state.generatedSchedules.map((s) =>
+            s.savedId === newSavedSchedule.id ? { ...s, savedId: serverId } : s,
+          ),
+        }));
+      }
+
       // 게스트 모드일 경우 로그인 유도 메시지 표시
       if (!isAuthenticated) {
         useToastStore
           .getState()
           .addToast("info", i18n.t("schedule.save.guestMode"));
       }
-      // 저장 성공 시 위젯 동기화
-      syncToNativeWidget(newSavedSchedule);
     } catch (error) {
       // API 에러 시 게스트 모드에 따라 다른 메시지 표시 (낙관적 UI는 유지)
       console.warn(
@@ -469,6 +496,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   },
 
   deleteSavedSchedule: async (id) => {
+    const wasRepresentative = get().representativeScheduleId === id;
+
     // 1. 낙관적 UI 업데이트
     set((state) => {
       const updatedGeneratedSchedules = state.generatedSchedules.map((s) =>
@@ -478,8 +507,18 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       return {
         savedSchedules: state.savedSchedules.filter((s) => s.id !== id),
         generatedSchedules: updatedGeneratedSchedules,
+        representativeScheduleId: wasRepresentative
+          ? null
+          : state.representativeScheduleId,
       };
     });
+
+    // 대표 시간표가 삭제된 경우 안내 토스트
+    if (wasRepresentative) {
+      useToastStore
+        .getState()
+        .addToast("info", i18n.t("schedule.representative.deleted"));
+    }
 
     // 2. 비동기 삭제 (API or LocalStorage)
     // 게스트 모드 확인
@@ -525,8 +564,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
       isCanvasOpen: true,
       viewMode: "saved",
     });
-    // 선택된 시간표 위젯 동기화
-    syncToNativeWidget(schedule);
+    // 위젯 동기화 제거 - 대표 시간표 설정 시에만 동기화
   },
 
   setActiveSavedIndex: (index) => {
@@ -536,10 +574,7 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
         activeSavedIndex: index,
         loadedSchedule: savedSchedules[index] || null, // 호환성을 위해 동기화
       });
-      // 인덱스 변경 시 위젯 동기화
-      if (savedSchedules[index]) {
-        syncToNativeWidget(savedSchedules[index]);
-      }
+      // 위젯 동기화 제거 - 대표 시간표 설정 시에만 동기화
     }
   },
 
@@ -577,6 +612,52 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
+
+  setAsRepresentative: async (id: string) => {
+    const { savedSchedules, representativeScheduleId } = get();
+    const targetSchedule = savedSchedules.find((s) => s.id === id);
+    if (!targetSchedule) return;
+
+    const previousRepId = representativeScheduleId;
+
+    // 1. 낙관적 UI 업데이트
+    set((state) => ({
+      isSettingRepresentative: true,
+      representativeScheduleId: id,
+      savedSchedules: state.savedSchedules.map((s) => ({
+        ...s,
+        isRepresentative: s.id === id,
+      })),
+    }));
+
+    // 2. API 호출
+    const success = await scheduleService.setRepresentativeSchedule(
+      id,
+      targetSchedule,
+    );
+
+    if (success) {
+      // 3. 성공: 위젯 동기화
+      syncToNativeWidget({ ...targetSchedule, isRepresentative: true });
+      useToastStore
+        .getState()
+        .addToast("success", i18n.t("schedule.representative.setSuccess"));
+    } else {
+      // 4. 실패: 롤백
+      set((state) => ({
+        representativeScheduleId: previousRepId,
+        savedSchedules: state.savedSchedules.map((s) => ({
+          ...s,
+          isRepresentative: s.id === previousRepId,
+        })),
+      }));
+      useToastStore
+        .getState()
+        .addToast("error", i18n.t("schedule.representative.failed"));
+    }
+
+    set({ isSettingRepresentative: false });
+  },
 
   reset: () => {
     set({

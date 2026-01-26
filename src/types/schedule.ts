@@ -60,6 +60,7 @@ export interface SavedSchedule extends Schedule {
   savedAt: string;
   name: string;
   isFavorite: boolean;
+  isRepresentative?: boolean; // 대표 시간표 여부
 }
 
 // 필터 설정 (시간 기반)
@@ -109,4 +110,5 @@ export interface BackendSavedSchedule {
   title: string;
   updated_at: string;
   user_id: number;
+  is_representative: boolean; // 대표 시간표 여부 (API 응답 필수 필드)
 }
