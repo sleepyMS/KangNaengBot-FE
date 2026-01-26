@@ -6,13 +6,6 @@ import { useNotificationStore } from "@/store";
 
 export const NotificationTab = () => {
   const { t } = useTranslation();
-  /* const [notiState, setNotiState] = useState<NotiState>({
-    enabled: false,
-    offset: 10,
-    permissionGranted: false,
-  });
-  const [isLoading, setIsLoading] = useState(true); */
-
   const { enabled, offset, permissionGranted, setNotiState, syncWithNative } =
     useNotificationStore();
   const [isLoading, setIsLoading] = useState(true);

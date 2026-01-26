@@ -12,7 +12,7 @@ interface NotificationStore extends NotiState {
   syncWithNative: () => void;
 }
 
-export const useNotificationStore = create<NotificationStore>((set, get) => ({
+export const useNotificationStore = create<NotificationStore>((set) => ({
   // Initial State
   enabled: false,
   offset: 10,
