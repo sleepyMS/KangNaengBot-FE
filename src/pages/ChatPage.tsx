@@ -71,6 +71,17 @@ export const ChatPage = () => {
   const showMessageList =
     messages.length > 0 || (currentSessionId && isLoading);
 
+  // 프로필 체크 중이거나 인증 로딩 중일 때 로딩 표시 (플리커링 방지)
+  if (isAuthLoading || (isAuthenticated && !isProfileComplete)) {
+    return (
+      <MainLayout>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+        </div>
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout>
       {showMessageList ? (
