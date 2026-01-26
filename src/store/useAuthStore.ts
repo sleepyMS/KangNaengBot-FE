@@ -135,17 +135,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error: any) {
           console.error("[Auth] Profile fetch failed:", error);
 
-          // 404 에러(유저 없음)인 경우 탈퇴된 회원이므로 강제 로그아웃
-          if (
-            error?.response?.status === 404 ||
-            error?.message?.includes("404")
-          ) {
-            console.log("[Auth] User not found (404), forcing logout");
-            get().logout();
-            return;
-          }
-
-          // 그 외 에러는 프로필 로드 실패로 처리 (로그인 상태 유지)
+          // 404 에러(프로필 없음)인 경우 신규 유저이므로 온보딩으로 유도 (로그아웃 하지 않음)
           set({ isLoading: false });
         }
       },
@@ -204,18 +194,7 @@ export const useAuthStore = create<AuthState>()(
           const profile = await profilesService.getProfile();
           set({ profile, isLoading: false });
         } catch (error: any) {
-          // 404 에러 시 강제 로그아웃 (좀비 세션 클린업)
-          if (
-            error?.response?.status === 404 ||
-            error?.message?.includes("404")
-          ) {
-            console.log(
-              "[Auth] User not found (404) during fetch, forcing logout",
-            );
-            get().logout();
-            return;
-          }
-
+          console.error("[Auth] Fetch profile failed:", error);
           set({
             isLoading: false,
             error:

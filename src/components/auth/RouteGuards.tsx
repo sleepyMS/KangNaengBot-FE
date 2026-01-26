@@ -16,7 +16,7 @@ export const AuthGuard = () => {
   const location = useLocation();
 
   // 1. 초기 하이드레이션 및 프로필 로딩 중일 때는 로딩 화면 유지
-  if (isLoading || (isAuthenticated && profile === null)) {
+  if (isLoading) {
     return (
       <MainLayout>
         <div className="flex-1 flex items-center justify-center">
