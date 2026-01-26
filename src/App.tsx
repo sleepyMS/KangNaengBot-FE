@@ -18,6 +18,7 @@ import {
   useAuthStore,
   useNotificationStore,
   useUIStore,
+  useScheduleStore,
 } from "@/store";
 import type { User } from "@/types";
 
@@ -123,6 +124,13 @@ function App() {
             setSidebarOpen,
           } = useUIStore.getState();
 
+          const {
+            isCanvasOpen,
+            isSavedListOpen,
+            closeCanvas,
+            toggleSavedList,
+          } = useScheduleStore.getState();
+
           // 1. 설정 모달이 열려있으면 닫기
           if (isSettingsModalOpen) {
             console.log("[App] Closing settings modal");
@@ -130,14 +138,28 @@ function App() {
             return;
           }
 
-          // 2. 사이드바가 열려있으면 닫기
+          // 2. 시간표 보관함 목록이 열려있으면 닫기
+          if (isSavedListOpen) {
+            console.log("[App] Closing saved schedule list");
+            toggleSavedList();
+            return;
+          }
+
+          // 3. 시간표 캔버스가 열려있으면 닫기
+          if (isCanvasOpen) {
+            console.log("[App] Closing schedule canvas");
+            closeCanvas();
+            return;
+          }
+
+          // 4. 사이드바가 열려있으면 닫기
           if (isSidebarOpen) {
             console.log("[App] Closing sidebar");
             setSidebarOpen(false);
             return;
           }
 
-          // 3. 그 외의 경우: 히스토리 뒤로가기 또는 앱 종료
+          // 5. 그 외의 경우: 히스토리 뒤로가기 또는 앱 종료
           // 루트 경로('/')이거나 히스토리가 없으면 앱 종료 요청
           if (window.location.pathname === "/" || window.history.length <= 1) {
             console.log("[App] Root path reached, requesting app exit");
