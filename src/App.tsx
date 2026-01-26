@@ -20,8 +20,45 @@ import {
   useUIStore,
   useScheduleStore,
   useModalStackStore,
+  useHistoryStackStore,
 } from "@/store";
+import { useHistoryTracker } from "@/hooks/useHistoryTracker";
 import type { User } from "@/types";
+
+/**
+ * AppContent - BrowserRouter 내부에서 라우터 훅을 사용할 수 있는 컴포넌트
+ */
+function AppContent() {
+  // 네비게이션 히스토리 추적 (react-router 훅 사용)
+  useHistoryTracker();
+
+  return (
+    <>
+      <Routes>
+        {/* 공개 라우트 */}
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+
+        {/* 비로그인 유저 전용 (로그인 시 접근 제한) */}
+        <Route element={<PublicGuard />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+
+        {/* 온보딩 특수 가드 (로그인 상태이나 프로필 미완료 시) */}
+        <Route element={<OnboardingGuard />}>
+          <Route path="/onboarding" element={<OnboardingPage />} />
+        </Route>
+
+        {/* 인증 필수 라우트 (프로필 완료 필수) */}
+        <Route element={<AuthGuard />}>
+          <Route path="/" element={<ChatPage />} />
+          <Route path="/chat/:sessionId" element={<ChatPage />} />
+        </Route>
+      </Routes>
+      <ToastContainer />
+    </>
+  );
+}
 
 function App() {
   const { initializeTheme } = useSettingsStore();
@@ -168,15 +205,20 @@ function App() {
           }
 
           // 5. 그 외의 경우: 히스토리 뒤로가기 또는 앱 종료
-          // 루트 경로('/')이거나 히스토리가 없으면 앱 종료 요청
-          if (window.location.pathname === "/" || window.history.length <= 1) {
-            console.log("[App] Root path reached, requesting app exit");
+          // useHistoryStackStore로 정확한 히스토리 깊이 확인
+          const { canGoBack, pop: popHistory } =
+            useHistoryStackStore.getState();
+
+          if (canGoBack()) {
+            console.log("[App] Navigating back via history");
+            popHistory(); // 스택 깊이 먼저 감소
+            window.history.back();
+          } else {
+            // 루트 경로이거나 히스토리 스택이 비어있으면 앱 종료
+            console.log("[App] Root reached, requesting app exit");
             if (window.sendToNative) {
               window.sendToNative("EXIT_APP", {});
             }
-          } else {
-            console.log("[App] Navigating back");
-            window.history.back();
           }
         }
       } catch (e) {
@@ -195,28 +237,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        {/* 공개 라우트 */}
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
-
-        {/* 비로그인 유저 전용 (로그인 시 접근 제한) */}
-        <Route element={<PublicGuard />}>
-          <Route path="/login" element={<LoginPage />} />
-        </Route>
-
-        {/* 온보딩 특수 가드 (로그인 상태이나 프로필 미완료 시) */}
-        <Route element={<OnboardingGuard />}>
-          <Route path="/onboarding" element={<OnboardingPage />} />
-        </Route>
-
-        {/* 인증 필수 라우트 (프로필 완료 필수) */}
-        <Route element={<AuthGuard />}>
-          <Route path="/" element={<ChatPage />} />
-          <Route path="/chat/:sessionId" element={<ChatPage />} />
-        </Route>
-      </Routes>
-      <ToastContainer />
+      <AppContent />
     </BrowserRouter>
   );
 }

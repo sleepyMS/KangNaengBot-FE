@@ -11,3 +11,4 @@ export { useScheduleStore } from "./useScheduleStore";
 export { useEmailStore } from "./useEmailStore";
 export { useNotificationStore } from "./useNotificationStore";
 export { useModalStackStore } from "./useModalStackStore";
+export { useHistoryStackStore } from "./useHistoryStackStore";
