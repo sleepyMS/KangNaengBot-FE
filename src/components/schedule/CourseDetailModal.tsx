@@ -5,6 +5,7 @@
 import { useTranslation } from "react-i18next";
 import { X, Clock, MapPin, User, BookOpen, Hash } from "lucide-react";
 import type { Course, Day } from "@/types";
+import { useModalBackHandler } from "@/hooks/useModalBackHandler";
 
 interface CourseDetailModalProps {
   course: Course | null;
@@ -16,6 +17,10 @@ export const CourseDetailModal = ({
   onClose,
 }: CourseDetailModalProps) => {
   const { t } = useTranslation();
+
+  // 네이티브 앱에서 뒤로가기 제스처로 모달 닫기 지원
+  // course가 있으면 모달이 열린 상태
+  useModalBackHandler(!!course, onClose);
 
   if (!course) return null;
 

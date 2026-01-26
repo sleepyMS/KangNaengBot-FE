@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AlertTriangle, Info, CheckCircle, XCircle } from "lucide-react";
+import { useModalBackHandler } from "@/hooks/useModalBackHandler";
 
 type AlertType = "info" | "warning" | "success" | "danger";
 
@@ -32,6 +33,9 @@ export const AlertModal = ({
   cancelText = "취소",
   type = "info",
 }: AlertModalProps) => {
+  // 네이티브 앱에서 뒤로가기 제스처로 모달 닫기 지원
+  useModalBackHandler(isOpen, onClose);
+
   if (!isOpen) return null;
 
   return createPortal(

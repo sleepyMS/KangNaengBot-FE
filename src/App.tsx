@@ -19,6 +19,7 @@ import {
   useNotificationStore,
   useUIStore,
   useScheduleStore,
+  useModalStackStore,
 } from "@/store";
 import type { User } from "@/types";
 
@@ -116,6 +117,13 @@ function App() {
         const message = JSON.parse(event.data);
         if (message.type === "HARDWARE_BACK_PRESS") {
           console.log("[App] Hardware back press received");
+
+          // 0. 동적 등록된 모달 스택 먼저 처리 (AlertModal, InputModal 등)
+          const { pop: popModal } = useModalStackStore.getState();
+          if (popModal()) {
+            console.log("[App] Closed modal from stack");
+            return;
+          }
 
           const {
             isSettingsModalOpen,

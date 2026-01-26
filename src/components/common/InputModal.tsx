@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+import { useModalBackHandler } from "@/hooks/useModalBackHandler";
 
 interface InputModalProps {
   isOpen: boolean;
@@ -25,6 +26,9 @@ export const InputModal = ({
 }: InputModalProps) => {
   const [value, setValue] = useState(initialValue);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // 네이티브 앱에서 뒤로가기 제스처로 모달 닫기 지원
+  useModalBackHandler(isOpen, onClose);
 
   useEffect(() => {
     if (isOpen) {

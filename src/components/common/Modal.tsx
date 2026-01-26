@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { useModalBackHandler } from "@/hooks/useModalBackHandler";
 
 interface ModalProps {
   isOpen: boolean;
@@ -17,6 +18,9 @@ export const Modal = ({
   size = "md",
 }: ModalProps) => {
   const [isMobile, setIsMobile] = useState(false);
+
+  // 네이티브 앱에서 뒤로가기 제스처로 모달 닫기 지원
+  useModalBackHandler(isOpen, onClose);
 
   // 모바일 감지
   useEffect(() => {
