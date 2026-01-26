@@ -8,7 +8,7 @@ import {
   SuggestedQuestions,
   FeatureSection,
 } from "@/components/chat";
-import { QuotaExceededModal } from "@/components/common";
+import { QuotaExceededModal, Spinner } from "@/components/common";
 import { useChatStore, useUIStore, useAuthStore } from "@/store";
 import { authService } from "@/api";
 
@@ -76,7 +76,7 @@ export const ChatPage = () => {
     return (
       <MainLayout>
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+          <Spinner size="lg" />
         </div>
       </MainLayout>
     );
