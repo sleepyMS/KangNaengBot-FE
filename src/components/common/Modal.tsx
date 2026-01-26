@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { useModalHistory } from "@/hooks/useModalHistory";
 
 interface ModalProps {
   isOpen: boolean;
@@ -43,9 +42,6 @@ export const Modal = ({
       document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
-
-  // 뒤로가기 제어 훅 적용
-  useModalHistory(isOpen, onClose);
 
   if (!isOpen) return null;
 

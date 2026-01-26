@@ -5,7 +5,6 @@
 import { useTranslation } from "react-i18next";
 import { X, Clock, MapPin, User, BookOpen, Hash } from "lucide-react";
 import type { Course, Day } from "@/types";
-import { useModalHistory } from "@/hooks/useModalHistory";
 
 interface CourseDetailModalProps {
   course: Course | null;
@@ -17,9 +16,6 @@ export const CourseDetailModal = ({
   onClose,
 }: CourseDetailModalProps) => {
   const { t } = useTranslation();
-
-  // 뒤로가기 제어 훅 적용 (course가 null이 아닐 때만 열림)
-  useModalHistory(!!course, onClose);
 
   if (!course) return null;
 
