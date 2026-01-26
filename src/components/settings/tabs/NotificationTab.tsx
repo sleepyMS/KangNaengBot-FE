@@ -2,20 +2,19 @@ import { useEffect, useState } from "react";
 import { Bell, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "@/components/common/Switch";
-
-interface NotiState {
-  enabled: boolean;
-  offset: number;
-  permissionGranted: boolean;
-}
+import { useNotificationStore } from "@/store";
 
 export const NotificationTab = () => {
   const { t } = useTranslation();
-  const [notiState, setNotiState] = useState<NotiState>({
+  /* const [notiState, setNotiState] = useState<NotiState>({
     enabled: false,
     offset: 10,
     permissionGranted: false,
   });
+  const [isLoading, setIsLoading] = useState(true); */
+
+  const { enabled, offset, permissionGranted, setNotiState, syncWithNative } =
+    useNotificationStore();
   const [isLoading, setIsLoading] = useState(true);
 
   // 1. 초기 로드: 네이티브 앱에 상태 요청
@@ -25,47 +24,30 @@ export const NotificationTab = () => {
       return;
     }
 
-    // 네이티브 응답 리스너
-    const handleNativeMessage = (event: MessageEvent) => {
-      try {
-        const message = JSON.parse(event.data);
-        if (message.type === "NOTI_STATE_UPDATED") {
-          setNotiState(message.payload);
-          setIsLoading(false);
-        }
-      } catch (e) {
-        // JSON 파싱 에러 무시
-      }
-    };
+    // 상태 요청 전송 (Global Listener가 수신하여 Store 업데이트)
+    syncWithNative();
 
-    window.addEventListener("message", handleNativeMessage);
-    document.addEventListener("message", handleNativeMessage as any);
-
-    // 상태 요청 전송
-    if (window.sendToNative) {
-      window.sendToNative("GET_NOTI_STATE", {});
-    }
-
-    return () => {
-      window.removeEventListener("message", handleNativeMessage);
-      document.removeEventListener("message", handleNativeMessage as any);
-    };
-  }, []);
+    // 약간의 딜레이 후 로딩 해제 (스토어 업데이트 대기)
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, [syncWithNative]);
 
   const handleToggle = (checked: boolean) => {
     // 켜는 경우, 네이티브에서 권한 요청 로직이 수행됨
     // UX 반응성을 위해 낙관적 업데이트(Optimistic Update) 적용
-    setNotiState((prev) => ({ ...prev, enabled: checked }));
+    // 켜는 경우, 네이티브에서 권한 요청 로직이 수행됨
+    // UX 반응성을 위해 낙관적 업데이트(Optimistic Update) 적용
+    setNotiState({ enabled: checked });
 
     if (window.sendToNative) {
       window.sendToNative("SET_NOTI_ENABLED", { enabled: checked });
     }
   };
 
-  const handleOffsetChange = (offset: number) => {
-    setNotiState((prev) => ({ ...prev, offset }));
+  const handleOffsetChange = (newOffset: number) => {
+    setNotiState({ offset: newOffset });
     if (window.sendToNative) {
-      window.sendToNative("SET_NOTI_OFFSET", { offset });
+      window.sendToNative("SET_NOTI_OFFSET", { offset: newOffset });
     }
   };
 
@@ -100,7 +82,7 @@ export const NotificationTab = () => {
             </p>
           </div>
           <Switch
-            checked={notiState.enabled}
+            checked={enabled}
             onCheckedChange={handleToggle}
             disabled={isLoading}
           />
@@ -109,7 +91,7 @@ export const NotificationTab = () => {
         {/* Offset Selector - 활성화된 경우에만 표시 */}
         <div
           className={`grid transition-all duration-200 ease-in-out ${
-            notiState.enabled
+            enabled
               ? "grid-rows-[1fr] opacity-100 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700"
               : "grid-rows-[0fr] opacity-0"
           }`}
@@ -127,7 +109,7 @@ export const NotificationTab = () => {
                   className={`
                     px-4 py-2 text-sm font-medium rounded-lg border transition-colors
                     ${
-                      notiState.offset === min
+                      offset === min
                         ? "bg-primary-50 border-primary-500 text-primary-700 dark:bg-primary-900/20 dark:border-primary-500 dark:text-primary-300"
                         : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 dark:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-slate-700"
                     }
@@ -142,7 +124,7 @@ export const NotificationTab = () => {
         </div>
       </div>
 
-      {!notiState.permissionGranted && notiState.enabled && (
+      {!permissionGranted && enabled && (
         <div className="p-3 text-sm text-yellow-700 bg-yellow-50 rounded-lg dark:bg-yellow-900/20 dark:text-yellow-400">
           ⚠️ {t("settings.notification.permission_required")}
         </div>

@@ -8,7 +8,7 @@ import {
   OnboardingPage,
 } from "@/pages";
 import { ToastContainer } from "@/components/common";
-import { useSettingsStore, useAuthStore } from "@/store";
+import { useSettingsStore, useAuthStore, useNotificationStore } from "@/store";
 import type { User } from "@/types";
 
 function App() {
@@ -65,6 +65,36 @@ function App() {
       );
     };
   }, [login, loginWithNativeUser]);
+
+  // 네이티브 앱에서 알림 설정 동기화 메시지 수신 (Global Listener)
+  useEffect(() => {
+    if (!window.IS_NATIVE_APP) return;
+
+    const { setNotiState } = useNotificationStore.getState();
+
+    const handleNativeMessage = (event: MessageEvent) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === "NOTI_STATE_UPDATED") {
+          console.log(
+            "[App] Native notification state updated:",
+            message.payload,
+          );
+          setNotiState(message.payload);
+        }
+      } catch (e) {
+        // Ignore JSON parse errors
+      }
+    };
+
+    window.addEventListener("message", handleNativeMessage);
+    document.addEventListener("message", handleNativeMessage as any);
+
+    return () => {
+      window.removeEventListener("message", handleNativeMessage);
+      document.removeEventListener("message", handleNativeMessage as any);
+    };
+  }, []);
 
   return (
     <BrowserRouter>
