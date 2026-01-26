@@ -14,7 +14,10 @@
     "or": "または",
     "copy": "コピー",
     "copied": "コピー完了",
-    "codeCopied": "クリップボードにコピーされました。"
+    "codeCopied": "クリップボードにコピーされました。",
+    "unit": {
+      "minute": "分"
+    }
   },
   "onboarding": {
     "title": "KangNaengBotへようこそ！🎉",
@@ -27,7 +30,7 @@
     "agreeAll": "全て同意",
     "agreeToTerms": "に同意します。",
     "agreeToPrivacy": "に同意します。",
-    "agreeToMarketing": "マーケティング情報の受信に同意します。（メール、プッシュ通知）"
+    "agreeToMarketing": "マーケティング情報の受信に同意します。（メール）"
   },
   "privacy": {
     "title": "プライバシーポリシー",
@@ -711,6 +714,15 @@
       "theme": "テーマ",
       "language": "言語",
       "feedback": "フィードバック"
+    },
+    "notification": {
+      "title": "通知設定",
+      "description": "授業開始通知を管理します。",
+      "class_alert": "授業アラート",
+      "class_alert_desc": "授業開始前に教室と時間を通知します。",
+      "time_before": "通知時間",
+      "permission_required": "通知権限が必要です。端末の設定で有効にしてください。",
+      "only_app_available": "この機能はモバイルアプリでのみ利用可能です。"
     },
     "profile": {
       "title": "プロフィール設定",

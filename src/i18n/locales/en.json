@@ -14,7 +14,10 @@
     "or": "or",
     "copy": "Copy",
     "copied": "Copied",
-    "codeCopied": "Copied to clipboard."
+    "codeCopied": "Copied to clipboard.",
+    "unit": {
+      "minute": "m"
+    }
   },
   "onboarding": {
     "title": "Welcome to KangNaengBot! 🎉",
@@ -27,7 +30,7 @@
     "agreeAll": "Agree All",
     "agreeToTerms": " - I agree to the terms.",
     "agreeToPrivacy": " - I agree to the policy.",
-    "agreeToMarketing": "I agree to receive marketing communications. (Email, Push)"
+    "agreeToMarketing": "I agree to receive marketing communications. (Email)"
   },
   "privacy": {
     "title": "Privacy Policy",
@@ -708,9 +711,19 @@
     "tabs": {
       "profile": "Profile",
       "account": "Account",
+      "notification": "Notifications",
       "theme": "Theme",
       "language": "Language",
       "feedback": "Feedback"
+    },
+    "notification": {
+      "title": "Notification Settings",
+      "description": "Manage class alert notifications.",
+      "class_alert": "Class Alert",
+      "class_alert_desc": "Notifies you of the classroom and time before class starts.",
+      "time_before": "Time Before",
+      "permission_required": "Notification permission is required. Please enable it in device settings.",
+      "only_app_available": "This feature is only available in the mobile app."
     },
     "profile": {
       "title": "Profile Settings",

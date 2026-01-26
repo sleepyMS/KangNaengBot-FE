@@ -14,7 +14,10 @@
     "or": "또는",
     "copy": "복사",
     "copied": "복사됨",
-    "codeCopied": "클립보드에 복사되었습니다."
+    "codeCopied": "클립보드에 복사되었습니다.",
+    "unit": {
+      "minute": "분"
+    }
   },
   "onboarding": {
     "title": "강냉봇에 오신 것을 환영합니다! 🎉",
