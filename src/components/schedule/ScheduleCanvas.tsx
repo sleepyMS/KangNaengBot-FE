@@ -6,10 +6,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Download, Star, Bookmark, ChevronLeft } from "lucide-react";
-import { useScheduleStore, useUIStore, useToastStore } from "@/store";
+import {
+  useScheduleStore,
+  useUIStore,
+  useToastStore,
+  useModalStore,
+} from "@/store";
 import { ScheduleCarousel } from "./ScheduleCarousel";
 
-import { InputModal, AlertModal, Spinner } from "@/components/common";
+import { InputModal, Spinner } from "@/components/common";
+
 import { Course } from "@/types";
 import { toPng } from "html-to-image";
 import { FilterPanel } from "./FilterPanel";
@@ -21,8 +27,10 @@ export const ScheduleCanvas = () => {
   const { isMobile } = useUIStore();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isInputModalOpen, setIsInputModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const [isDownloading, setIsDownloading] = useState(false);
+  const { openModal } = useModalStore(); // Global Modal
+
   const {
     isCanvasOpen,
     closeCanvas,
@@ -291,7 +299,38 @@ export const ScheduleCanvas = () => {
                   <button
                     onClick={() => {
                       if (isSaved) {
-                        setIsDeleteModalOpen(true);
+                        openModal({
+                          type: "warning",
+                          title: t("schedule.delete.title"),
+                          message: t("schedule.delete.message"),
+                          confirmText: t("schedule.saved.delete"),
+                          cancelText: t("common.cancel"),
+                          onConfirm: () => {
+                            let targetId: string | undefined;
+
+                            if (viewMode === "saved") {
+                              targetId = loadedSchedule?.id;
+                            } else {
+                              const currentSchedule =
+                                generatedSchedules[activeScheduleIndex];
+                              targetId = currentSchedule?.savedId;
+                            }
+
+                            if (targetId) {
+                              deleteSavedSchedule(targetId);
+                              // Saved 모드였으면 캔버스 닫기
+                              if (viewMode === "saved") {
+                                closeCanvas();
+                              }
+                              useToastStore
+                                .getState()
+                                .addToast(
+                                  "success",
+                                  t("schedule.delete.success"),
+                                );
+                            }
+                          },
+                        });
                       } else {
                         setIsInputModalOpen(true);
                       }
@@ -325,7 +364,6 @@ export const ScheduleCanvas = () => {
         onClose={() => setSelectedCourse(null)}
       />
 
-      {/* 시간표 이름 입력 모달 */}
       <InputModal
         isOpen={isInputModalOpen}
         onClose={() => setIsInputModalOpen(false)}
@@ -338,39 +376,6 @@ export const ScheduleCanvas = () => {
         title={t("schedule.save.title")}
         placeholder={t("schedule.save.placeholder")}
         confirmText={t("schedule.save.confirm")}
-      />
-
-      {/* 삭제 확인 모달 */}
-      <AlertModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={() => {
-          let targetId: string | undefined;
-
-          if (viewMode === "saved") {
-            targetId = loadedSchedule?.id;
-          } else {
-            const currentSchedule = generatedSchedules[activeScheduleIndex];
-            targetId = currentSchedule?.savedId;
-          }
-
-          if (targetId) {
-            deleteSavedSchedule(targetId);
-            // Saved 모드였으면 캔버스 닫기
-            if (viewMode === "saved") {
-              closeCanvas();
-            }
-            useToastStore
-              .getState()
-              .addToast("success", t("schedule.delete.success"));
-          }
-          setIsDeleteModalOpen(false);
-        }}
-        type="warning"
-        title={t("schedule.delete.title")}
-        message={t("schedule.delete.message")}
-        confirmText={t("schedule.saved.delete")}
-        cancelText={t("common.cancel")}
       />
     </>
   );

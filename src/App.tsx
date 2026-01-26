@@ -7,7 +7,7 @@ import {
   PrivacyPage,
   OnboardingPage,
 } from "@/pages";
-import { ToastContainer } from "@/components/common";
+import { ToastContainer, GlobalModalContainer } from "@/components/common";
 import {
   AuthGuard,
   PublicGuard,
@@ -18,6 +18,8 @@ import {
   useAuthStore,
   useNotificationStore,
   useUIStore,
+  useScheduleStore,
+  useModalStore,
 } from "@/store";
 import type { User } from "@/types";
 
@@ -137,7 +139,35 @@ function App() {
             return;
           }
 
-          // 3. 그 외의 경우: 히스토리 뒤로가기 또는 앱 종료
+          // 3. 시간표 Canvas/List가 열려있으면 닫기
+          const {
+            isCanvasOpen,
+            isSavedListOpen,
+            closeCanvas,
+            toggleSavedList,
+          } = useScheduleStore.getState();
+
+          if (isSavedListOpen) {
+            console.log("[App] Closing saved schedule list");
+            toggleSavedList();
+            return;
+          }
+
+          if (isCanvasOpen) {
+            console.log("[App] Closing schedule canvas");
+            closeCanvas();
+            return;
+          }
+
+          // 4. 일반 모달(Alert/Confirm)이 열려있으면 닫기
+          const { isOpen: isModalOpen, closeModal } = useModalStore.getState();
+          if (isModalOpen) {
+            console.log("[App] Closing generic modal");
+            closeModal();
+            return;
+          }
+
+          // 5. 그 외의 경우: 히스토리 뒤로가기 또는 앱 종료
           // 루트 경로('/')이거나 히스토리가 없으면 앱 종료 요청
           if (window.location.pathname === "/" || window.history.length <= 1) {
             console.log("[App] Root path reached, requesting app exit");
@@ -187,6 +217,7 @@ function App() {
         </Route>
       </Routes>
       <ToastContainer />
+      <GlobalModalContainer />
     </BrowserRouter>
   );
 }

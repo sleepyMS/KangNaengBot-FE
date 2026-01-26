@@ -2,8 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LogOut, Mail, User, UserX } from "lucide-react";
-import { useAuthStore, useUIStore, useToastStore } from "@/store";
-import { AlertModal } from "@/components/common";
+import {
+  useAuthStore,
+  useUIStore,
+  useToastStore,
+  useModalStore,
+} from "@/store";
 
 export const AccountTab = () => {
   const { t } = useTranslation();
@@ -12,8 +16,7 @@ export const AccountTab = () => {
     useAuthStore();
   const { closeSettingsModal, isMobile } = useUIStore();
   const { addToast } = useToastStore();
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const { openModal } = useModalStore();
 
   const handleLogout = async () => {
     await logout();
@@ -118,7 +121,16 @@ export const AccountTab = () => {
 
       {/* 로그아웃 버튼 */}
       <button
-        onClick={() => setShowLogoutConfirm(true)}
+        onClick={() =>
+          openModal({
+            type: "warning",
+            title: t("settings.account.logout"),
+            message: t("settings.account.logoutConfirm"),
+            confirmText: t("settings.account.logout"),
+            cancelText: t("common.cancel"),
+            onConfirm: handleLogout,
+          })
+        }
         className="logout-btn w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-950/30 border border-transparent dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
       >
         <LogOut size={18} />
@@ -127,37 +139,22 @@ export const AccountTab = () => {
 
       {/* 회원탈퇴 버튼 */}
       <button
-        onClick={() => setShowDeleteConfirm(true)}
+        onClick={() =>
+          openModal({
+            type: "danger",
+            title: t("settings.account.deleteAccount"),
+            message: t("settings.account.deleteAccountConfirm"),
+            confirmText: t("settings.account.deleteAccount"),
+            cancelText: t("common.cancel"),
+            onConfirm: handleDeleteAccount,
+          })
+        }
         disabled={isLoading}
         className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
       >
         <UserX size={18} />
         {t("settings.account.deleteAccount")}
       </button>
-
-      {/* 로그아웃 확인 모달 */}
-      <AlertModal
-        isOpen={showLogoutConfirm}
-        onClose={() => setShowLogoutConfirm(false)}
-        onConfirm={handleLogout}
-        type="warning"
-        title={t("settings.account.logout")}
-        message={t("settings.account.logoutConfirm")}
-        confirmText={t("settings.account.logout")}
-        cancelText={t("common.cancel")}
-      />
-
-      {/* 회원탈퇴 확인 모달 */}
-      <AlertModal
-        isOpen={showDeleteConfirm}
-        onClose={() => setShowDeleteConfirm(false)}
-        onConfirm={handleDeleteAccount}
-        type="danger"
-        title={t("settings.account.deleteAccount")}
-        message={t("settings.account.deleteAccountConfirm")}
-        confirmText={t("settings.account.deleteAccount")}
-        cancelText={t("common.cancel")}
-      />
     </div>
   );
 };

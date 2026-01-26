@@ -3,6 +3,7 @@ export { Input } from "./Input";
 export { Modal } from "./Modal";
 export * from "./AlertModal";
 export * from "./InputModal";
+export * from "./GlobalModalContainer";
 export { CustomDropdown } from "./CustomDropdown";
 export { ToastContainer } from "./ToastContainer";
 export { SwipeableItem } from "./SwipeableItem";
