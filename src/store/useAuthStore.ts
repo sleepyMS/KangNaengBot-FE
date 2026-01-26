@@ -61,15 +61,9 @@ export const useAuthStore = create<AuthState>()(
             localStorage.removeItem("pending_merge_session_id");
             try {
               console.log("[Auth] Merging guest session:", pendingSessionId);
-              // Circular dependency 방지를 위해 직접 import 하지 않고 services에서 호출
-              // (이미 상단에 import 되어 있음)
               await sessionsService.mergeSession(pendingSessionId);
-
-              // 병합 후 세션 목록 갱신은 ChatPage 진입 시 이루어짐 (낙관적 처리 불필요)
             } catch (mergeError) {
               console.error("[Auth] Session merge failed:", mergeError);
-              // 실패 시 재시도를 위해 복구할지 결정해야 하지만,
-              // 이미 병합되었는데 에러가 난 경우(500 등) 무한 루프 위험이 있으므로 복구하지 않음
             }
           }
 
