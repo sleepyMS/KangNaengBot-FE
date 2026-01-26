@@ -13,7 +13,12 @@ import {
   PublicGuard,
   OnboardingGuard,
 } from "@/components/auth/RouteGuards";
-import { useSettingsStore, useAuthStore, useNotificationStore } from "@/store";
+import {
+  useSettingsStore,
+  useAuthStore,
+  useNotificationStore,
+  useUIStore,
+} from "@/store";
 import type { User } from "@/types";
 
 function App() {
@@ -98,6 +103,63 @@ function App() {
     return () => {
       window.removeEventListener("message", handleNativeMessage);
       document.removeEventListener("message", handleNativeMessage as any);
+    };
+  }, []);
+
+  // 네이티브 뒤로가기 핸들러 (UI 상태 제어)
+  useEffect(() => {
+    if (!window.IS_NATIVE_APP) return;
+
+    const handleHardwareBackPress = (event: MessageEvent) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === "HARDWARE_BACK_PRESS") {
+          console.log("[App] Hardware back press received");
+
+          const {
+            isSettingsModalOpen,
+            closeSettingsModal,
+            isSidebarOpen,
+            setSidebarOpen,
+          } = useUIStore.getState();
+
+          // 1. 설정 모달이 열려있으면 닫기
+          if (isSettingsModalOpen) {
+            console.log("[App] Closing settings modal");
+            closeSettingsModal();
+            return;
+          }
+
+          // 2. 사이드바가 열려있으면 닫기
+          if (isSidebarOpen) {
+            console.log("[App] Closing sidebar");
+            setSidebarOpen(false);
+            return;
+          }
+
+          // 3. 그 외의 경우: 히스토리 뒤로가기 또는 앱 종료
+          // 루트 경로('/')이거나 히스토리가 없으면 앱 종료 요청
+          if (window.location.pathname === "/" || window.history.length <= 1) {
+            console.log("[App] Root path reached, requesting app exit");
+            if (window.sendToNative) {
+              window.sendToNative("EXIT_APP", {});
+            }
+          } else {
+            console.log("[App] Navigating back");
+            window.history.back();
+          }
+        }
+      } catch (e) {
+        // Ignore
+      }
+    };
+
+    window.addEventListener("message", handleHardwareBackPress);
+    document.addEventListener("message", handleHardwareBackPress as any);
+
+    return () => {
+      window.removeEventListener("message", handleHardwareBackPress);
+      document.removeEventListener("message", handleHardwareBackPress as any);
     };
   }, []);
 
