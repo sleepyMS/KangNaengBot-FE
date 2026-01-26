@@ -75,14 +75,24 @@ export const ScheduleCanvas = () => {
         pixelRatio: 2, // 고해상도 (속도 저하의 주원인이지만 품질 위해 유지)
       });
 
-      const link = document.createElement("a");
-      link.download = `timetable-${Date.now()}.png`;
-      link.href = dataUrl;
-      link.click();
+      const filename = `timetable-${Date.now()}.png`;
 
-      useToastStore
-        .getState()
-        .addToast("success", t("schedule.save.success_image_download"));
+      // 앱 환경에서는 브릿지를 통해 네이티브로 전송
+      if (window.IS_NATIVE_APP && window.sendToNative) {
+        window.sendToNative("SAVE_IMAGE", { dataUrl, filename });
+        useToastStore
+          .getState()
+          .addToast("success", t("schedule.save.success_image_download"));
+      } else {
+        // 웹 환경에서는 기존 방식 사용
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = dataUrl;
+        link.click();
+        useToastStore
+          .getState()
+          .addToast("success", t("schedule.save.success_image_download"));
+      }
     } catch (error) {
       console.error("Image save failed:", error);
       useToastStore
