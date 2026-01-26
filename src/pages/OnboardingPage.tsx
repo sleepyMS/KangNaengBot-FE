@@ -65,7 +65,7 @@ export const OnboardingPage = () => {
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setForm((prev) => {
@@ -382,8 +382,8 @@ export const OnboardingPage = () => {
                       agreements.marketing
                         ? "bg-primary-500 text-white"
                         : isDark
-                        ? "bg-slate-700 text-gray-300 hover:bg-slate-600"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          ? "bg-slate-700 text-gray-300 hover:bg-slate-600"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                     }`}
                   >
                     {t("onboarding.agreeAll")}

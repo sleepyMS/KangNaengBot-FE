@@ -27,7 +27,7 @@
     "agreeAll": "전체동의",
     "agreeToTerms": "에 동의합니다.",
     "agreeToPrivacy": "에 동의합니다.",
-    "agreeToMarketing": "마케팅 정보 수신에 동의합니다. (이메일, 푸시 알림)"
+    "agreeToMarketing": "마케팅 정보 수신에 동의합니다. (이메일)"
   },
   "privacy": {
     "title": "개인정보 처리방침",
@@ -708,9 +708,19 @@
     "tabs": {
       "profile": "프로필",
       "account": "계정",
+      "notification": "알림",
       "theme": "테마",
       "language": "언어",
       "feedback": "피드백"
+    },
+    "notification": {
+      "title": "알림 설정",
+      "description": "수업 시작 알림을 관리합니다.",
+      "class_alert": "수업 시작 알림",
+      "class_alert_desc": "설정된 시간 전에 강의실과 시간을 알려줍니다.",
+      "time_before": "알림 시간",
+      "permission_required": "알림 권한이 필요합니다. 기기 설정에서 허용해주세요.",
+      "only_app_available": "이 기능은 모바일 앱에서만 사용할 수 있습니다."
     },
     "profile": {
       "title": "프로필 설정",

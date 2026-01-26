@@ -5,6 +5,7 @@ export type SettingsTabId =
   | "account"
   | "theme"
   | "language"
+  | "notification"
   | "feedback";
 
 interface UIState {

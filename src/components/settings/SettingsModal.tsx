@@ -1,5 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { X, User, Settings, Palette, Globe, MessageSquare } from "lucide-react";
+import {
+  X,
+  User,
+  Settings,
+  Palette,
+  Globe,
+  MessageSquare,
+  Bell,
+} from "lucide-react";
 import { useUIStore, SettingsTabId } from "@/store";
 import { useTranslation } from "react-i18next";
 import { ProfileTab } from "./tabs/ProfileTab";
@@ -7,6 +15,7 @@ import { AccountTab } from "./tabs/AccountTab";
 import { ThemeTab } from "./tabs/ThemeTab";
 import { LanguageTab } from "./tabs/LanguageTab";
 import { FeedbackTab } from "./tabs/FeedbackTab";
+import { NotificationTab } from "./tabs/NotificationTab";
 
 interface Tab {
   id: SettingsTabId;
@@ -24,6 +33,11 @@ const TABS: Tab[] = [
     id: "account",
     labelKey: "settings.tabs.account",
     icon: <Settings size={18} />,
+  },
+  {
+    id: "notification",
+    labelKey: "settings.tabs.notification",
+    icon: <Bell size={18} />,
   },
   { id: "theme", labelKey: "settings.tabs.theme", icon: <Palette size={18} /> },
   {
@@ -148,9 +162,6 @@ export const SettingsModal = () => {
     }
   };
 
-  // 부모 컴포넌트에서 항상 렌더링(mount) 하므로, CSS로 visibility와 transition을 제어합니다.
-  // if (!isSettingsModalOpen) return null; <- 삭제됨
-
   const renderTabContent = () => {
     switch (activeSettingsTab) {
       case "profile":
@@ -161,6 +172,8 @@ export const SettingsModal = () => {
         return <ThemeTab />;
       case "language":
         return <LanguageTab />;
+      case "notification":
+        return <NotificationTab />;
       case "feedback":
         return <FeedbackTab />;
       default:
