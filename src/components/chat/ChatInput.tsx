@@ -9,8 +9,8 @@ import {
   useScheduleStore,
   useUIStore,
   useEmailStore,
-  useModalStore,
 } from "@/store";
+import { AlertModal } from "@/components/common";
 import { ToolDropdown } from "./ToolDropdown";
 
 interface ChatInputProps {
@@ -26,6 +26,7 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
+  const [showLoginAlert, setShowLoginAlert] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonContainerRef = useRef<HTMLDivElement>(null);
@@ -102,23 +103,19 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
   const handleNewChat = () => {
     // 게스트 모드면 로그인 유도 모달 표시
     if (!isAuthenticated) {
-      useModalStore.getState().openModal({
-        type: "info",
-        title: t("chat.loginRequired"),
-        message: t("chat.loginRequiredDesc"),
-        confirmText: t("chat.login"),
-        cancelText: t("common.cancel"),
-        onConfirm: () => {
-          if (!authService.requestNativeLogin()) {
-            navigate("/login");
-          }
-        },
-      });
+      setShowLoginAlert(true);
       return;
     }
     // 세션 생성하지 않고, 현재 세션만 초기화
     // 실제 세션은 첫 메시지 전송 시 생성됨 (handleSubmit에서 처리)
     useChatStore.getState().clearCurrentSession();
+  };
+
+  const handleLoginConfirm = () => {
+    setShowLoginAlert(false);
+    if (!authService.requestNativeLogin()) {
+      navigate("/login");
+    }
   };
 
   return (
@@ -251,6 +248,18 @@ export const ChatInput = ({ showNewChatButton = false }: ChatInputProps) => {
           </form>
         </div>
       </div>
+
+      {/* 게스트 로그인 유도 모달 */}
+      <AlertModal
+        isOpen={showLoginAlert}
+        onClose={() => setShowLoginAlert(false)}
+        onConfirm={handleLoginConfirm}
+        type="info"
+        title={t("chat.loginRequired")}
+        message={t("chat.loginRequiredDesc")}
+        confirmText={t("chat.login")}
+        cancelText={t("common.cancel")}
+      />
     </>
   );
 };

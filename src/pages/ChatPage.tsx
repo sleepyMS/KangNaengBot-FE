@@ -8,9 +8,9 @@ import {
   SuggestedQuestions,
   FeatureSection,
 } from "@/components/chat";
-import { useChatStore, useUIStore, useModalStore } from "@/store";
+import { QuotaExceededModal } from "@/components/common";
+import { useChatStore, useUIStore } from "@/store";
 import { authService } from "@/api";
-import { useTranslation } from "react-i18next";
 
 export const ChatPage = () => {
   const { sessionId } = useParams<{ sessionId?: string }>();
@@ -24,8 +24,6 @@ export const ChatPage = () => {
     clearError,
   } = useChatStore();
   const { isMobile } = useUIStore();
-  const { openModal } = useModalStore(); // Global Modal
-  const { t } = useTranslation();
 
   // 스크롤 위치에 따른 New Chat 버튼 표시 상태
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -50,59 +48,9 @@ export const ChatPage = () => {
     ) {
       navigate(`/chat/${currentSessionId}`, { replace: true });
     } else if (!currentSessionId && sessionId) {
-    } else if (!currentSessionId && sessionId) {
       navigate("/", { replace: true });
     }
   }, [currentSessionId]);
-
-  // 에러 발생 시 글로벌 모달 트리거 (QuotaExceeded)
-  useEffect(() => {
-    if (error === "GUEST_QUOTA_EXCEEDED") {
-      openModal({
-        type: "warning",
-        title: t("auth.quotaExceeded.title", "대화 횟수 초과"),
-        message: t(
-          "auth.quotaExceeded.message",
-          "게스트 모드에서는 최대 3개의 메시지만 보낼 수 있습니다.\n계속 대화하려면 로그인해주세요.",
-        ),
-        confirmText: t("auth.loginToContinue", "로그인하고 계속하기"),
-        cancelText: t("common.cancel", "취소"),
-        onConfirm: () => {
-          // 현재 세션 ID 저장 (로그인 후 병합용)
-          if (currentSessionId) {
-            localStorage.setItem("pending_merge_session_id", currentSessionId);
-            localStorage.setItem(
-              "login_redirect_url",
-              `/chat/${currentSessionId}`,
-            );
-          }
-
-          // 네이티브 앱 로그인 요청
-          if (authService.requestNativeLogin()) {
-            clearError();
-            return;
-          }
-
-          // 현재 세션 ID 저장 (로그인 후 병합용)
-          if (currentSessionId) {
-            localStorage.setItem("pending_merge_session_id", currentSessionId);
-            localStorage.setItem(
-              "login_redirect_url",
-              `/chat/${currentSessionId}`,
-            );
-            // 로그인 페이지로 이동 (리다이렉트 URL 포함)
-            navigate(`/login?redirect=/chat/${currentSessionId}`);
-          } else {
-            navigate("/login");
-          }
-          clearError();
-        },
-        onCancel: () => {
-          clearError();
-        },
-      });
-    }
-  }, [error, currentSessionId, navigate, openModal, t, clearError]);
 
   const showMessageList =
     messages.length > 0 || (currentSessionId && isLoading);
@@ -144,6 +92,42 @@ export const ChatPage = () => {
           </div>
         </div>
       )}
+
+      {/* 게스트 쿼터 초과 모달 */}
+      <QuotaExceededModal
+        isOpen={error === "GUEST_QUOTA_EXCEEDED"}
+        onClose={() => clearError()}
+        onLogin={() => {
+          // 현재 세션 ID 저장 (로그인 후 병합용)
+          if (currentSessionId) {
+            localStorage.setItem("pending_merge_session_id", currentSessionId);
+            localStorage.setItem(
+              "login_redirect_url",
+              `/chat/${currentSessionId}`,
+            );
+          }
+
+          // 네이티브 앱 로그인 요청
+          if (authService.requestNativeLogin()) {
+            clearError();
+            return;
+          }
+
+          // 현재 세션 ID 저장 (로그인 후 병합용)
+          if (currentSessionId) {
+            localStorage.setItem("pending_merge_session_id", currentSessionId);
+            localStorage.setItem(
+              "login_redirect_url",
+              `/chat/${currentSessionId}`,
+            );
+            // 로그인 페이지로 이동 (리다이렉트 URL 포함)
+            navigate(`/login?redirect=/chat/${currentSessionId}`);
+          } else {
+            navigate("/login");
+          }
+          clearError();
+        }}
+      />
     </MainLayout>
   );
 };
