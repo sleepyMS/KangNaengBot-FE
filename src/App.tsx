@@ -118,6 +118,14 @@ function App() {
         if (message.type === "HARDWARE_BACK_PRESS") {
           console.log("[App] Hardware back press received");
 
+          // 1. 일반 모달(Alert/Confirm)이 열려있으면 닫기 (최우선 순위)
+          const { isOpen: isModalOpen, closeModal } = useModalStore.getState();
+          if (isModalOpen) {
+            console.log("[App] Closing generic modal");
+            closeModal();
+            return;
+          }
+
           const {
             isSettingsModalOpen,
             closeSettingsModal,
@@ -125,17 +133,10 @@ function App() {
             setSidebarOpen,
           } = useUIStore.getState();
 
-          // 1. 설정 모달이 열려있으면 닫기
+          // 2. 설정 모달이 열려있으면 닫기
           if (isSettingsModalOpen) {
             console.log("[App] Closing settings modal");
             closeSettingsModal();
-            return;
-          }
-
-          // 2. 사이드바가 열려있으면 닫기
-          if (isSidebarOpen) {
-            console.log("[App] Closing sidebar");
-            setSidebarOpen(false);
             return;
           }
 
@@ -159,11 +160,10 @@ function App() {
             return;
           }
 
-          // 4. 일반 모달(Alert/Confirm)이 열려있으면 닫기
-          const { isOpen: isModalOpen, closeModal } = useModalStore.getState();
-          if (isModalOpen) {
-            console.log("[App] Closing generic modal");
-            closeModal();
+          // 4. 사이드바가 열려있으면 닫기
+          if (isSidebarOpen) {
+            console.log("[App] Closing sidebar");
+            setSidebarOpen(false);
             return;
           }
 
