@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo, useCallback } from "react";
+import { useEffect, useRef, useMemo, useCallback, useState } from "react";
 import { ChatBubble } from "./ChatBubble";
 import { Spinner } from "@/components/common";
 import { useChatStore, useScheduleStore } from "@/store";
@@ -53,6 +53,11 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
   const isAtBottomRef = useRef(true);
   const scrollEndTimerRef = useRef<number>(0);
 
+  // 세션 전환 감지를 위한 상태
+  const prevSessionIdRef = useRef<string | null>(null);
+  const prevMessageCountRef = useRef<number>(0);
+  const [isSessionTransition, setIsSessionTransition] = useState(false);
+
   const filteredMessages = useMemo(
     () => deduplicateMessages(messages),
     [messages],
@@ -98,12 +103,47 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
     };
   }, [checkScrollPosition]);
 
-  // 새 메시지 시 자동 스크롤 (바닥에 있을 때만)
+  // 세션 전환 감지: currentSessionId 변경 시
   useEffect(() => {
-    if (isAtBottomRef.current) {
+    const isNewSession = prevSessionIdRef.current !== currentSessionId;
+
+    if (isNewSession && currentSessionId !== null) {
+      // 세션 전환 시: 애니메이션 활성화 + 즉시 스크롤
+      setIsSessionTransition(true);
+
+      // 즉시 바닥으로 스크롤 (애니메이션 없이)
+      requestAnimationFrame(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "auto" });
+        isAtBottomRef.current = true;
+        onScrollChange?.(true);
+      });
+
+      // 애니메이션 완료 후 상태 초기화 (300ms = 애니메이션 duration)
+      const timer = setTimeout(() => {
+        setIsSessionTransition(false);
+      }, 350);
+
+      prevSessionIdRef.current = currentSessionId;
+      prevMessageCountRef.current = messages.length;
+
+      return () => clearTimeout(timer);
+    }
+
+    prevSessionIdRef.current = currentSessionId;
+  }, [currentSessionId, messages.length, onScrollChange]);
+
+  // 새 메시지 추가 시 자동 스크롤 (세션 전환이 아닐 때만)
+  useEffect(() => {
+    const isNewMessage = messages.length > prevMessageCountRef.current;
+    const isSameSession = prevSessionIdRef.current === currentSessionId;
+
+    // 세션 전환 중이 아니고, 새 메시지가 추가되었을 때만 smooth 스크롤
+    if (isSameSession && isNewMessage && isAtBottomRef.current) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages.length, isSending]);
+
+    prevMessageCountRef.current = messages.length;
+  }, [messages.length, isSending, currentSessionId]);
 
   // 초기 로드 시 바닥으로 스크롤
   useEffect(() => {
@@ -128,7 +168,12 @@ export const MessageList = ({ onScrollChange }: MessageListProps) => {
       ref={containerRef}
       className="flex-1 overflow-y-auto px-4 pt-14 md:pt-16 pb-6"
     >
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div
+        key={currentSessionId || "empty"}
+        className={`max-w-3xl mx-auto space-y-6 ${
+          isSessionTransition ? "animate-slide-up" : ""
+        }`}
+      >
         {filteredMessages.map((message, index) => (
           <ChatBubble key={index} message={message} />
         ))}
