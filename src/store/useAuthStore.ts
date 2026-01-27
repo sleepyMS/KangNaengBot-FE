@@ -11,6 +11,7 @@ interface AuthState {
   user: User | null;
   profile: ProfileResponse | null;
   isAuthenticated: boolean;
+  isGuestMode: boolean; // 게스트 모드 여부
   isLoading: boolean;
   error: string | null;
 
@@ -26,6 +27,8 @@ interface AuthState {
   deleteAccount: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (profile: Partial<ProfileResponse>) => Promise<void>;
+  enterGuestMode: () => void; // 게스트 모드 진입
+  exitGuestMode: () => void; // 게스트 모드 종료
   clearError: () => void;
 }
 
@@ -36,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       profile: null,
       isAuthenticated: false,
+      isGuestMode: false,
       isLoading: false,
       error: null,
 
@@ -74,6 +78,7 @@ export const useAuthStore = create<AuthState>()(
             user,
             profile,
             isAuthenticated: true,
+            isGuestMode: false, // 로그인 성공 시 게스트 모드 해제
             isLoading: false,
           });
         } catch (error) {
@@ -98,6 +103,7 @@ export const useAuthStore = create<AuthState>()(
         set({
           user,
           isAuthenticated: true,
+          isGuestMode: false, // 로그인 성공 시 게스트 모드 해제
           isLoading: true, // 프로필 로딩 중
           error: null,
         });
@@ -141,6 +147,7 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           profile: null,
           isAuthenticated: false,
+          isGuestMode: false, // 로그아웃 시 게스트 모드도 해제
           error: null,
         });
 
@@ -165,6 +172,7 @@ export const useAuthStore = create<AuthState>()(
             user: null,
             profile: null,
             isAuthenticated: false,
+            isGuestMode: false, // 계정 삭제 시 게스트 모드도 해제
             isLoading: false,
           });
 
@@ -228,6 +236,20 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
+      enterGuestMode: () => {
+        // 게스트 모드 진입: 인증 없이 ChatPage 접근 허용
+        set({
+          isGuestMode: true,
+          isAuthenticated: false,
+          user: null,
+          profile: null,
+        });
+      },
+
+      exitGuestMode: () => {
+        set({ isGuestMode: false });
+      },
+
       clearError: () => set({ error: null }),
     }),
     {
@@ -236,6 +258,7 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         profile: state.profile,
         isAuthenticated: state.isAuthenticated,
+        isGuestMode: state.isGuestMode,
       }),
     },
   ),

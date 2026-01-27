@@ -18,7 +18,7 @@ export const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login, isAuthenticated, isLoading, logout, error } = useAuthStore();
+  const { login, isAuthenticated, isLoading, error } = useAuthStore();
   const { isMobile } = useUIStore();
   const { addToast } = useToastStore();
   const { resolvedTheme } = useSettingsStore();
@@ -79,9 +79,9 @@ export const LoginPage = () => {
     authService.googleLogin(redirectUri);
   };
 
-  const handleGuestMode = async () => {
-    // 기존 로그인 상태 정리 (세션은 첫 메시지 전송 시 생성됨)
-    await logout();
+  const handleGuestMode = () => {
+    // 게스트 모드 활성화 후 메인 페이지로 이동
+    useAuthStore.getState().enterGuestMode();
     navigate("/");
   };
 

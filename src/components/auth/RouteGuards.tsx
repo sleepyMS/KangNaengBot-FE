@@ -10,9 +10,10 @@ import { MainLayout } from "@/components/layout";
 /**
  * 인증된 사용자만 접근할 수 있는 페이지 보호
  * 로그인하지 않은 유저는 /login으로 보내고, 프로필이 미완료된 유저는 /onboarding으로 보냅니다.
+ * 단, 게스트 모드인 경우 인증 없이 접근을 허용합니다.
  */
 export const AuthGuard = () => {
-  const { isAuthenticated, profile, isLoading } = useAuthStore();
+  const { isAuthenticated, isGuestMode, profile, isLoading } = useAuthStore();
   const location = useLocation();
 
   // 1. 초기 하이드레이션 및 프로필 로딩 중일 때는 로딩 화면 유지
@@ -26,12 +27,17 @@ export const AuthGuard = () => {
     );
   }
 
-  // 2. 인증되지 않은 경우 로그인 페이지로
+  // 2. 게스트 모드인 경우 인증 없이 접근 허용
+  if (isGuestMode) {
+    return <Outlet />;
+  }
+
+  // 3. 인증되지 않은 경우 로그인 페이지로
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // 3. 프로필 미완료 시 온보딩 페이지로 (온보딩 페이지 자체 접근은 제외)
+  // 4. 프로필 미완료 시 온보딩 페이지로 (온보딩 페이지 자체 접근은 제외)
   const isProfileComplete =
     Boolean(profile?.profile_name?.trim()) &&
     Boolean(profile?.student_id?.trim()) &&
@@ -43,7 +49,7 @@ export const AuthGuard = () => {
     return <Navigate to="/onboarding" replace />;
   }
 
-  // 4. 모든 조건 통과 (ChatPage 등)
+  // 5. 모든 조건 통과 (ChatPage 등)
   return <Outlet />;
 };
 
