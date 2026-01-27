@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Calendar, Lock, Mail } from "lucide-react";
+import { Calendar, Mail } from "lucide-react";
 import { useScheduleStore, useUIStore, useEmailStore } from "@/store";
 import { FeatureCard } from "./FeatureCard";
 
@@ -54,13 +54,14 @@ export const FeatureSection = () => {
       onClick: handleCreateEmail,
       isComingSoon: false,
     },
-    {
-      id: "coming-soon-1",
-      title: t("chat.feature.new", "새로운 기능"),
-      description: t("chat.feature.newDesc", "새로운 기능이 추가될 예정이에요"),
-      icon: Lock,
-      isComingSoon: true,
-    },
+    // 앱 심사를 위해 임시 숨김 처리
+    // {
+    //   id: "coming-soon-1",
+    //   title: t("chat.feature.new", "새로운 기능"),
+    //   description: t("chat.feature.newDesc", "새로운 기능이 추가될 예정이에요"),
+    //   icon: Lock,
+    //   isComingSoon: true,
+    // },
   ];
 
   return (
