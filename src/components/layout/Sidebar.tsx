@@ -537,12 +537,9 @@ export const Sidebar = () => {
             className={`
             border-t border-gray-100
             transition-all duration-300 ease-in-out
-            flex mt-auto relative
-            ${
-              isSidebarOpen
-                ? "px-4 py-3 justify-start"
-                : "px-0 py-3 justify-center"
-            }
+            flex mt-auto relative items-center
+            h-[72px]
+            ${isSidebarOpen ? "px-4 justify-start" : "px-0 justify-center"}
           `}
           >
             <button
@@ -550,10 +547,11 @@ export const Sidebar = () => {
               className={`
                 user-profile-btn flex items-center rounded-full border border-transparent
                 transition-all duration-300 ease-in-out
+                h-14
                 ${
                   isSidebarOpen
-                    ? "w-full pl-2 pr-4 py-2 gap-3"
-                    : "w-12 h-12 p-1 justify-center"
+                    ? "w-full pl-2 pr-4 gap-3"
+                    : "w-14 p-1 justify-center"
                 }
                 ${
                   isProfileModalOpen
